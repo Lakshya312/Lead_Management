@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center mb-5">
+
+    <h1>Lead Management System</h1>
+    <p class="text-muted">
+        Product & Region Management
+    </p>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-6">
+
+        <div class="card shadow">
+
+            <div class="card-body text-center">
+
+                <h3>Products</h3>
+
+                <p>Manage products</p>
+
+                <a href="{% url 'product_list' %}"
+                   class="btn btn-primary">
+
+                    Open Products
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card shadow">
+
+            <div class="card-body text-center">
+
+                <h3>Regions</h3>
+
+                <p>Manage regions</p>
+
+                <a href="{% url 'region_list' %}"
+                   class="btn btn-success">
+
+                    Open Regions
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
