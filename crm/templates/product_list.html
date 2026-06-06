@@ -1,0 +1,29 @@
+<!-- HTML -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+</head>
+<body>
+
+    <h1>Product List</h1>
+
+    <table border="1">
+
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+        </tr>
+
+        {% for product in products %}
+        <tr>
+            <td>{{ product.productid }}</td>
+            <td>{{ product.productname }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>
