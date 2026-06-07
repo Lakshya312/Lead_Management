@@ -73,7 +73,7 @@ CREATE TABLE Lead (
     FOREIGN KEY (LeadSourceID) REFERENCES Lead_Source(LeadSourceID)
 );
 
-CREATE TABLE Lead_Follow_Up (
+CREATE TABLE Lead_Follow_Up(
     FollowUpID INT PRIMARY KEY,
     LeadID INT,
     ExecutiveID INT,
@@ -87,3 +87,27 @@ CREATE TABLE Lead_Follow_Up (
     FOREIGN KEY (LeadID) REFERENCES Lead(LeadID),
     FOREIGN KEY (LeadStatusID) REFERENCES Lead_Status(StatusID)
 );
+
+-- ALTER TABLE Product_Category
+-- ALTER COLUMN Added_Dts DATETIME;
+
+-- ALTER TABLE Product
+-- ALTER COLUMN Added_Dts DATETIME;
+
+-- ALTER TABLE Region
+-- ALTER COLUMN Added_Dts DATETIME;
+
+-- ALTER TABLE Territory
+-- ALTER COLUMN Added_Dts DATETIME;
+
+-- ALTER TABLE Lead_Status
+-- ALTER COLUMN Added_Dts DATETIME;
+
+-- ALTER TABLE Lead_Source
+-- ALTER COLUMN Added_Dts DATETIME;
+
+-- ALTER TABLE Lead
+-- ALTER COLUMN Added_Dts DATETIME;
+
+-- ALTER TABLE Lead_Follow_Up
+-- ALTER COLUMN Added_Dts DATETIME;

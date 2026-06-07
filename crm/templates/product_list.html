@@ -1,29 +1,125 @@
-<!-- HTML -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Products</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Master</title>
+    <style>
+        /* Standard layout normalization to ensure both blocks align perfectly at the top */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #fafafa;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        h3 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        table {
+        border-collapse: collapse;
+        background-color: #fff;
+}
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        /* Tight layout styles for your side form block */
+        .form-container p {
+            margin-bottom: 12px;
+        }
+        .form-container input[type="text"], 
+        .form-container select {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+        }
+        button {
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Product List</h1>
+    <h1>Product Master</h1>
 
-    <table border="1">
+    <div style="display: flex; gap: 25px; align-items: flex-start;">
 
-        <tr>
-            <th>Product ID</th>
-            <th>Product Name</th>
-        </tr>
+        <div style="flex: 3;">
+            <h3>Product Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Active Status</th>
+                        <th>Added By</th>
+                        <th>Added Date/Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.productid }}</td>
+                        <td>{{ product.productname }}</td>
+                        <td>{{ product.categoryid.categoryname }}</td>
+                        <td>
+                            {% if product.is_active == 1 %} Yes {% else %} No {% endif %}
+                        </td>
+                        <td>{{ product.added_by }}</td>
+                        <td>{{ product.added_dts|date:"Y-m-d H:i:s" }}</td>
+                        <td>
+                            <a href="{% url 'edit_product' product.productid %}"><button type="button">Edit</button></a>
+                            <a href="{% url 'delete_product' product.productid %}" onclick="return confirm('Delete this product?');"><button type="button">Delete</button></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align: center;">No products found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        {% for product in products %}
-        <tr>
-            <td>{{ product.productid }}</td>
-            <td>{{ product.productname }}</td>
-        </tr>
-        {% endfor %}
+        <div class="form-container" style="flex: 1; border: 1px solid #ccc; padding: 20px; background-color: #fff; border-radius: 4px; min-width: 290px; margin-top: 35px;">
+            <h3>
+                {% if edit_mode %} Update Product {% else %} Add New Product {% endif %}
+            </h3>
+            
+            <form method="POST" action="{% if edit_mode %}{% url 'edit_product' form.instance.productid %}{% else %}{% url 'add_product' %}{% endif %}">
+                {% csrf_token %}
+                
+                {{ form.as_p }}
 
-    </table>
+                <div style="margin-top: 15px;">
+                    <button type="submit">
+                        {% if edit_mode %} Update Product {% else %} Add Product {% endif %}
+                    </button>
+                    {% if edit_mode %}
+                        <a href="{% url 'product_list' %}" style="margin-left: 10px;">
+                            <button type="button">Cancel</button>
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
 
+    </div>
 </body>
 </html>
