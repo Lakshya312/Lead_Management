@@ -3,6 +3,6 @@ inner join Product_Category ON Product.CategoryID = Product_Category.CategoryID;
 
 SELECT count(*) FROM Product;
 
-select * from Product
+select * from Region;
 
 use LeadManagementDB;

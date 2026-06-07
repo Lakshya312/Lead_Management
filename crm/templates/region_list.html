@@ -1,0 +1,208 @@
+<!-- HTML -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Region Master</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #fafafa;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        h3 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        table {
+            border-collapse: collapse;
+            background-color: #fff;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+
+        .form-container p {
+            margin-bottom: 12px;
+        }
+
+        .form-container input[type="text"] {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Region Master</h1>
+
+    <div style="display:flex; gap:25px; align-items:flex-start;">
+
+        <div style="flex:3;">
+
+            <h3>Region Records</h3>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Region Name</th>
+                        <th>Added Date/Time</th>
+                        <th>Actions</th>
+                        <th>Added By</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for region in regions %}
+
+                    <tr>
+
+                        <td>{{ region.regionid }}</td>
+                    
+                        <td>{{ region.regionname }}</td>
+                    
+                        <td>{{ region.added_by }}</td>
+                    
+                        <td>{{ region.added_dts|date:"Y-m-d H:i:s" }}</td>
+                    
+                        <td>
+                    
+                            <a href="{% url 'edit_region' region.regionid %}">
+                                <button type="button">
+                                    Edit
+                                </button>
+                            </a>
+                    
+                            <a href="{% url 'delete_region' region.regionid %}"
+                               onclick="return confirm('Delete this region?');">
+                    
+                                <button type="button">
+                                    Delete
+                                </button>
+                    
+                            </a>
+                    
+                        </td>
+                    
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="3" style="text-align:center;">
+                            No regions found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div
+            class="form-container"
+            style="
+                flex:1;
+                min-width:290px;
+                border:1px solid #ccc;
+                padding:20px;
+                background-color:#fff;
+                border-radius:4px;
+                margin-top: 35px;
+            "
+        >
+
+            <h3>
+
+                {% if edit_mode %}
+                    Update Region
+                {% else %}
+                    Add New Region
+                {% endif %}
+
+            </h3>
+
+            <form
+                method="POST"
+                action="{% if edit_mode %}{% url 'edit_region' form.instance.regionid %}{% else %}{% url 'add_region' %}{% endif %}"
+            >
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div style="margin-top:15px;">
+
+                    <button type="submit">
+
+                        {% if edit_mode %}
+                            Update Region
+                        {% else %}
+                            Add Region
+                        {% endif %}
+
+                    </button>
+
+                    {% if edit_mode %}
+
+                    <a
+                        href="{% url 'region_list' %}"
+                        style="margin-left:10px;"
+                    >
+
+                        <button type="button">
+                            Cancel
+                        </button>
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

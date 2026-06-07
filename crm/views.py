@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product
-from .forms import ProductForm
+from .models import Product, Region
+from .forms import ProductForm, RegionForm
 from datetime import datetime
+
+'''FOR PRODUCTS'''
 
 # 1. MAIN LIST VIEW (GET ONLY)
 def product_list(request):
     products = Product.objects.all()
     form = ProductForm()
-    
+
     return render(
         request,
         'product_list.html',
@@ -77,3 +79,91 @@ def delete_product(request, productid):
     product = get_object_or_404(Product, pk=productid)
     product.delete()
     return redirect('product_list')
+
+'''FOR REGION'''
+
+# Python
+
+def region_list(request):
+
+    regions = Region.objects.all()
+    form = RegionForm()
+
+    return render(
+        request,
+        'region_list.html',
+        {
+            'regions': regions,
+            'form': form
+        }
+    )
+
+
+def add_region(request):
+
+    if request.method == 'POST':
+
+        form = RegionForm(request.POST)
+
+        if form.is_valid():
+
+            last_region = Region.objects.order_by(
+                '-regionid'
+            ).first()
+
+            region = form.save(commit=False)
+
+            region.regionid = (
+                last_region.regionid + 1
+                if last_region
+                else 1
+            )
+
+            region.save()
+
+            return redirect('region_list')
+
+    return redirect('region_list')
+
+
+def edit_region(request, regionid):
+
+    region = get_object_or_404(
+        Region,
+        pk=regionid
+    )
+
+    form = RegionForm(
+        request.POST or None,
+        instance=region
+    )
+
+    if request.method == 'POST' and form.is_valid():
+
+        form.save()
+
+        return redirect('region_list')
+
+    regions = Region.objects.all()
+
+    return render(
+        request,
+        'region_list.html',
+        {
+            'regions': regions,
+            'form': form,
+            'edit_mode': True
+        }
+    )
+
+
+def delete_region(request, regionid):
+
+    region = get_object_or_404(
+        Region,
+        pk=regionid
+    )
+
+    region.delete()
+
+    return redirect('region_list')

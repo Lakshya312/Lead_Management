@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product
+from .models import Product, Region
 
 
 class ProductForm(forms.ModelForm):
@@ -21,3 +21,12 @@ class ProductForm(forms.ModelForm):
                 format='%Y-%m-%dT%H:%M'
             )
         }
+
+class RegionForm(forms.ModelForm):
+
+    class Meta:
+        model = Region
+
+        fields = [
+            'regionname'
+        ]
