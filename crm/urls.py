@@ -25,4 +25,6 @@ urlpatterns = [
 
     # API SECTION
     path('api/products/',product_api,name='product_api'),
+    path('api/leads/', lead_api, name='lead_api'),
+    path('api/regions/', region_api, name='region_api'),
 ]

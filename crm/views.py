@@ -5,7 +5,7 @@ from datetime import datetime
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import ProductSerializer
+from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
 
 '''FOR PRODUCTS'''
 class Product_view:
@@ -242,14 +242,18 @@ def dashboard(request):
 
 @api_view(['GET'])
 def product_api(request):
-
     products = Product.objects.all()
+    serializer = ProductSerializer(products,many=True)
+    return Response(serializer.data)
 
-    serializer = ProductSerializer(
-        products,
-        many=True
-    )
+@api_view(['GET'])
+def lead_api(request):
+    regions = Lead.objects.all()
+    serializer = LeadSerializer(regions, many=True)
+    return Response(serializer.data)
 
-    return Response(
-        serializer.data
-    )
+@api_view(['GET'])
+def region_api(request):
+    regions = Region.objects.all()
+    serializer = RegionSerializer(regions, many=True)
+    return Response(serializer.data)
