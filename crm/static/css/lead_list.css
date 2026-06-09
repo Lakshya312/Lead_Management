@@ -1,0 +1,285 @@
+/* ==========================================
+   ALIGNMENT MATRIX: DASHBOARD THEME DESIGN TOKENS
+   ========================================== */
+   :root {
+    --bg-universe: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --glass-card: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    
+    --glow-primary: #6366f1;
+    --glow-primary-rgba: rgba(99, 102, 241, 0.4);
+    --glow-lead: #818cf8;
+    --glow-success: #10b981;
+    --glow-danger: #ef4444;
+    
+    --text-white: #f8fafc;
+    --text-slate: #94a3b8;
+    
+    --radius-box: 20px;
+    --radius-input: 12px;
+    --ease-curve: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Base Body Environment Resets */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--bg-universe);
+    color: var(--text-white);
+    padding: 40px 30px;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   HEADER BANNER OVERHAUL 
+   ========================================== */
+.header-banner {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    padding: 24px 40px;
+    margin-bottom: 45px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    border-radius: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: fadeInDown 0.6s var(--ease-curve) both;
+}
+
+.header-banner span {
+    background: linear-gradient(90deg, #fff, var(--text-slate), #fff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard-back-btn {
+    text-decoration: none;
+    color: var(--text-white);
+    font-size: 14px;
+    font-weight: 700;
+    background: var(--glow-primary);
+    padding: 12px 26px;
+    border-radius: 50px;
+    box-shadow: 0 4px 14px var(--glow-primary-rgba);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s var(--ease-curve);
+}
+.dashboard-back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+    filter: brightness(1.1);
+}
+
+/* ==========================================
+   FLUID ROW WORKSPACE SPLIT (100% SCALE PROPORTIONS)
+   ========================================== */
+.main-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    max-width: 100%;
+    margin: 0 auto;
+    animation: scaleInUp 0.7s var(--ease-curve) 0.1s both;
+}
+
+/* ==========================================
+   LEFT PANEL: COMPACT HIGH-VOLUME TABLE LEDGER
+   ========================================== */
+.table-section {
+    flex: 3;
+    background: var(--glass-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    padding: 24px;
+    border-radius: var(--radius-box);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+}
+.section-header-row h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+
+.live-status-pill {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--glow-primary);
+    background: rgba(99, 102, 241, 0.12);
+    padding: 6px 14px;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.live-status-pill::before {
+    content: ''; width: 6px; height: 6px; background: var(--glow-primary);
+    border-radius: 50%; box-shadow: 0 0 10px var(--glow-primary);
+}
+
+/* Local Horizontal Overflow Guard: Protects widescreen layouts from popping outer borders */
+.table-scroll-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--glass-border);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px 16px; /* Optimized down from product sizing for multi-column layout dense profiles */
+    text-align: left;
+    border-bottom: 1px solid var(--glass-border);
+    white-space: nowrap; /* Prevents columns text from folding into messy line heights */
+}
+
+th {
+    background-color: rgba(15, 23, 42, 0.5);
+    font-weight: 600;
+    color: var(--text-slate);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+}
+
+tr { transition: background-color 0.2s; }
+tr:hover { background-color: rgba(255, 255, 255, 0.02); }
+
+.id-token { font-family: monospace; font-weight: 700; color: var(--glow-primary); font-size: 14px; }
+
+/* Lead Profile Identity Styles */
+.lead-identity-cell { display: flex; align-items: center; gap: 10px; }
+.lead-avatar {
+    width: 30px; height: 30px; background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
+}
+.lead-name-txt { font-weight: 600; font-size: 14px; }
+
+/* Badge Element Uniform Structs */
+.badge-tag-pill { font-size: 13px; font-weight: 500; padding: 5px 12px; border-radius: 6px; }
+.company-tag { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); color: var(--text-white); }
+.region-tag { background: rgba(14, 165, 233, 0.1); color: #38bdf8; }
+
+.indicator-badge {
+    font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 50px;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.status-workflow { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+
+.user-meta-txt { color: var(--text-slate); font-size: 14px; }
+.chrono-stamp { font-family: monospace; color: var(--text-slate); font-size: 13px; }
+
+/* BUTTON INTERACTION STYLING FOR LEDGER ROW ACQUISITIONS */
+.action-buttons-group { display: flex; gap: 6px; }
+.action-trigger-btn {
+    width: 32px; height: 32px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; font-size: 14px; transition: all 0.2s ease;
+}
+.edit-trigger { background: rgba(99, 102, 241, 0.12); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.15); }
+.edit-trigger:hover { background: var(--glow-primary); color: #fff; transform: scale(1.06); }
+
+.delete-trigger { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.15); }
+.delete-trigger:hover { background: var(--glow-danger); color: #fff; transform: scale(1.06); }
+
+.empty-fallback-state { text-align: center; padding: 60px 0 !important; color: var(--text-slate); }
+.empty-fallback-state i { font-size: 40px; margin-bottom: 12px; display: block; }
+
+/* ==========================================
+   RIGHT PANEL: HIGH DENSITY FIXED-COL INPUT CARD
+   ========================================== */
+.form-section {
+    flex: 1;
+    background: var(--glass-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    padding: 28px;
+    border-radius: var(--radius-box);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    min-width: 330px; /* Perfectly structured to prevent crunching down inputs elements */
+    position: sticky;
+    top: 40px;
+    transition: border-color 0.4s, box-shadow 0.4s;
+}
+.form-section:hover { border-color: rgba(99, 102, 241, 0.25); box-shadow: 0 20px 50px rgba(99, 102, 241, 0.1); }
+
+.form-title-block { margin-bottom: 30px; padding-bottom: 16px; border-bottom: 1px solid var(--glass-border); }
+.form-title-block h3 { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.form-title-block p { font-size: 13px; color: var(--text-slate); margin-top: 4px; }
+
+.color-add { color: var(--glow-success); }
+.color-edit { color: var(--glow-primary); }
+
+/* Django Form Rendering Formats Map Overrides */
+.django-injected-form-wrapper p { margin-bottom: 18px; }
+.django-injected-form-wrapper label {
+    font-size: 12px; font-weight: 700; color: var(--text-slate);
+    display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+/* Premium Dynamic JS Capture Hook Fields Variables */
+.premium-cyber-input-element {
+    width: 100%; background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid var(--glass-border) !important; border-radius: var(--radius-input) !important;
+    padding: 12px 16px !important; color: var(--text-white) !important;
+    font-size: 14px !important; font-family: inherit;
+    transition: all 0.3s var(--ease-curve) !important;
+}
+.premium-cyber-input-element:focus {
+    border-color: var(--glow-primary) !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important; outline: none !important;
+}
+
+/* Enforcing tight limits on native text-area blocks box size properties */
+textarea.premium-cyber-input-element { min-height: 80px; resize: vertical; }
+
+/* UTILITY SUBMIT BUTTON WRAPPER LAYOUT PROFILES */
+.form-processing-actions { margin-top: 35px; display: flex; flex-direction: column; gap: 14px; }
+.submit-core-action-btn {
+    width: 100%; padding: 16px; font-size: 14px; font-weight: 700; border: none;
+    border-radius: var(--radius-input); background: var(--glow-success); color: #fff;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3); cursor: pointer; transition: all 0.3s var(--ease-curve);
+}
+.submit-core-action-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+.submit-core-action-btn.modify-theme-btn { background: var(--glow-primary); box-shadow: 0 4px 16px var(--glow-primary-rgba); }
+
+.dismiss-action-link {
+    display: block; text-align: center; text-decoration: none; color: var(--text-slate);
+    font-size: 13px; font-weight: 600; padding: 14px; border: 1px solid var(--glass-border);
+    border-radius: var(--radius-input); transition: all 0.2s;
+}
+.dismiss-action-link:hover { color: var(--text-white); background: rgba(255, 255, 255, 0.05); }
+
+/* Core Systems Animations Keyframes Engine */
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleInUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* View footprint grid breaking maps scale triggers */
+@media (max-width: 1400px) {
+    .main-container { flex-direction: column; align-items: stretch; }
+    .form-section { position: relative; top: 0; width: 100%; }
+}

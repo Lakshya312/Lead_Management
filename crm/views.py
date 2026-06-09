@@ -3,6 +3,10 @@ from .models import *
 from .forms import *
 from datetime import datetime
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import ProductSerializer
+
 '''FOR PRODUCTS'''
 class Product_view:
 
@@ -60,17 +64,17 @@ class Product_view:
         product = get_object_or_404(Product, pk=productid)
         form = ProductForm(request.POST or None, instance=product)
 
-        if request.method == 'POST' and form.is_valid():
-            form.save()
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.added_dts = datetime.now()
+            product.save()
             return redirect('product_list')
 
-        # Keep the table loaded underneath the form while editing on the same page
-        products = Product.objects.all()
-        return render(
-            request, 
-            'product_list.html', 
-            {'products': products, 'form': form, 'edit_mode': True}
-        )
+        return render(request, 'product_list.html', {
+            'products': Product.objects.all(),
+            'form': form,
+            'edit_mode': True
+        })
 
     def delete_product(request, productid):
         product = get_object_or_404(Product, pk=productid)
@@ -110,11 +114,9 @@ class Region_view:
 
                 region = form.save(commit=False)
 
-                region.regionid = (
-                    last_region.regionid + 1
-                    if last_region
-                    else 1
-                )
+                region.regionid = last_region.regionid + 1 if last_region else 1
+                region.added_by = request.user.username if request.user.is_authenticated else 'System'
+                region.added_dts = datetime.now()
 
                 region.save()
 
@@ -137,7 +139,13 @@ class Region_view:
 
         if request.method == 'POST' and form.is_valid():
 
-            form.save()
+            region = form.save(commit=False)
+
+            region.added_dts = datetime.now()
+
+            region.added_by = request.user.username if request.user.is_authenticated else 'System'
+
+            region.save()
 
             return redirect('region_list')
 
@@ -205,6 +213,8 @@ class Lead_view:
         form = LeadForm(request.POST or None, instance=lead)
 
         if request.method == 'POST' and form.is_valid():
+            lead = form.save(commit=False)
+            lead.added_dts = datetime.now()
             form.save()
             return redirect('lead_list')
 
@@ -223,3 +233,23 @@ class Lead_view:
         lead = get_object_or_404(Lead, pk=leadid)
         lead.delete()
         return redirect('lead_list')
+    
+'''DASHBOARD'''
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
+'''CREATE API VIEW'''
+
+@api_view(['GET'])
+def product_api(request):
+
+    products = Product.objects.all()
+
+    serializer = ProductSerializer(
+        products,
+        many=True
+    )
+
+    return Response(
+        serializer.data
+    )

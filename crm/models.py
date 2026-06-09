@@ -9,9 +9,22 @@ class Product(models.Model):
     added_by = models.CharField(db_column='Added_By', max_length=255, db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
     added_dts = models.DateTimeField(db_column='Added_Dts', blank=True, null=True)  # Field name made lowercase.
 
+    ACTIVE_CHOICES = [
+        (1, 'Active'),
+        (0, 'Inactive'),
+    ]
+    
+    is_active = models.IntegerField(
+        choices=ACTIVE_CHOICES,
+        default=1
+    )
+
     class Meta:
         managed = False
         db_table = 'Product'
+
+    def __str__(self):
+        return self.productname
 
 
 class ProductCategory(models.Model):
@@ -24,6 +37,9 @@ class ProductCategory(models.Model):
         managed = False
         db_table = 'Product_Category'
 
+    def __str__(self):
+        return self.categoryname
+
 
 class Region(models.Model):
     regionid = models.IntegerField(db_column='RegionID', primary_key=True)  # Field name made lowercase.
@@ -34,6 +50,9 @@ class Region(models.Model):
     class Meta:
         managed = False
         db_table = 'Region'
+
+    def __str__(self):
+        return self.regionname
 
 class Lead(models.Model):
     leadid = models.IntegerField(db_column='LeadID', primary_key=True)  # Field name made lowercase.
@@ -71,6 +90,9 @@ class Territory(models.Model):
         managed = False
         db_table = 'Territory'
 
+    def __str__(self):
+        return self.territoryname
+
 
 class LeadFollowUp(models.Model):
     followupid = models.IntegerField(db_column='FollowUpID', primary_key=True)  # Field name made lowercase.
@@ -99,6 +121,9 @@ class LeadSource(models.Model):
         managed = False
         db_table = 'Lead_Source'
 
+    def __str__(self):
+        return self.leadsourcename
+
 
 class LeadStatus(models.Model):
     statusid = models.IntegerField(db_column='StatusID', primary_key=True)  # Field name made lowercase.
@@ -109,3 +134,6 @@ class LeadStatus(models.Model):
     class Meta:
         managed = False
         db_table = 'Lead_Status'
+
+    def __str__(self):
+        return self.statusname

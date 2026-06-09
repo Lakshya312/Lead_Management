@@ -19,4 +19,10 @@ urlpatterns = [
     path('leads/add/', Lead_view.add_lead, name='add_lead'),
     path('leads/edit/<int:leadid>/', Lead_view.edit_lead, name='edit_lead'),
     path('leads/delete/<int:leadid>/', Lead_view.delete_lead, name='delete_lead'),
+
+    # Dashboard
+    path('', dashboard, name='dashboard'),
+
+    # API SECTION
+    path('api/products/',product_api,name='product_api'),
 ]

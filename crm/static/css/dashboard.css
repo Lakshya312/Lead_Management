@@ -1,0 +1,208 @@
+/* ==========================================
+   PREMIUM ENTERPRISE DESIGN TOKENS (SYSTEM)
+   ========================================== */
+   :root {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --border-glow: rgba(99, 102, 241, 0.15);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    
+    /* Segment Accents */
+    --lead-color: #6366f1;
+    --lead-glow: rgba(99, 102, 241, 0.4);
+    --product-color: #10b981;
+    --product-glow: rgba(16, 185, 129, 0.4);
+    --region-color: #0ea5e9;
+    --region-glow: rgba(14, 165, 233, 0.4);
+
+    --radius-card: 20px;
+    --radius-btn: 12px;
+    --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Base Body Environment Defaults */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    overflow-x: hidden;
+}
+
+/* ==========================================
+   HEADER BANNER (GLASSMORPHIC HOVER GLOW)
+   ========================================== */
+.header-banner {
+    text-align: center;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--text-primary);
+    padding: 24px 60px;
+    margin-bottom: 60px;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: fadeInDown 0.8s var(--ease-smooth) both;
+}
+
+.header-banner span {
+    background: linear-gradient(90deg, #fff, var(--text-secondary), #fff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shineText 4s linear infinite;
+}
+
+/* ==========================================
+   GRID WORKSPACE ARCHITECTURE
+   ========================================== */
+.grid-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 auto;
+    animation: scaleInUp 0.8s var(--ease-smooth) 0.2s both;
+}
+
+/* ==========================================
+   INTERACTIVE CARDS LAYOUT MATRIX
+   ========================================== */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-card);
+    padding: 40px 30px;
+    width: 340px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s var(--ease-smooth), 
+                box-shadow 0.4s var(--ease-smooth), 
+                border-color 0.4s var(--ease-smooth);
+}
+
+/* Individual Segment Core Glow Systems */
+.card-lead:hover { border-color: var(--lead-color); box-shadow: 0 20px 40px var(--lead-glow); }
+.card-product:hover { border-color: var(--product-color); box-shadow: 0 20px 40px var(--product-glow); }
+.card-region:hover { border-color: var(--region-color); box-shadow: 0 20px 40px var(--region-glow); }
+
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+/* Dynamic Interactive Icons Styling */
+.card-icon {
+    font-size: 42px;
+    margin-bottom: 25px;
+    transition: transform 0.4s var(--ease-smooth);
+}
+.card-lead .card-icon { color: var(--lead-color); }
+.card-product .card-icon { color: var(--product-color); }
+.card-region .card-icon { color: var(--region-color); }
+
+.card:hover .card-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.card h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+}
+
+.card p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 35px;
+    height: 72px; /* Fixes layout text alignment */
+}
+
+/* ==========================================
+   BUTTON CALL TO ACTIONS (DYNAMIC RESPONSES)
+   ========================================== */
+.card-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #fff;
+    padding: 14px 28px;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    border-radius: var(--radius-btn);
+    transition: transform 0.2s var(--ease-smooth), filter 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-lead .card-link { background: var(--lead-color); }
+.card-product .card-link { background: var(--product-color); }
+.card-region .card-link { background: var(--region-color); }
+
+.card-link i {
+    font-size: 18px;
+    transition: transform 0.3s var(--ease-smooth);
+}
+
+.card-link:hover {
+    filter: brightness(1.15);
+}
+
+.card-link:active {
+    transform: scale(0.98);
+}
+
+.card:hover .card-link i {
+    transform: translateX(4px);
+}
+
+/* ==========================================
+   ENGINE SYSTEMS ANIMATION KEYFRAMES
+   ========================================== */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleInUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes shineText {
+    to { background-position: 200% center; }
+}
+
+/* Mobile Responsiveness View Constraints */
+@media (max-width: 768px) {
+    .grid-container { gap: 24px; }
+    .card { width: 100%; max-width: 400px; }
+    .header-banner { font-size: 24px; padding: 16px 32px; margin-bottom: 40px; }
+}
