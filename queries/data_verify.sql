@@ -4,6 +4,7 @@ inner join Product_Category ON Product.CategoryID = Product_Category.CategoryID;
 SELECT count(*) FROM Lead;
 
 select * from Product;
+select * from Product_Category;
 select * from Lead;
 select * from Region;
 select * from Territory;

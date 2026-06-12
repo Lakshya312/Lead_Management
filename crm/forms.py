@@ -1,5 +1,7 @@
 from django import forms
 from .models import *
+import re
+from django.core.exceptions import ValidationError
 
 
 class ProductForm(forms.ModelForm):
@@ -16,9 +18,12 @@ class ProductForm(forms.ModelForm):
         }
 
         widgets = {
+            'productname': forms.TextInput(attrs={
+            'pattern': '[A-Za-z0-9 ]+$',
+            'title': 'Only letters, numbers and spaces are allowed.'
+        }),
             # Enforces a strict dropdown configuration with an empty selection placeholder
             'is_active': forms.Select(choices=[
-                ('', '--- Select Status ---'),
                 ('1', 'Active'),
                 ('0', 'Inactive')
             ]),
@@ -71,6 +76,13 @@ class RegionForm(forms.ModelForm):
             'regionname': 'Region Name',
         }
 
+        widgets = {
+            'regionname': forms.TextInput(attrs={
+            'pattern': '^[A-Za-z ]+$',
+            'title': 'Only letters and spaces are allowed.'
+            })
+        }
+
 class LeadForm(forms.ModelForm):
     class Meta:
         model = Lead
@@ -99,9 +111,51 @@ class LeadForm(forms.ModelForm):
         }
 
         widgets = {
+            'personname': forms.TextInput(attrs={
+            'pattern': '^[A-Za-z ]+$',
+            'title': 'Only letters and spaces are allowed.'
+        }),
+            'gender': forms.TextInput(attrs={
+            'pattern': '^(Male|Female|Other)$',
+            'title': 'Enter Male, Female or Other.'
+        }),
+
+            'companyname': forms.TextInput(attrs={
+            'pattern': '^[A-Za-z0-9 &.-]+$',
+            'title': 'Only letters, numbers, spaces, &, . and - are allowed.'
+        }),
+
+            'contactno': forms.TextInput(attrs={
+            'pattern': '^[0-9]{10}$',
+            'title': 'Enter exactly 10 digits.'
+        }),
+
+            'email': forms.EmailInput(attrs={
+            'type': 'email',
+            'title': 'Enter a valid email address.'
+        }),
+
+            'city': forms.TextInput(attrs={
+            'pattern': '^[A-Za-z ]+$',
+            'title': 'Only letters and spaces are allowed.'
+        }),
+
+            'state': forms.TextInput(attrs={
+            'pattern': '^[A-Za-z ]+$',
+            'title': 'Only letters and spaces are allowed.'
+        }),
+
+            'executiveid': forms.NumberInput(attrs={
+            'min': '1',
+            'step': '1',
+            'title': 'Enter a positive integer.'
+        }),
             # Fixed to type="date" to match the DateField model configuration
             'lead_gen_date': forms.DateInput(
-                attrs={'type': 'date'},
+                attrs={
+                    'type': 'date',
+                    'class': 'premium-cyber-input-element'
+                    },
                 format='%Y-%m-%d'
             ),
             'businessneed': forms.Textarea(attrs={'rows': 3}),

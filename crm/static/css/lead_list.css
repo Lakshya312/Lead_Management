@@ -149,10 +149,10 @@ table {
 }
 
 th, td {
-    padding: 14px 16px; /* Optimized down from product sizing for multi-column layout dense profiles */
+    padding: 14px 16px; 
     text-align: left;
     border-bottom: 1px solid var(--glass-border);
-    white-space: nowrap; /* Prevents columns text from folding into messy line heights */
+    white-space: nowrap; 
 }
 
 th {
@@ -220,11 +220,32 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     padding: 28px;
     border-radius: var(--radius-box);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    min-width: 330px; /* Perfectly structured to prevent crunching down inputs elements */
+    min-width: 330px; 
     position: sticky;
     top: 40px;
     transition: border-color 0.4s, box-shadow 0.4s;
+
+    /* Lock form viewport height boundary maps */
+    max-height: calc(100vh - 80px); 
+    overflow-y: auto;
 }
+
+/* In-Card Custom Premium Scrollbars */
+.form-section::-webkit-scrollbar {
+    width: 6px;
+}
+.form-section::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+.form-section::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.form-section::-webkit-scrollbar-thumb:hover {
+    background: var(--glow-primary);
+}
+
 .form-section:hover { border-color: rgba(99, 102, 241, 0.25); box-shadow: 0 20px 50px rgba(99, 102, 241, 0.1); }
 
 .form-title-block { margin-bottom: 30px; padding-bottom: 16px; border-bottom: 1px solid var(--glass-border); }
@@ -282,4 +303,62 @@ textarea.premium-cyber-input-element { min-height: 80px; resize: vertical; }
 @media (max-width: 1400px) {
     .main-container { flex-direction: column; align-items: stretch; }
     .form-section { position: relative; top: 0; width: 100%; }
+}
+
+/* ==========================================
+   NATIVE CALENDAR LIGHT INTERFACE ENGINE
+   ========================================== */
+
+/* Explicitly force type dates into dark contextual rules overrides */
+input[type="date"].premium-cyber-input-element,
+input[type="datetime-local"].premium-cyber-input-element {
+    color-scheme: dark !important;
+    background-color: rgba(15, 23, 42, 0.5) !important;
+    color: var(--text-white) !important;
+}
+
+/* Target and turn the browser calendar indicator symbol crystal white */
+.premium-cyber-input-element::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(2) !important;
+    cursor: pointer !important;
+    opacity: 0.85 !important;
+    transition: transform 0.2s var(--ease-curve) !important;
+}
+
+.premium-cyber-input-element::-webkit-calendar-picker-indicator:hover {
+    transform: scale(1.15);
+    opacity: 1 !important;
+}
+
+/* Ensure data text bounds inside field rows are readable white values */
+.premium-cyber-input-element::-webkit-datetime-edit,
+.premium-cyber-input-element::-webkit-datetime-edit-fields-wrapper,
+.premium-cyber-input-element::-webkit-datetime-edit-text,
+.premium-cyber-input-element::-webkit-datetime-edit-month-field,
+.premium-cyber-input-element::-webkit-datetime-edit-day-field,
+.premium-cyber-input-element::-webkit-datetime-edit-year-field {
+    color: var(--text-white) !important;
+    background: transparent !important;
+}
+
+/* ==========================================
+   FORCE CALENDAR ICON TO BRIGHT WHITE
+   ========================================== */
+   input[type="date"]::-webkit-calendar-picker-indicator,
+   input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+       filter: invert(1) brightness(10) contrast(10) !important;
+       background-size: contain;
+       opacity: 1 !important;
+       cursor: pointer !important;
+   }
+
+   form input::-webkit-calendar-picker-indicator,
+.premium-cyber-input-element::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator,
+input::-webkit-calendar-picker-indicator {
+    filter: invert(100%) brightness(200%) contrast(100%) !important;
+    -webkit-filter: invert(100%) brightness(200%) contrast(100%) !important;
+    opacity: 1 !important;
+    display: block !important;
+    background-color: transparent !important;
 }

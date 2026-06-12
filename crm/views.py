@@ -6,6 +6,8 @@ from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
+from rest_framework import status
+import getpass
 
 '''FOR PRODUCTS'''
 class Product_view:
@@ -240,20 +242,206 @@ def dashboard(request):
 
 '''CREATE API VIEW'''
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def product_api(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products,many=True)
-    return Response(serializer.data)
 
-@api_view(['GET'])
+    if request.method == 'GET':
+
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response({
+            "success": True,
+            "count": products.count(),
+            "data": serializer.data
+        })
+
+    if request.method == 'POST':
+        serializer = ProductSerializer(data=request.data)
+
+        if serializer.is_valid():
+            last = Product.objects.order_by('-productid').first()
+            print(request.user)
+            print(request.user.is_authenticated)
+            serializer.save(
+                productid=last.productid + 1 if last else 1,
+                added_by=request.user.username if request.user.is_authenticated else "System",
+                added_dts=datetime.now()
+            )
+            return Response({
+                "success": True,
+                "message": "Product added successfully.",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+
+        return Response({
+            "success": False,
+            "message": "Validation failed.",
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
 def lead_api(request):
-    regions = Lead.objects.all()
-    serializer = LeadSerializer(regions, many=True)
-    return Response(serializer.data)
 
-@api_view(['GET'])
+    if request.method == 'GET':
+        leads = Lead.objects.all()
+        serializer = LeadSerializer(leads, many=True)
+        return Response({
+            "success": True,
+            "count": leads.count(),
+            "data": serializer.data
+        })
+
+    serializer = LeadSerializer(data=request.data)
+
+    if serializer.is_valid():
+        last = Lead.objects.order_by('-leadid').first()
+        serializer.save(
+            leadid=last.leadid + 1 if last else 1,
+            added_by=request.user.username if request.user.is_authenticated else "System",
+            added_dts=datetime.now()
+        )
+        return Response({
+            "success": True,
+            "message": "Lead added successfully.",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+    return Response({
+        "success": False,
+        "message": "Validation failed.",
+        "errors": serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
 def region_api(request):
-    regions = Region.objects.all()
-    serializer = RegionSerializer(regions, many=True)
-    return Response(serializer.data)
+
+    if request.method == 'GET':
+        regions = Region.objects.all()
+        serializer = RegionSerializer(regions, many=True)
+        return Response({
+            "success": True,
+            "count": regions.count(),
+            "data": serializer.data
+        })
+
+    serializer = RegionSerializer(data=request.data)
+
+    if serializer.is_valid():
+        last = Region.objects.order_by('-regionid').first()
+        serializer.save(
+            regionid=last.regionid + 1 if last else 1,
+            added_by=request.user.username if request.user.is_authenticated else "System",
+            added_dts=datetime.now()
+        )
+        return Response({
+            "success": True,
+            "message": "Region added successfully.",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+    return Response({
+        "success": False,
+        "message": "Validation failed.",
+        "errors": serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
+
+# PUT APIs
+@api_view(['PUT'])
+def update_product_api(request, productid):
+    product = get_object_or_404(Product, pk=productid)
+    before = ProductSerializer(product).data
+    serializer = ProductSerializer(product, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "success": True,
+            "message": "Product updated successfully.",
+            "before": before,
+            "after": serializer.data
+        })
+
+    return Response({
+        "success": False,
+        "message": "Validation failed.",
+        "errors": serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def update_region_api(request, regionid):
+    region = get_object_or_404(Region, pk=regionid)
+    before = RegionSerializer(region).data
+    serializer = RegionSerializer(region, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "success": True,
+            "message": "Region updated successfully.",
+            "before": before,
+            "after": serializer.data
+        })
+
+    return Response({
+        "success": False,
+        "message": "Validation failed.",
+        "errors": serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def update_lead_api(request, leadid):
+    lead = get_object_or_404(Lead, pk=leadid)
+    before = LeadSerializer(lead).data
+    serializer = LeadSerializer(lead, data=request.data, partial=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            "success": True,
+            "message": "Lead updated successfully.",
+            "before": before,
+            "after": serializer.data
+        })
+
+    return Response({
+        "success": False,
+        "message": "Validation failed.",
+        "errors": serializer.errors
+    }, status=status.HTTP_400_BAD_REQUEST)
+
+# DELETE APIs
+@api_view(['DELETE'])
+def delete_product_api(request, productid):
+    product = get_object_or_404(Product, pk=productid)
+    deleted_data = ProductSerializer(product).data
+    product.delete()
+
+    return Response({
+        "success": True,
+        "message": "Product deleted successfully.",
+        "data": deleted_data
+    })
+
+@api_view(['DELETE'])
+def delete_region_api(request, regionid):
+    region = get_object_or_404(Region, pk=regionid)
+    deleted_data = RegionSerializer(region).data
+    region.delete()
+
+    return Response({
+        "success": True,
+        "message": "Region deleted successfully.",
+        "data": deleted_data
+    })
+
+@api_view(['DELETE'])
+def delete_lead_api(request, leadid):
+    lead = get_object_or_404(Lead, pk=leadid)
+    deleted_data = LeadSerializer(lead).data
+    lead.delete()
+
+    return Response({
+        "success": True,
+        "message": "Lead deleted successfully.",
+        "data": deleted_data
+    })

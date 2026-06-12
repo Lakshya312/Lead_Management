@@ -25,6 +25,14 @@ urlpatterns = [
 
     # API SECTION
     path('api/products/',product_api,name='product_api'),
+    path('api/products/<int:productid>/', update_product_api),
+    path('api/products/<int:productid>/delete/', delete_product_api),
+
     path('api/leads/', lead_api, name='lead_api'),
+    path('api/leads/<int:leadid>/', update_lead_api),
+    path('api/leads/<int:leadid>/delete/', delete_lead_api),
+
     path('api/regions/', region_api, name='region_api'),
+    path('api/regions/<int:regionid>/', update_region_api),
+    path('api/regions/<int:regionid>/delete/', delete_region_api),
 ]
