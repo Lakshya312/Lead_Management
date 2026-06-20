@@ -125,6 +125,44 @@
                 }
             });
         });
+
+        // ==========================
+        // PRODUCT NAME VALIDATION
+        // ==========================
+
+        const productInput = document.getElementById('productname');
+
+        if (productInput) {
+
+            productInput.addEventListener('input', function () {
+                this.setCustomValidity('');
+            });
+
+            productInput.addEventListener('blur', function () {
+
+                if (this.value.trim() === '') return;
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                fetch(`/check-productname/?productname=${encodeURIComponent(this.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        if (data.exists) {
+                            this.setCustomValidity(
+                                'Product with this name already exists.'
+                            );
+                        } else {
+                            this.setCustomValidity('');
+                        }
+
+                        this.reportValidity();
+                    });
+            });
+        }
     </script>
 </body>
 </html>

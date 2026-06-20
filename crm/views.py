@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from datetime import datetime
+from django.http import JsonResponse
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -260,11 +261,9 @@ def product_api(request):
 
         if serializer.is_valid():
             last = Product.objects.order_by('-productid').first()
-            print(request.user)
-            print(request.user.is_authenticated)
             serializer.save(
                 productid=last.productid + 1 if last else 1,
-                added_by=request.user.username if request.user.is_authenticated else "System",
+                added_by=getpass.getuser(),
                 added_dts=datetime.now()
             )
             return Response({
@@ -297,7 +296,7 @@ def lead_api(request):
         last = Lead.objects.order_by('-leadid').first()
         serializer.save(
             leadid=last.leadid + 1 if last else 1,
-            added_by=request.user.username if request.user.is_authenticated else "System",
+            added_by=getpass.getuser(),
             added_dts=datetime.now()
         )
         return Response({
@@ -330,7 +329,7 @@ def region_api(request):
         last = Region.objects.order_by('-regionid').first()
         serializer.save(
             regionid=last.regionid + 1 if last else 1,
-            added_by=request.user.username if request.user.is_authenticated else "System",
+            added_by=getpass.getuser(),
             added_dts=datetime.now()
         )
         return Response({
@@ -444,4 +443,62 @@ def delete_lead_api(request, leadid):
         "success": True,
         "message": "Lead deleted successfully.",
         "data": deleted_data
+    })
+
+# LEAD VALIDATIONS
+def check_personname(request):
+    personname = request.GET.get('personname')
+
+    exists = Lead.objects.filter(
+        personname=personname
+    ).exists()
+
+    return JsonResponse({
+        'exists': exists
+    })
+
+def check_contactno(request):
+    contactno = request.GET.get('contactno')
+
+    exists = Lead.objects.filter(
+        contactno=contactno
+    ).exists()
+
+    return JsonResponse({
+        'exists': exists
+    })
+
+def check_email(request):
+    email = request.GET.get('email')
+
+    exists = Lead.objects.filter(
+        email=email
+    ).exists()
+
+    return JsonResponse({
+        'exists': exists
+    })
+
+# PRODUCT VALIDATIONS
+def check_productname(request):
+    productname = request.GET.get('productname')
+
+    exists = Product.objects.filter(
+        productname=productname
+    ).exists()
+
+    return JsonResponse({
+        'exists': exists
+    })
+
+# REGION VALIDATIONS
+def check_regionname(request):
+    regionname = request.GET.get('regionname')
+    print("REGION =", regionname)
+    exists = Region.objects.filter(
+        regionname=regionname
+    ).exists()
+    print("EXIST", exists)
+    return JsonResponse({
+        'exists': exists
     })

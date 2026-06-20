@@ -35,4 +35,18 @@ urlpatterns = [
     path('api/regions/', region_api, name='region_api'),
     path('api/regions/<int:regionid>/', update_region_api),
     path('api/regions/<int:regionid>/delete/', delete_region_api),
+
+    # VALIDATIONS
+    # FOR LEAD
+    path('check-personname/',check_personname,name='check_personname'),
+    path('check-contactno/',check_contactno,name='check_contactno'),
+    path('check-email/',check_email,name='check_email'),
+
+    # FOR PRODUCT
+    path('check-productname/',check_productname,name='check_productname'),
+
+    # FOR REGION
+    path('check-regionname/',check_regionname,name='check_regionname'),
+
+
 ]

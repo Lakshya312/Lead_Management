@@ -20,7 +20,9 @@ class ProductForm(forms.ModelForm):
         widgets = {
             'productname': forms.TextInput(attrs={
             'pattern': '[A-Za-z0-9 ]+$',
-            'title': 'Only letters, numbers and spaces are allowed.'
+            'title': 'Only letters, numbers and spaces are allowed.',
+            'required':True,
+            'id':'productname'
         }),
             # Enforces a strict dropdown configuration with an empty selection placeholder
             'is_active': forms.Select(choices=[
@@ -33,7 +35,8 @@ class ProductForm(forms.ModelForm):
                     'type': 'datetime-local'
                 },
                 format='%Y-%m-%dT%H:%M'
-            )
+            ),
+            'categoryid': forms.Select(attrs={'required':True})
         }
 
     # Injecting placeholders dynamically
@@ -43,27 +46,6 @@ class ProductForm(forms.ModelForm):
         self.fields['categoryid'].empty_label = "--- Select Category ---"
 
 class RegionForm(forms.ModelForm):
-
-    # 1. Define the strict list of allowed geographic permutations
-    REGION_CHOICES = [
-        ('', '--- Select Region ---'),  # Default placeholder
-        ('North', 'North'),
-        ('South', 'South'),
-        ('East', 'East'),
-        ('West', 'West'),
-        ('North-East', 'North-East'),
-        ('North-West', 'North-West'),
-        ('South-East', 'South-East'),
-        ('South-West', 'South-West'),
-        ('Central', 'Central'),
-    ]
-
-    # 2. Override the form field to render as a Select Choice Dropdown
-    regionname = forms.ChoiceField(
-        choices=REGION_CHOICES,
-        label='Region Name',
-        widget=forms.Select()
-    )
 
     class Meta:
         model = Region
@@ -79,9 +61,21 @@ class RegionForm(forms.ModelForm):
         widgets = {
             'regionname': forms.TextInput(attrs={
             'pattern': '^[A-Za-z ]+$',
-            'title': 'Only letters and spaces are allowed.'
+            'title': 'Only letters and spaces are allowed.',
+            'required':True,
+            'id':'regionname'
             })
         }
+
+    def clean_regionname(self):
+        value = self.cleaned_data['regionname']
+
+        if Region.objects.filter(regionname=value).exists():
+            raise forms.ValidationError(
+                "Region with this name already exists."
+            )
+
+        return value
 
 class LeadForm(forms.ModelForm):
     class Meta:
@@ -91,6 +85,7 @@ class LeadForm(forms.ModelForm):
             'city', 'state', 'territoryid', 'regionid', 'productid',
             'statusid', 'leadsourceid', 'businessneed', 'lead_gen_date', 'executiveid'
         ]
+        
 
         labels = {
             'personname': 'Person Name',
@@ -112,53 +107,70 @@ class LeadForm(forms.ModelForm):
 
         widgets = {
             'personname': forms.TextInput(attrs={
-            'pattern': '^[A-Za-z ]+$',
-            'title': 'Only letters and spaces are allowed.'
-        }),
-            'gender': forms.TextInput(attrs={
-            'pattern': '^(Male|Female|Other)$',
-            'title': 'Enter Male, Female or Other.'
-        }),
+                'pattern': '^[A-Za-z0-9 ]+$',
+                'title': 'Only letters, numbers and spaces are allowed.',
+                'required':True,
+                'id':'personname'
+            }),
+
+            'gender': forms.Select(choices=[
+                ('', '--- Select Gender ---'),
+                ('Male', 'Male'),
+                ('Female', 'Female'),
+                ('Other', 'Other')
+            ],
+            attrs={
+                'required':True
+            }),
 
             'companyname': forms.TextInput(attrs={
-            'pattern': '^[A-Za-z0-9 &.-]+$',
-            'title': 'Only letters, numbers, spaces, &, . and - are allowed.'
-        }),
+                'pattern': '^[A-Za-z0-9 &.-]+$',
+                'title': 'Invalid company name.',
+                'required':True
+            }),
 
             'contactno': forms.TextInput(attrs={
-            'pattern': '^[0-9]{10}$',
-            'title': 'Enter exactly 10 digits.'
-        }),
+                'pattern': '^[0-9]{10}$',
+                'maxlength': '10',
+                'title': 'Enter exactly 10 digits.',
+                'maxlength':10,
+                'required':True,
+                'id':'contactno'
+            }),
 
             'email': forms.EmailInput(attrs={
-            'type': 'email',
-            'title': 'Enter a valid email address.'
-        }),
+                'required':True,
+                'id':'email'
+            }),
 
             'city': forms.TextInput(attrs={
-            'pattern': '^[A-Za-z ]+$',
-            'title': 'Only letters and spaces are allowed.'
-        }),
+                'pattern': '^[A-Za-z ]+$',
+                'title': 'Only letters and spaces are allowed.',
+                'required':True
+            }),
 
             'state': forms.TextInput(attrs={
-            'pattern': '^[A-Za-z ]+$',
-            'title': 'Only letters and spaces are allowed.'
-        }),
+                'pattern': '^[A-Za-z ]+$',
+                'title': 'Only letters and spaces are allowed.',
+                'required':True
+            }),
 
             'executiveid': forms.NumberInput(attrs={
-            'min': '1',
-            'step': '1',
-            'title': 'Enter a positive integer.'
-        }),
-            # Fixed to type="date" to match the DateField model configuration
+                'min': '1',
+                'required':True
+            }),
+
             'lead_gen_date': forms.DateInput(
                 attrs={
                     'type': 'date',
-                    'class': 'premium-cyber-input-element'
-                    },
-                format='%Y-%m-%d'
+                    'required':True},
+                format='%Y-%m-%d',
             ),
-            'businessneed': forms.Textarea(attrs={'rows': 3}),
+
+            'businessneed': forms.Textarea(attrs={
+                'rows': 3,
+                'required':True
+            }),
         }
         
     # Injecting placeholders dynamically for all Foreign Key dropdowns
@@ -169,3 +181,35 @@ class LeadForm(forms.ModelForm):
         self.fields['productid'].empty_label = "--- Select Product ---"
         self.fields['statusid'].empty_label = "--- Select Status ---"
         self.fields['leadsourceid'].empty_label = "--- Select Lead Source ---"
+
+    def clean_personname(self):
+        value = self.cleaned_data['personname']
+
+        if Lead.objects.filter(personname=value).exists():
+            raise forms.ValidationError(
+                "Lead with this name already exists. Add another name."
+            )
+
+        return value
+
+
+    def clean_contactno(self):
+        value = self.cleaned_data['contactno']
+
+        if Lead.objects.filter(contactno=value).exists():
+            raise forms.ValidationError(
+                "Lead with this contact number already exists."
+            )
+
+        return value
+
+
+    def clean_email(self):
+        value = self.cleaned_data['email']
+
+        if Lead.objects.filter(email=value).exists():
+            raise forms.ValidationError(
+                "Lead with this email already exists."
+            )
+
+        return value

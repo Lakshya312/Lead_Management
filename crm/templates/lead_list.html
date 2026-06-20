@@ -122,13 +122,141 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Automatically capture all auto-rendered inputs, date pickers, selectors and text areas
-            const formElements = document.querySelectorAll('.django-injected-form-wrapper p input, .django-injected-form-wrapper p select, .django-injected-form-wrapper p textarea');
+
+            // Apply styling classes
+            const formElements = document.querySelectorAll(
+                '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select, .django-injected-form-wrapper p textarea'
+            );
+
             formElements.forEach(element => {
                 if (element.type !== 'checkbox' && element.type !== 'radio') {
                     element.classList.add('premium-cyber-input-element');
                 }
             });
+
+            // ==========================
+            // PERSON NAME VALIDATION
+            // ==========================
+
+            const personInput = document.getElementById('personname');
+
+            if (personInput) {
+
+                personInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                personInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-personname/?personname=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this name already exists. Add another name.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Person Name Validation Error:', error);
+                        });
+                });
+            }
+
+            // ==========================
+            // CONTACT NUMBER VALIDATION
+            // ==========================
+
+            const contactInput = document.getElementById('contactno');
+
+            if (contactInput) {
+
+                contactInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                contactInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-contactno/?contactno=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this contact number already exists.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Contact Validation Error:', error);
+                        });
+                });
+            }
+
+            // ==========================
+            // EMAIL VALIDATION
+            // ==========================
+
+            const emailInput = document.getElementById('email');
+
+            if (emailInput) {
+
+                emailInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                emailInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-email/?email=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this email already exists.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Email Validation Error:', error);
+                        });
+                });
+            }
+
         });
     </script>
 </body>

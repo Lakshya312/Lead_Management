@@ -107,13 +107,52 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const formElements = document.querySelectorAll('.django-injected-form-wrapper p input, .django-injected-form-wrapper p select');
-            formElements.forEach(element => {
-                if (element.type !== 'checkbox' && element.type !== 'radio') {
-                    element.classList.add('premium-cyber-input-element');
-                }
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const formElements = document.querySelectorAll(
+            '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select'
+        );
+
+        formElements.forEach(element => {
+            if (element.type !== 'checkbox' && element.type !== 'radio') {
+                element.classList.add('premium-cyber-input-element');
+            }
+        });
+
+        const regionInput = document.getElementById('regionname');
+
+        if (regionInput) {
+
+            regionInput.addEventListener('input', function () {
+                this.setCustomValidity('');
             });
+
+            regionInput.addEventListener('blur', function () {
+
+                if (this.value.trim() === '') return;
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                fetch(`/check-regionname/?regionname=${encodeURIComponent(this.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        if (data.exists) {
+                            this.setCustomValidity(
+                                'Region with this name already exists.'
+                            );
+                        } else {
+                            this.setCustomValidity('');
+                        }
+
+                        this.reportValidity();
+                    });
+            });
+        }
+
         });
     </script>
 </body>
