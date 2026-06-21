@@ -74,16 +74,18 @@
 
                 <td>
 
-                    <a href="/leads/edit/{{ lead.LeadID }}/"
-                       class="edit-btn">
-                        Edit
-                    </a>
+                    {% if request.user.userprofile.role == "Admin" or request.user.userprofile.role == "Manager" or lead.Added_By == request.user.username %}
+                        <a href="/leads/edit/{{ lead.LeadID }}/"
+                           class="edit-btn">
+                            Edit
+                        </a>
 
-                    <a href="/leads/delete/{{ lead.LeadID }}/"
-                       class="delete-btn"
-                       onclick="return confirm('Are you sure you want to delete this lead?');">
-                        Delete
-                    </a>
+                        <a href="/leads/delete/{{ lead.LeadID }}/"
+                           class="delete-btn"
+                           onclick="return confirm('Are you sure you want to delete this lead?');">
+                            Delete
+                        </a>
+                    {% endif %}
 
                 </td>
 

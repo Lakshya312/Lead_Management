@@ -31,22 +31,38 @@
             margin: 0 15px;
         }
 
+        .btn-login,
+        .btn-register {
+            padding: 9px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
         .btn-login {
             border: 1px solid #3b82f6;
             color: white;
-            padding: 8px 25px;
-            border-radius: 8px;
-            text-decoration: none;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+            background: rgba(59, 130, 246, 0.15);
+            color: white;
         }
 
         .btn-register {
             background: linear-gradient(135deg, #2563eb, #9333ea);
             color: white;
-            padding: 9px 25px;
-            border-radius: 8px;
-            text-decoration: none;
             margin-left: 10px;
-            font-weight: 600;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+            filter: brightness(1.08);
+            color: white;
         }
 
         .hero {
@@ -100,6 +116,8 @@
             text-decoration: none;
             font-weight: 600;
             margin-right: 12px;
+            display: inline-block;
+            transition: all 0.3s ease;
         }
 
         .primary-btn {
@@ -108,10 +126,24 @@
             box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
         }
 
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+            filter: brightness(1.08);
+            color: white;
+        }
+
         .secondary-btn {
             background: white;
             color: #0f172a;
             border: 1px solid #e2e8f0;
+        }
+
+        .secondary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+            background: #f8fafc;
+            color: #0f172a;
         }
 
         .dashboard-preview {

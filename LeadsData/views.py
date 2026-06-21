@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db.models.deletion import ProtectedError
 from django.utils import timezone
-from django.http import HttpResponseForbidden
 from functools import wraps
 
 
@@ -35,9 +34,8 @@ def allowed_roles(roles=[]):
             if user_role in roles:
                 return view_func(request, *args, **kwargs)
 
-            return HttpResponseForbidden(
-                "You are not authorized to access this page."
-            )
+            messages.error(request, "You are not authorized to access this page.")
+            return redirect("dashboard")
 
         return wrapper
     return decorator
@@ -71,7 +69,7 @@ def dashboard(request):
 
 
 # ================= PRODUCT =================
-@allowed_roles(["Admin", "Manager"])
+@allowed_roles(["Admin", "Manager", "Executive"])
 def product_list(request):
     search = request.GET.get('search')
 
@@ -88,6 +86,7 @@ def product_list(request):
         {'products': products}
     )
 
+@allowed_roles(["Admin", "Manager"])
 def add_product(request):
 
     categories = Product_Category.objects.all()
@@ -136,8 +135,21 @@ def add_product(request):
         "categories": categories
     })
 
+@allowed_roles(["Admin", "Manager"])
 def edit_product(request, id):
-    product = get_object_or_404(Product, ProductID=id, Added_By=request.user.username)
+
+    if request.user.userprofile.role == "Admin":
+        product = Product.objects.filter(ProductID=id).first()
+    else:
+        product = Product.objects.filter(
+            ProductID=id,
+            Added_By=request.user.username
+        ).first()
+
+    if not product:
+        messages.error(request, "Permission denied. You are not allowed to edit this product.")
+        return redirect("product_list")
+
     categories = Product_Category.objects.all()
 
     if request.method == "POST":
@@ -149,6 +161,7 @@ def edit_product(request, id):
         product.Category = category
         product.save()
 
+        messages.success(request, "Product updated successfully.")
         return redirect("product_list")
 
     return render(request, "product/edit_product.html", {
@@ -156,7 +169,7 @@ def edit_product(request, id):
         "categories": categories
     })
 
-
+@allowed_roles(["Admin", "Manager"])
 def delete_product(request, id):
     try:
         product = get_object_or_404(Product, ProductID=id, Added_By=request.user.username)
@@ -280,7 +293,7 @@ def product_detail_api(request, id):
 
 
 # ================= REGION =================
-@allowed_roles(["Admin"])
+@allowed_roles(["Admin", "Manager", "Executive"])
 def region_list(request):
     search = request.GET.get('search')
 
@@ -297,7 +310,7 @@ def region_list(request):
         {'regions': regions}
     )
 
-
+@allowed_roles(["Admin", "Manager"])
 def add_region(request):
     if request.method == "POST":
         try:
@@ -319,7 +332,7 @@ def add_region(request):
         "regions": Region.objects.all()
     })
 
-
+@allowed_roles(["Admin", "Manager"])
 def edit_region(request, id):
     region = get_object_or_404(Region, RegionID=id, Added_By=request.user.username)
 
@@ -330,7 +343,7 @@ def edit_region(request, id):
 
     return render(request, "region/edit_region.html", {"region": region})
 
-
+@allowed_roles(["Admin", "Manager"])
 def delete_region(request, id):
     region = get_object_or_404(Region, RegionID=id, Added_By=request.user.username)
     region.delete()
@@ -424,13 +437,21 @@ def region_detail_api(request, id):
 def lead_list(request):
     search = request.GET.get('search')
 
-    leads = Lead.objects.select_related(
+    role = request.user.userprofile.role
+
+    if role == "Executive":
+        leads = Lead.objects.filter(
+            Added_By=request.user.username
+        )
+    else:
+        leads = Lead.objects.all()
+
+    leads = leads.select_related(
         'Region',
         'Source',
         'Product',
         'Status',
         'Territory'
-    #).filter( Added_By=request.user.username
     ).order_by('LeadID')
 
     if search:
@@ -459,6 +480,7 @@ def lead_list(request):
     return render(request, "lead/lead_list.html", context)
 
 
+@allowed_roles(["Admin", "Manager", "Executive"])
 def add_lead(request):
     if request.method == "POST":
 
@@ -516,9 +538,16 @@ def add_lead(request):
         "genders": Lead.objects.all(),
     })
 
-
+@allowed_roles(["Admin", "Manager", "Executive"])
 def edit_lead(request, id):
-    lead = get_object_or_404(Lead, LeadID=id, Added_By=request.user.username)
+
+    role = request.user.userprofile.role
+
+    if role == "Executive":
+        lead = get_object_or_404(Lead,LeadID=id,Added_By=request.user.username)
+
+    else:
+         lead = get_object_or_404(Lead,LeadID=id)
 
     if request.method == "POST":
         lead.PersonName = request.POST.get("PersonName")
@@ -531,10 +560,11 @@ def edit_lead(request, id):
         lead.Product_id = request.POST.get("Product")
         lead.Region_id = request.POST.get("Region")
         lead.Source_id = request.POST.get("Source")
-
         lead.Status_id = request.POST.get("Status")
 
         lead.save()
+
+        messages.success(request, "Lead updated successfully.")
         return redirect("lead_list")
 
     return render(request, "lead/edit_lead.html", {
@@ -545,7 +575,7 @@ def edit_lead(request, id):
         "statuses": Lead_Status.objects.all(),
     })
 
-
+@allowed_roles(["Admin", "Manager", "Executive"])
 def delete_lead(request, id):
     lead = get_object_or_404(Lead, LeadID=id, Added_By=request.user.username)
     lead.delete()
@@ -879,6 +909,13 @@ def update_user_role(request, user_id):
             defaults={"role": "Executive"}
         )
 
+        if profile.is_main_admin:
+            messages.error(
+                request,
+                "Main Admin role cannot be changed."
+            )
+            return redirect("user_management")
+
         if role in ["Admin", "Manager", "Executive"]:
             profile.role = role
             profile.save()
@@ -908,6 +945,13 @@ def delete_user(request, user_id):
             user=user,
             defaults={"role": "Executive"}
         )
+
+        if profile.is_main_admin:
+            messages.error(
+                request,
+                "Main Admin account cannot be deleted."
+            )
+            return redirect("user_management")
 
         if profile.role == "Admin":
 

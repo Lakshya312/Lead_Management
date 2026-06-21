@@ -265,6 +265,8 @@ class UserProfile(models.Model):
         default='Executive'
      )
 
+     is_main_admin = models.BooleanField(default=False)
+
      def __str__(self):
         return f"{self.user.username} - {self.role}"
 

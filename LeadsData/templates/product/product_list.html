@@ -240,9 +240,11 @@
 
     <div class="toolbar-card d-flex justify-content-between align-items-center">
 
-        <a href="{% url 'add_product' %}" class="add-btn">
-            Add Product
-        </a>
+        {% if request.user.userprofile.role == "Admin" or request.user.userprofile.role == "Manager" %}
+            <a href="{% url 'add_product' %}" class="add-btn">
+                Add Product
+            </a>
+        {% endif %}
 
         <form method="GET">
             <div class="input-group search-box">
@@ -302,16 +304,18 @@
                     </td>
 
                     <td>
-                        <a href="/products/edit/{{ p.ProductID }}/"
-                           class="edit-btn">
-                            Edit
-                        </a>
+                        {% if request.user.userprofile.role == "Admin" or p.Added_By == request.user.username %}
+                            <a href="/products/edit/{{ p.ProductID }}/"
+                               class="edit-btn">
+                                Edit
+                            </a>
 
-                        <a href="/products/delete/{{ p.ProductID }}/"
-                           class="delete-btn"
-                           onclick="return confirm('Are you sure you want to delete this product?');">
-                            Delete
-                        </a>
+                            <a href="/products/delete/{{ p.ProductID }}/"
+                               class="delete-btn"
+                               onclick="return confirm('Are you sure you want to delete this product?');">
+                                Delete
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}
