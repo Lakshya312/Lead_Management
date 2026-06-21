@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 style="font-family: 'Times New Roman', Times, serif;">Products</h2>
+
+<a href="{% url 'product_add' %}"
+class="btn btn-info mb-3"
+style="font-family: 'Times New Roman', Times, serif;">
+Add Product
+</a>
+<form method="GET" class="mb-3">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search by Product ID or Name"
+            value="{{ search }}"
+        >
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Search
+        </button>
+
+    </div>
+
+</form>
+
+
+<table class="table table-bordered" style="font-family: 'Times New Roman', Times, serif;">
+
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Category</th>
+    <th>isActive</th>
+    <th>Added By</th>
+    <th>Added Date</th>
+    <th>Action</th>
+</tr>
+
+{% for p in products %}
+
+<tr>
+
+<td>{{ p.ProductID }}</td>
+
+<td>{{ p.ProductName }}</td>
+
+<td>{{ p.CategoryID }}</td>
+
+<td>
+    {% if p.Is_Active %}
+        <span class="badge bg-success">
+            Active
+        </span>
+    {% else %}
+        <span class="badge bg-danger">
+            Inactive
+        </span>
+    {% endif %}
+</td>
+<td>{{ p.Added_By }}</td>
+
+<td>{{ p.Added_Dts|date:"Y-m-d H:i:s" }}</td>
+
+
+<td>
+
+
+<a href="{% url 'product_edit' p.pk %}"
+class="btn btn-warning btn-sm"
+style="font-family: 'Times New Roman', Times, serif;">
+Edit
+</a>
+
+<a href="{% url 'product_delete' p.pk %}"
+class="btn btn-danger btn-sm"
+style="font-family: 'Times New Roman', Times, serif;">
+Delete
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

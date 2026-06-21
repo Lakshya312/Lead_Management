@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+    <h1 class="mb-5" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+        Region Form
+    </h1>
+
+    <form method="post">
+
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
+        <div class="mb-4" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+
+            <label class="form-label">
+                Region Name
+            </label>
+
+            {{ form.RegionName }}
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-success">
+
+            Save Region
+
+        </button>
+
+        <a href="{% url 'region_list' %}"
+           class="btn btn-secondary"
+           style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+
+            Back
+
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

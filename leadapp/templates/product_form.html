@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+    <h2 class="mb-4" style="font-family: 'Times New Roman', Times, serif;">
+        Product Form
+    </h2>
+
+    <form method="post">
+
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
+
+        <div class="mb-3">
+
+            <label class="form-label" style="font-family: 'Times New Roman', Times, serif;">
+                Product Name
+            </label>
+
+            {{ form.ProductName }}
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label" style="font-family: 'Times New Roman', Times, serif;">
+                Category
+            </label>
+
+            {{ form.CategoryID }}
+
+        </div>
+
+        <div class="mb-3 form-check" style="font-family: 'Times New Roman', Times, serif;">
+
+            {{ form.Is_Active }}
+
+            <label class="form-check-label" style="font-family: 'Times New Roman', Times, serif;">
+                Is Active
+            </label>
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-success" style="font-family: 'Times New Roman', Times, serif;">
+
+            Save Product
+
+        </button>
+
+        <a href="{% url 'product_list' %}"
+           class="btn btn-secondary"
+           style="font-family: 'Times New Roman', Times, serif;">
+
+            Back
+
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

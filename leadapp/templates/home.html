@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center mb-5">
+    <h1 style="font-family:'Times New Roman', Times, serif;">
+    Lead Management System
+</h1>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <div class="card shadow"
+     style="background-color:#e3f2fd;">
+
+            <div class="card-body text-center">
+
+                <h3 style="font-family:'Times New Roman', Times, serif;">
+                    Product</h3>
+
+                <a href="{% url 'product_list' %}"
+                   class="btn btn-primary">
+                    Open Products
+                </a>
+                
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+       <div class="card shadow"
+     style="background-color:#e8f5e9;">
+
+            <div class="card-body text-center">
+
+                <h3 style="font-family:'Times New Roman', Times, serif;">Region</h3>
+
+                <a href="{% url 'region_list' %}"
+                   class="btn btn-success">
+                    Open Regions
+                </a>
+
+              
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card shadow"
+     style="background-color:#fff3e0;">
+
+            <div class="card-body text-center">
+
+                <h3 style="font-family:'Times New Roman', Times, serif;">Lead</h3>
+
+
+                <a href="{% url 'lead_list' %}"
+                   class="btn btn-danger">
+                    Open Leads
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

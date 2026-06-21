@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+    <h2 class="mb-4" style="font-family:'Times New Roman', Times, serif;">
+        Lead Entry Form
+    </h2>
+
+    <form method="post" style="font-family:'Times New Roman', Times, serif;">
+
+    {% csrf_token %}
+
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
+    {{ form.as_p }}
+
+    <button
+        type="submit"
+        class="btn btn-success"
+        style="font-family:'Times New Roman', Times, serif;">
+
+        Save Lead
+
+    </button>
+
+    <a href="{% url 'product_list' %}"
+       class="btn btn-secondary"
+       style="font-family:'Times New Roman', Times, serif;">
+
+        Back
+
+    </a>
+
+</form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,95 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path(
+        "products/",
+        views.product_list,
+        name="product_list"
+    ),
+    path(
+        "products/add/",
+        views.product_add,
+        name="product_add"
+    ),
+    path(
+        "products/edit/<int:pk>/",
+        views.product_edit,
+        name="product_edit"
+    ),
+    path(
+        "products/delete/<int:pk>/",
+        views.product_delete,
+        name="product_delete"
+    ),
+    path(
+        "regions/",
+        views.region_list,
+        name="region_list"
+    ),
+    path(
+        "regions/add/",
+        views.region_add,
+        name="region_add"
+    ),
+    path(
+        "regions/edit/<int:pk>/",
+        views.region_edit,
+        name="region_edit"
+    ),
+    path(
+        "regions/delete/<int:pk>/",
+        views.region_delete,
+        name="region_delete"
+    ),
+    path(
+        "leads/",
+        views.lead_list,
+        name="lead_list"
+    ),
+    path(
+        "leads/add/",
+        views.lead_add,
+        name="lead_add"
+    ),
+    path(
+        "leads/edit/<int:pk>/",
+        views.lead_edit,
+        name="lead_edit"
+    ),
+    path(
+        "leads/delete/<int:pk>/",
+        views.lead_delete,
+        name="lead_delete"
+    ),
+   path(
+    'api/products/',
+    views.product_api
+    ),
+
+    path(
+        'api/products/<int:pk>/',
+        views.product_detail_api
+    ),
+
+    path(
+        'api/regions/',
+        views.region_api
+    ),
+
+    path(
+        'api/regions/<int:pk>/',
+        views.region_detail_api
+    ),
+
+    path(
+        'api/leads/',
+        views.lead_api
+    ),
+
+    path(
+        'api/leads/<int:pk>/',
+        views.lead_detail_api
+    ),
+]

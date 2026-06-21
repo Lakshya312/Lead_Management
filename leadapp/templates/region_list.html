@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Regions</h2>
+
+<a href="{% url 'region_add' %}"
+class="btn btn-info mb-3"
+style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+Add Region
+</a>
+<form method="GET" class="mb-3">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search by Region ID or Name"
+            value="{{ search }}"
+        >
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Search
+        </button>
+
+    </div>
+</form>
+<table class="table table-bordered" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Added By</th>
+<th>Added Date</th>
+<th>Action</th>
+</tr>
+
+{% for r in regions %}
+
+<tr>
+
+<td>{{ r.RegionID }}</td>
+
+<td>{{ r.RegionName }}</td>
+
+<td>{{ r.Added_By }}</td>
+
+<td>{{ r.Added_Dts|date:"Y-m-d H:i:s" }}</td>
+
+<td>
+
+<a href="{% url 'region_edit' r.pk %}"
+class="btn btn-success btn-sm"
+style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+Edit
+</a>
+
+<a href="{% url 'region_delete' r.pk %}"
+class="btn btn-danger btn-sm"
+style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+Delete
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

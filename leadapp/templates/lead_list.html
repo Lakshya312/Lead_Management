@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-3" style="font-family:'Times New Roman', Times, serif;">
+    Lead 
+</h2>
+
+<a href="{% url 'lead_add' %}"
+   class="btn btn-info mb-3"
+   style="font-family:'Times New Roman', Times, serif;">
+
+   Add Lead
+</a>
+<form method="GET" class="mb-3">
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search by Lead ID or Name"
+            value="{{ search }}"
+        >
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            Search
+        </button>
+
+    </div>
+</form>
+
+<table class="table table-bordered table-striped" style="font-family:'Times New Roman', Times, serif;">
+
+    <thead>
+
+       <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Gender</th>
+    <th>Company</th>
+    <th>Product</th>
+    <th>Region</th>
+    <th>Added_By</th>
+    <th>Added_Dts</th>
+    <th>Action</th>
+</tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for lead in leads %}
+
+        <tr>
+    <td>{{ lead.LeadID }}</td>
+    <td>{{ lead.PersonName }}</td>
+    <td>
+    {% if lead.Gender == "Male" %}
+        <span class="badge bg-primary">
+            Male
+        </span>
+    {% else %}
+        <span class="badge bg-danger">
+            Female
+        </span>
+    {% endif %}
+</td>
+    <td>{{ lead.CompanyName }}</td>
+    <td>{{ lead.ProductID }}</td>
+    <td>{{ lead.RegionID }}</td>
+    <td>{{lead.Added_By}}</td>
+    <td>{{lead.Added_Dts|date:"Y-m-d H:i:s"}}</td>
+    <td>
+
+
+        <a href="{% url 'lead_edit' lead.pk %}"
+           class="btn btn-warning btn-sm"
+           style="font-family:'Times New Roman', Times, serif;">
+            Edit
+        </a>
+
+        <a href="{% url 'lead_delete' lead.pk %}"
+           class="btn btn-danger btn-sm"
+           style="font-family:'Times New Roman', Times, serif;">
+            Delete
+        </a>
+    </td>
+</tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}
