@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Lead Management System{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12 text-center mb-5">
+        <h1>Welcome to the Lead Management System</h1>
+        <p class="lead">Select a module from the navigation menu to get started.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Total Regions</div>
+            <div class="card-body">
+                <h2 class="card-title">{{ total_regions }}</h2>
+                <a href="{% url 'leads:region_list' %}" class="btn btn-light mt-2">Manage Regions</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Total Products</div>
+            <div class="card-body">
+                <h2 class="card-title">{{ total_products }}</h2>
+                <a href="{% url 'leads:product_list' %}" class="btn btn-light mt-2">Manage Products</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Total Leads</div>
+            <div class="card-body">
+                <h2 class="card-title">{{ total_leads }}</h2>
+                <a href="{% url 'leads:lead_list' %}" class="btn btn-light mt-2">Manage Leads</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

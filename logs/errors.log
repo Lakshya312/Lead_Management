@@ -1,0 +1,28 @@
+[2026-06-19 17:58:45] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-19 17:58:45] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 5963
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-19 18:06:18] [WARNING] [django.request] [log.log_message:L249]
+  Message : Forbidden: /api/regions/
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-19 18:06:18] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /api/regions/ HTTP/1.1" 403 39
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-19 18:07:20] [WARNING] [django.request] [log.log_message:L249]
+  Message : Bad Request: /api/regions/
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-19 18:07:20] [WARNING] [django.server] [log.log_message:L249]
+  Message : "POST /api/regions/ HTTP/1.1" 400 62
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-20 18:16:34] [WARNING] [leads] [views.post:L545]
+  Message : RegionDeleteView: ProtectedError — Region 'North' (pk=1) is referenced by Territories or Leads. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+--------------------------------------------------------------------------------
