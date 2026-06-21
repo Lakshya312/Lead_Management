@@ -3,12 +3,14 @@ from .models import *
 from .forms import *
 from datetime import datetime
 from django.http import JsonResponse
+from django.contrib import messages
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
 from rest_framework import status
 import getpass
+from .utils import log_error
 
 '''FOR PRODUCTS'''
 class Product_view:
@@ -23,65 +25,145 @@ class Product_view:
             {'products': products, 'form': form}
         )
 
+    @staticmethod
     def add_product(request):
 
-        if request.method == 'POST':
+        try:
 
-            form = ProductForm(request.POST)
+            if request.method == 'POST':
+
+                form = ProductForm(request.POST)
+
+                if form.is_valid():
+
+                    last_product = Product.objects.order_by(
+                        '-productid'
+                    ).first()
+
+                    product = form.save(commit=False)
+
+                    product.productid = (
+                        last_product.productid + 1
+                        if last_product
+                        else 1
+                    )
+
+                    product.added_dts = datetime.now()
+
+                    product.added_by = (
+                        request.user.username
+                        if request.user.is_authenticated
+                        else "System"
+                    )
+
+                    product.save()
+
+                    messages.success(
+                        request,
+                        "Product added successfully."
+                    )
+
+                    return redirect('product_list')
+
+            products = Product.objects.all()
+
+            return render(
+                request,
+                'product_list.html',
+                {
+                    'products': products,
+                    'form': form
+                }
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('product_list')
+
+    @staticmethod
+    def edit_product(request, productid):
+
+        try:
+
+            product = get_object_or_404(
+                Product,
+                pk=productid
+            )
+
+            form = ProductForm(
+                request.POST or None,
+                instance=product
+            )
 
             if form.is_valid():
 
-                last_product = Product.objects.order_by(
-                    '-productid'
-                ).first()
-
                 product = form.save(commit=False)
-
-                product.productid = (
-                    last_product.productid + 1
-                    if last_product
-                    else 1
-                )
 
                 product.added_dts = datetime.now()
 
-                product.added_by = (
-                    request.user.username
-                    if request.user.is_authenticated
-                    else "System"
-                )
-
                 product.save()
+
+                messages.success(
+                    request,
+                    "Product updated successfully."
+                )
 
                 return redirect('product_list')
 
-        products = Product.objects.all()
+            return render(
+                request,
+                'product_list.html',
+                {
+                    'products': Product.objects.all(),
+                    'form': form,
+                    'edit_mode': True
+                }
+            )
 
-        return render(
-            request,
-            'product_list.html',
-            {'products': products, 'form': form}
-        )
+        except Exception as e:
 
-    def edit_product(request, productid):
-        product = get_object_or_404(Product, pk=productid)
-        form = ProductForm(request.POST or None, instance=product)
+            log_error(e)
 
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.added_dts = datetime.now()
-            product.save()
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
             return redirect('product_list')
 
-        return render(request, 'product_list.html', {
-            'products': Product.objects.all(),
-            'form': form,
-            'edit_mode': True
-        })
-
+    @staticmethod
     def delete_product(request, productid):
-        product = get_object_or_404(Product, pk=productid)
-        product.delete()
+
+        try:
+
+            product = get_object_or_404(
+                Product,
+                pk=productid
+            )
+
+            product.delete()
+
+            messages.success(
+                request,
+                "Product deleted successfully."
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
         return redirect('product_list')
 
 '''FOR REGION'''
@@ -103,76 +185,144 @@ class Region_view:
         )
 
 
+    @staticmethod
     def add_region(request):
 
-        if request.method == 'POST':
+        try:
 
-            form = RegionForm(request.POST)
+            if request.method == 'POST':
 
-            if form.is_valid():
+                form = RegionForm(request.POST)
 
-                last_region = Region.objects.order_by(
-                    '-regionid'
-                ).first()
+                if form.is_valid():
 
-                region = form.save(commit=False)
+                    last_region = Region.objects.order_by(
+                        '-regionid'
+                    ).first()
 
-                region.regionid = last_region.regionid + 1 if last_region else 1
-                region.added_by = request.user.username if request.user.is_authenticated else 'System'
-                region.added_dts = datetime.now()
+                    region = form.save(commit=False)
 
-                region.save()
+                    region.regionid = (
+                        last_region.regionid + 1
+                        if last_region else 1
+                    )
 
-                return redirect('region_list')
+                    region.added_by = (
+                        request.user.username
+                        if request.user.is_authenticated
+                        else 'System'
+                    )
 
-        return redirect('region_list')
+                    region.added_dts = datetime.now()
 
+                    region.save()
 
-    def edit_region(request, regionid):
+                    messages.success(
+                        request,
+                        "Region added successfully."
+                    )
 
-        region = get_object_or_404(
-            Region,
-            pk=regionid
-        )
-
-        form = RegionForm(
-            request.POST or None,
-            instance=region
-        )
-
-        if request.method == 'POST' and form.is_valid():
-
-            region = form.save(commit=False)
-
-            region.added_dts = datetime.now()
-
-            region.added_by = request.user.username if request.user.is_authenticated else 'System'
-
-            region.save()
+                    return redirect('region_list')
 
             return redirect('region_list')
 
-        regions = Region.objects.all()
+        except Exception as e:
 
-        return render(
-            request,
-            'region_list.html',
-            {
-                'regions': regions,
-                'form': form,
-                'edit_mode': True
-            }
-        )
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('region_list')
 
 
+    @staticmethod
+    def edit_region(request, regionid):
+
+        try:
+
+            region = get_object_or_404(
+                Region,
+                pk=regionid
+            )
+
+            form = RegionForm(
+                request.POST or None,
+                instance=region
+            )
+
+            if request.method == 'POST' and form.is_valid():
+
+                region = form.save(commit=False)
+
+                region.added_dts = datetime.now()
+
+                region.added_by = (
+                    request.user.username
+                    if request.user.is_authenticated
+                    else 'System'
+                )
+
+                region.save()
+
+                messages.success(
+                    request,
+                    "Region updated successfully."
+                )
+
+                return redirect('region_list')
+
+            regions = Region.objects.all()
+
+            return render(
+                request,
+                'region_list.html',
+                {
+                    'regions': regions,
+                    'form': form,
+                    'edit_mode': True
+                }
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('region_list')
+
+
+    @staticmethod
     def delete_region(request, regionid):
 
-        region = get_object_or_404(
-            Region,
-            pk=regionid
-        )
+        try:
 
-        region.delete()
+            region = get_object_or_404(
+                Region,
+                pk=regionid
+            )
+
+            region.delete()
+
+            messages.success(
+                request,
+                "Region deleted successfully."
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
 
         return redirect('region_list')
 
@@ -190,51 +340,145 @@ class Lead_view:
             }
         )
 
+    @staticmethod
     def add_lead(request):
-        if request.method == 'POST':
-            form = LeadForm(request.POST)
-            if form.is_valid():
-                last_lead = Lead.objects.order_by('-leadid').first()
-                lead = form.save(commit=False)
-                lead.leadid = last_lead.leadid + 1 if last_lead else 1
-                
-                # Auto audit tracking tags
-                lead.added_by = request.user.username if request.user.is_authenticated else "System"
-                lead.added_dts = datetime.now()
-                
-                lead.save()
-                return redirect('lead_list')
-            else:
-                # If form validation fails, display errors right on the same master interface page
+
+        try:
+            1/0
+            if request.method == 'POST':
+
+                form = LeadForm(request.POST)
+
+                if form.is_valid():
+
+                    last_lead = Lead.objects.order_by('-leadid').first()
+
+                    lead = form.save(commit=False)
+
+                    lead.leadid = (
+                        last_lead.leadid + 1
+                        if last_lead else 1
+                    )
+
+                    lead.added_by = (
+                        request.user.username
+                        if request.user.is_authenticated
+                        else "System"
+                    )
+
+                    lead.added_dts = datetime.now()
+
+                    lead.save()
+
+                    messages.success(
+                        request,
+                        "Lead added successfully."
+                    )
+
+                    return redirect('lead_list')
+
                 leads = Lead.objects.all()
-                return render(request, 'lead_list.html', {'leads': leads, 'form': form})
-                
-        return redirect('lead_list')
 
-    def edit_lead(request, leadid):
-        lead = get_object_or_404(Lead, pk=leadid)
-        form = LeadForm(request.POST or None, instance=lead)
+                return render(
+                    request,
+                    'lead_list.html',
+                    {
+                        'leads': leads,
+                        'form': form
+                    }
+                )
 
-        if request.method == 'POST' and form.is_valid():
-            lead = form.save(commit=False)
-            lead.added_dts = datetime.now()
-            form.save()
             return redirect('lead_list')
 
-        leads = Lead.objects.all()
-        return render(
-            request,
-            'lead_list.html',
-            {
-                'leads': leads,
-                'form': form,
-                'edit_mode': True
-            }
-        )
+        except Exception as e:
 
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('lead_list')
+
+    @staticmethod
+    def edit_lead(request, leadid):
+
+        try:
+
+            lead = get_object_or_404(
+                Lead,
+                pk=leadid
+            )
+
+            form = LeadForm(
+                request.POST or None,
+                instance=lead
+            )
+
+            if request.method == 'POST' and form.is_valid():
+
+                lead = form.save(commit=False)
+
+                lead.added_dts = datetime.now()
+                lead.save()
+
+                messages.success(
+                    request,
+                    "Lead updated successfully."
+                )
+
+                return redirect('lead_list')
+
+            leads = Lead.objects.all()
+
+            return render(
+                request,
+                'lead_list.html',
+                {
+                    'leads': leads,
+                    'form': form,
+                    'edit_mode': True
+                }
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+        return redirect('lead_list')
+
+    @staticmethod
     def delete_lead(request, leadid):
-        lead = get_object_or_404(Lead, pk=leadid)
-        lead.delete()
+
+        try:
+
+            lead = get_object_or_404(
+                Lead,
+                pk=leadid
+            )
+
+            lead.delete()
+
+            messages.success(
+                request,
+                "Lead deleted successfully."
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
         return redirect('lead_list')
     
 '''DASHBOARD'''
@@ -246,26 +490,39 @@ def dashboard(request):
 @api_view(['GET', 'POST'])
 def product_api(request):
 
-    if request.method == 'GET':
+    try:
 
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response({
-            "success": True,
-            "count": products.count(),
-            "data": serializer.data
-        })
+        if request.method == 'GET':
 
-    if request.method == 'POST':
-        serializer = ProductSerializer(data=request.data)
+            products = Product.objects.all()
+
+            serializer = ProductSerializer(
+                products,
+                many=True
+            )
+
+            return Response({
+                "success": True,
+                "count": products.count(),
+                "data": serializer.data
+            })
+
+        serializer = ProductSerializer(
+            data=request.data
+        )
 
         if serializer.is_valid():
-            last = Product.objects.order_by('-productid').first()
+
+            last = Product.objects.order_by(
+                '-productid'
+            ).first()
+
             serializer.save(
                 productid=last.productid + 1 if last else 1,
                 added_by=getpass.getuser(),
                 added_dts=datetime.now()
             )
+
             return Response({
                 "success": True,
                 "message": "Product added successfully.",
@@ -278,71 +535,122 @@ def product_api(request):
             "errors": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+    except Exception as e:
+
+        log_error(e)
+
+        return Response({
+            "success": False,
+            "error_type": type(e).__name__,
+            "message": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['GET', 'POST'])
 def lead_api(request):
 
-    if request.method == 'GET':
-        leads = Lead.objects.all()
-        serializer = LeadSerializer(leads, many=True)
+    try:
+
+        if request.method == 'GET':
+            leads = Lead.objects.all()
+            serializer = LeadSerializer(leads, many=True)
+
+            return Response({
+                "success": True,
+                "count": leads.count(),
+                "data": serializer.data
+            })
+
+        serializer = LeadSerializer(data=request.data)
+
+        if serializer.is_valid():
+
+            last = Lead.objects.order_by('-leadid').first()
+            int("abc")
+            serializer.save(
+                leadid=last.leadid + 1 if last else 1,
+                added_by=getpass.getuser(),
+                added_dts=datetime.now()
+            )
+
+            return Response({
+                "success": True,
+                "message": "Lead added successfully.",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+
         return Response({
-            "success": True,
-            "count": leads.count(),
-            "data": serializer.data
-        })
+            "success": False,
+            "message": "Validation failed.",
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
-    serializer = LeadSerializer(data=request.data)
+    except Exception as e:
 
-    if serializer.is_valid():
-        last = Lead.objects.order_by('-leadid').first()
-        serializer.save(
-            leadid=last.leadid + 1 if last else 1,
-            added_by=getpass.getuser(),
-            added_dts=datetime.now()
-        )
+        log_error(e)
+
         return Response({
-            "success": True,
-            "message": "Lead added successfully.",
-            "data": serializer.data
-        }, status=status.HTTP_201_CREATED)
-
-    return Response({
-        "success": False,
-        "message": "Validation failed.",
-        "errors": serializer.errors
-    }, status=status.HTTP_400_BAD_REQUEST)
+            "success": False,
+            "error_type": type(e).__name__,
+            "message": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET', 'POST'])
 def region_api(request):
 
-    if request.method == 'GET':
-        regions = Region.objects.all()
-        serializer = RegionSerializer(regions, many=True)
-        return Response({
-            "success": True,
-            "count": regions.count(),
-            "data": serializer.data
-        })
+    try:
 
-    serializer = RegionSerializer(data=request.data)
+        if request.method == 'GET':
 
-    if serializer.is_valid():
-        last = Region.objects.order_by('-regionid').first()
-        serializer.save(
-            regionid=last.regionid + 1 if last else 1,
-            added_by=getpass.getuser(),
-            added_dts=datetime.now()
+            regions = Region.objects.all()
+
+            serializer = RegionSerializer(
+                regions,
+                many=True
+            )
+
+            return Response({
+                "success": True,
+                "count": regions.count(),
+                "data": serializer.data
+            })
+
+        serializer = RegionSerializer(
+            data=request.data
         )
-        return Response({
-            "success": True,
-            "message": "Region added successfully.",
-            "data": serializer.data
-        }, status=status.HTTP_201_CREATED)
 
-    return Response({
-        "success": False,
-        "message": "Validation failed.",
-        "errors": serializer.errors
-    }, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+
+            last = Region.objects.order_by(
+                '-regionid'
+            ).first()
+
+            serializer.save(
+                regionid=last.regionid + 1 if last else 1,
+                added_by=getpass.getuser(),
+                added_dts=datetime.now()
+            )
+
+            return Response({
+                "success": True,
+                "message": "Region added successfully.",
+                "data": serializer.data
+            }, status=status.HTTP_201_CREATED)
+
+        return Response({
+            "success": False,
+            "message": "Validation failed.",
+            "errors": serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+
+        log_error(e)
+
+        return Response({
+            "success": False,
+            "error_type": type(e).__name__,
+            "message": str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # PUT APIs
 @api_view(['PUT'])
