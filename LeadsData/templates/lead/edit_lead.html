@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    body {
+        background: #f8fafc;
+    }
+
+    .lead-card {
+        border: none;
+        border-radius: 22px;
+        background: #ffffff;
+        padding: 30px;
+        box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: 750;
+        color: #0f172a;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        height: 48px;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+    }
+
+    .form-section {
+        margin-bottom: 20px;
+    }
+
+    .btn-custom {
+        width: 150px;
+        height: 45px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .lead-card {
+            padding: 22px;
+        }
+
+        .btn-custom {
+            width: 130px;
+        }
+    }
+</style>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8 col-md-10">
+
+            <div class="lead-card">
+
+                <h3 class="text-center page-title">
+                    Edit Lead
+                </h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-section">
+                        <label class="form-label">
+                            Lead Name
+                        </label>
+
+                        <input type="text"
+                               name="PersonName"
+                               value="{{ lead.PersonName }}"
+                               class="form-control"
+                               placeholder="Enter lead name"
+                               required>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input type="email"
+                               name="Email"
+                               value="{{ lead.Email }}"
+                               class="form-control"
+                               placeholder="Enter email address"
+                               required>
+                    </div>
+
+                    <div class="form-section">
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select name="Status"
+                                class="form-control"
+                                required>
+
+                            {% for st in statuses %}
+                            <option value="{{ st.StatusID }}"
+                                {% if lead.Status.StatusID == st.StatusID %}
+                                    selected
+                                {% endif %}>
+                                {{ st.StatusName }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+
+                        <button type="submit"
+                                class="btn btn-success btn-custom">
+                            Update
+                        </button>
+
+                        <a href="{% url 'lead_list' %}"
+                           class="btn btn-outline-secondary btn-custom">
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

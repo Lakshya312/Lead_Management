@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Add Lead Source</h3>
+
+<form method="POST">
+{% csrf_token %}
+
+<input name="LeadSourceName" class="form-control mb-2" required placeholder="Enter Lead Source Name">
+
+<button class="btn btn-success w-100">Save</button>
+
+</form>
+
+{% endblock %}

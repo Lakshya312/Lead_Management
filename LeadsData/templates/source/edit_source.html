@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Edit Lead Source</h3>
+
+<form method="POST">
+{% csrf_token %}
+
+<input name="LeadSourceName"
+       value="{{ source.LeadSourceName }}"
+       class="form-control mb-2">
+
+<button class="btn btn-primary w-100">Update</button>
+
+</form>
+
+{% endblock %}

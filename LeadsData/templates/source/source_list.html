@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Lead Sources</h3>
+
+<a href="/sources/add/" class="btn btn-success mb-3">+ Add Source</a>
+
+<form method="GET" class="mb-3">
+    <div class="input-group" style="width: 400px;">
+        <input type="text"
+               name="search"
+               class="form-control"
+               placeholder="Search Source..."
+               value="{{ request.GET.search }}">
+        <button class="btn btn-primary">
+            Search
+        </button>
+    </div>
+</form>
+
+<table class="table table-bordered">
+
+<tr>
+    <th>Name</th>
+    <th>Action</th>
+</tr>
+
+{% for s in sources %}
+<tr>
+    <td>{{ s.LeadSourceName }}</td>
+    <td>
+        <a href="/sources/edit/{{ s.LeadSourceID }}/" class="btn btn-primary btn-sm">Edit</a>
+        <a href="/sources/delete/{{ s.LeadSourceID }}/" class="btn btn-danger btn-sm">Delete</a>
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}
