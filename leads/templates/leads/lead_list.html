@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Leads | Lead Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+    <h2>Leads</h2>
+    <a href="{% url 'leads:lead_add' %}" class="btn btn-info text-white">Add New Lead</a>
+</div>
+
+<form method="get" class="mb-4 card shadow-sm">
+    <div class="card-body row gx-2 gy-2">
+        <div class="col-md-3">
+            <input type="text" name="q" class="form-control" placeholder="Search Name, Email, Contact..." value="{{ request.GET.q }}">
+        </div>
+        <div class="col-md-2">
+            <select name="region" class="form-select">
+                <option value="">-- Region --</option>
+                {% for reg in regions %}
+                    <option value="{{ reg.regionid }}" {% if request.GET.region == reg.regionid|stringformat:"s" %}selected{% endif %}>{{ reg.regionname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">-- Status --</option>
+                {% for st in statuses %}
+                    <option value="{{ st.statusid }}" {% if request.GET.status == st.statusid|stringformat:"s" %}selected{% endif %}>{{ st.statusname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="product" class="form-select">
+                <option value="">-- Product --</option>
+                {% for prod in products %}
+                    <option value="{{ prod.productid }}" {% if request.GET.product == prod.productid|stringformat:"s" %}selected{% endif %}>{{ prod.productname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-flex">
+            <button type="submit" class="btn btn-outline-info w-100 me-2">Filter</button>
+            {% if request.GET.q or request.GET.region or request.GET.status or request.GET.product %}
+                <a href="{% url 'leads:lead_list' %}" class="btn btn-link text-info">Clear</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Lead ID</th>
+                    <th>Person Name</th>
+                    <th>Company Name</th>
+                    <th>Product</th>
+                    <th>Status</th>
+                    <th>Generated Date</th>
+                    <th>Added By</th>
+                    <th>Added Date</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                <tr>
+                    <td>{{ lead.leadid }}</td>
+                    <td>{{ lead.personname }}</td>
+                    <td>{{ lead.companyname|default:"-" }}</td>
+                    <td>{{ lead.productid.productname }}</td>
+                    <td><span class="badge bg-secondary">{{ lead.statusid.statusname }}</span></td>
+                    <td>{{ lead.lead_gen_date|date:"M d, Y"|default:"-" }}</td>
+                    <td>{{ lead.added_by|default:"-" }}</td>
+                    <td>{{ lead.added_dts|default:"-" }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'leads:lead_edit' lead.leadid %}" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a href="{% url 'leads:lead_delete' lead.leadid %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center">No leads found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,414 @@
+followupid,leadid,executiveid,actiontaken,remarks,leadstatusid,followupdate,added_by,added_dts,executive_name
+1,1,22,Follow-up call,Waiting for management approval,2,2025-12-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive22
+2,1,22,Follow-up call,Technical clarification shared,4,2025-12-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive22
+3,2,46,Follow-up call,Positive response from client,4,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive46
+4,2,46,Follow-up call,Waiting for management approval,3,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive46
+5,3,23,Follow-up call,Positive response from client,3,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive23
+6,3,23,Follow-up call,Pricing negotiated,2,2025-11-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive23
+7,3,23,Follow-up call,Technical clarification shared,4,2025-12-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive23
+8,4,40,Follow-up call,Pricing negotiated,3,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive40
+9,4,40,Follow-up call,Pricing negotiated,3,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive40
+10,4,40,Follow-up call,"Client interested, asked for demo",3,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive40
+11,4,40,Follow-up call,"Client interested, asked for demo",2,2025-12-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive40
+12,5,47,Follow-up call,Technical clarification shared,5,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive47
+13,5,47,Follow-up call,Positive response from client,5,2025-11-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive47
+14,5,47,Follow-up call,Technical clarification shared,5,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive47
+15,6,20,Follow-up call,Positive response from client,4,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive20
+16,6,20,Follow-up call,Pricing negotiated,3,2025-12-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive20
+17,7,21,Follow-up call,"Client interested, asked for demo",3,2025-11-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive21
+18,7,21,Follow-up call,Positive response from client,3,2025-11-29,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive21
+19,7,21,Follow-up call,Pricing negotiated,2,2025-12-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive21
+20,8,46,Follow-up call,Pricing negotiated,4,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive46
+21,8,46,Follow-up call,"Client interested, asked for demo",2,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive46
+22,9,11,Follow-up call,"Client interested, asked for demo",3,2025-11-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive11
+23,9,11,Follow-up call,Budget discussion done,3,2025-12-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive11
+24,10,7,Follow-up call,Technical clarification shared,3,2025-12-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive7
+25,10,7,Follow-up call,Waiting for management approval,4,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive7
+26,10,7,Follow-up call,Pricing negotiated,3,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive7
+27,10,7,Follow-up call,Waiting for management approval,2,2025-11-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive7
+28,11,8,Follow-up call,Budget discussion done,4,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive8
+29,11,8,Follow-up call,Pricing negotiated,4,2025-12-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive8
+30,12,36,Follow-up call,Technical clarification shared,4,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive36
+31,12,36,Follow-up call,Technical clarification shared,3,2025-12-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive36
+32,13,8,Follow-up call,Positive response from client,3,2025-12-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive8
+33,13,8,Follow-up call,Budget discussion done,3,2025-11-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive8
+34,13,8,Follow-up call,Budget discussion done,3,2025-12-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive8
+35,14,37,Follow-up call,Budget discussion done,4,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive37
+36,14,37,Follow-up call,Pricing negotiated,2,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive37
+37,15,36,Follow-up call,Technical clarification shared,4,2025-11-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive36
+38,15,36,Follow-up call,Waiting for management approval,4,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive36
+39,16,4,Follow-up call,Budget discussion done,3,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive4
+40,16,4,Follow-up call,Positive response from client,4,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive4
+41,16,4,Follow-up call,"Client interested, asked for demo",2,2025-12-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive4
+42,16,4,Follow-up call,"Client interested, asked for demo",2,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive4
+43,17,44,Follow-up call,Positive response from client,4,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive44
+44,17,44,Follow-up call,Technical clarification shared,2,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive44
+45,18,11,Follow-up call,Pricing negotiated,4,2025-11-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive11
+46,18,11,Follow-up call,Technical clarification shared,2,2025-12-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive11
+47,18,11,Follow-up call,Positive response from client,2,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive11
+48,18,11,Follow-up call,Technical clarification shared,3,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive11
+49,19,1,Follow-up call,"Client interested, asked for demo",3,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:09:27.357,Executive1
+50,19,1,Follow-up call,Positive response from client,3,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive1
+51,19,1,Follow-up call,Waiting for management approval,3,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive1
+52,20,36,Follow-up call,Technical clarification shared,2,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive36
+53,20,36,Follow-up call,"Client interested, asked for demo",4,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive36
+54,21,39,Follow-up call,Waiting for management approval,2,2025-12-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive39
+55,21,39,Follow-up call,Technical clarification shared,4,2025-12-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive39
+56,21,39,Follow-up call,Budget discussion done,2,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive39
+57,21,39,Follow-up call,Pricing negotiated,2,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive39
+58,22,46,Follow-up call,"Client interested, asked for demo",5,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive46
+59,22,46,Follow-up call,Budget discussion done,5,2025-11-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive46
+60,22,46,Follow-up call,"Client interested, asked for demo",5,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive46
+61,22,46,Follow-up call,Positive response from client,5,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive46
+62,23,42,Follow-up call,"Client interested, asked for demo",4,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive42
+63,23,42,Follow-up call,Waiting for management approval,3,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive42
+64,24,32,Follow-up call,Pricing negotiated,4,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive32
+65,24,32,Follow-up call,Positive response from client,4,2025-12-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive32
+66,25,2,Follow-up call,Budget discussion done,5,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive2
+67,25,2,Follow-up call,Pricing negotiated,5,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive2
+68,25,2,Follow-up call,"Client interested, asked for demo",5,2025-12-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive2
+69,26,5,Follow-up call,Positive response from client,2,2025-12-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive5
+70,26,5,Follow-up call,Pricing negotiated,2,2025-11-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive5
+71,27,37,Follow-up call,Positive response from client,4,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive37
+72,27,37,Follow-up call,Positive response from client,2,2025-12-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive37
+73,28,43,Follow-up call,Waiting for management approval,2,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive43
+74,28,43,Follow-up call,"Client interested, asked for demo",2,2025-12-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive43
+75,29,36,Follow-up call,Pricing negotiated,4,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive36
+76,29,36,Follow-up call,Positive response from client,2,2025-11-29,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive36
+77,29,36,Follow-up call,Positive response from client,2,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive36
+78,30,15,Follow-up call,Positive response from client,2,2025-11-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive15
+79,30,15,Follow-up call,Positive response from client,4,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive15
+80,30,15,Follow-up call,Pricing negotiated,4,2025-12-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive15
+81,30,15,Follow-up call,Budget discussion done,3,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive15
+82,31,42,Follow-up call,Positive response from client,3,2025-11-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive42
+83,31,42,Follow-up call,Positive response from client,2,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive42
+84,31,42,Follow-up call,Budget discussion done,2,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive42
+85,31,42,Follow-up call,"Client interested, asked for demo",3,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive42
+86,32,28,Follow-up call,Budget discussion done,4,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive28
+87,32,28,Follow-up call,Pricing negotiated,4,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive28
+88,32,28,Follow-up call,Positive response from client,4,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive28
+89,33,14,Follow-up call,Budget discussion done,4,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive14
+90,33,14,Follow-up call,Pricing negotiated,3,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive14
+91,34,12,Follow-up call,Waiting for management approval,2,2025-12-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive12
+92,34,12,Follow-up call,Technical clarification shared,4,2025-12-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive12
+93,34,12,Follow-up call,Pricing negotiated,3,2025-12-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive12
+94,35,31,Follow-up call,"Client interested, asked for demo",2,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive31
+95,35,31,Follow-up call,"Client interested, asked for demo",2,2025-11-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive31
+96,35,31,Follow-up call,Pricing negotiated,4,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive31
+97,36,11,Follow-up call,Pricing negotiated,2,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive11
+98,36,11,Follow-up call,Budget discussion done,4,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive11
+99,37,6,Follow-up call,Pricing negotiated,3,2025-11-29,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:10:16.970,Executive6
+100,37,6,Follow-up call,Positive response from client,2,2025-11-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive6
+101,38,12,Follow-up call,Pricing negotiated,2,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive12
+102,38,12,Follow-up call,Waiting for management approval,2,2025-11-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive12
+103,38,12,Follow-up call,"Client interested, asked for demo",2,2025-11-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive12
+104,39,26,Follow-up call,Waiting for management approval,2,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+105,39,26,Follow-up call,Pricing negotiated,4,2025-12-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+106,39,26,Follow-up call,Budget discussion done,2,2025-12-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+107,39,26,Follow-up call,Pricing negotiated,4,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+108,40,21,Follow-up call,Pricing negotiated,4,2025-12-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive21
+109,40,21,Follow-up call,"Client interested, asked for demo",4,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive21
+110,40,21,Follow-up call,Budget discussion done,4,2025-11-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive21
+111,41,43,Follow-up call,Technical clarification shared,2,2025-12-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive43
+112,41,43,Follow-up call,Budget discussion done,2,2025-11-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive43
+113,41,43,Follow-up call,Budget discussion done,4,2025-12-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive43
+114,42,33,Follow-up call,Waiting for management approval,4,2025-11-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive33
+115,42,33,Follow-up call,"Client interested, asked for demo",3,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive33
+116,42,33,Follow-up call,Budget discussion done,2,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive33
+117,43,9,Follow-up call,Technical clarification shared,2,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive9
+118,43,9,Follow-up call,Pricing negotiated,3,2025-12-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive9
+119,44,26,Follow-up call,Technical clarification shared,3,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+120,44,26,Follow-up call,Positive response from client,2,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+121,44,26,Follow-up call,"Client interested, asked for demo",2,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+122,44,26,Follow-up call,Positive response from client,4,2025-11-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive26
+123,45,45,Follow-up call,Pricing negotiated,4,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive45
+124,45,45,Follow-up call,Pricing negotiated,2,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive45
+125,46,32,Follow-up call,Pricing negotiated,2,2025-11-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive32
+126,46,32,Follow-up call,Technical clarification shared,4,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive32
+127,46,32,Follow-up call,"Client interested, asked for demo",4,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive32
+128,47,11,Follow-up call,"Client interested, asked for demo",3,2025-12-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive11
+129,47,11,Follow-up call,Positive response from client,2,2025-11-29,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive11
+130,48,21,Follow-up call,Technical clarification shared,4,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive21
+131,48,21,Follow-up call,Waiting for management approval,2,2025-11-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive21
+132,48,21,Follow-up call,Pricing negotiated,4,2025-12-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive21
+133,48,21,Follow-up call,"Client interested, asked for demo",4,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive21
+134,49,44,Follow-up call,Waiting for management approval,4,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive44
+135,49,44,Follow-up call,Budget discussion done,3,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive44
+136,49,44,Follow-up call,Budget discussion done,3,2025-12-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive44
+137,50,34,Follow-up call,Waiting for management approval,2,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive34
+138,50,34,Follow-up call,Pricing negotiated,3,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive34
+139,50,34,Follow-up call,Positive response from client,2,2025-11-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive34
+140,50,34,Follow-up call,Positive response from client,4,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive34
+141,51,39,Follow-up call,"Client interested, asked for demo",2,2025-12-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive39
+142,51,39,Follow-up call,"Client interested, asked for demo",2,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive39
+143,51,39,Follow-up call,"Client interested, asked for demo",4,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive39
+144,52,6,Follow-up call,"Client interested, asked for demo",3,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive6
+145,52,6,Follow-up call,Pricing negotiated,3,2025-11-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive6
+146,52,6,Follow-up call,Pricing negotiated,2,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive6
+147,53,37,Follow-up call,Pricing negotiated,2,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive37
+148,53,37,Follow-up call,Pricing negotiated,2,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive37
+149,54,40,Follow-up call,Technical clarification shared,3,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive40
+150,54,40,Follow-up call,Technical clarification shared,4,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:18:05.633,Executive40
+151,54,40,Follow-up call,Waiting for management approval,4,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive40
+152,55,18,Follow-up call,Waiting for management approval,5,2025-12-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+153,55,18,Follow-up call,Positive response from client,5,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+154,55,18,Follow-up call,Technical clarification shared,5,2025-11-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+155,55,18,Follow-up call,Budget discussion done,5,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+156,56,3,Follow-up call,Positive response from client,4,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive3
+157,56,3,Follow-up call,Pricing negotiated,4,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive3
+158,56,3,Follow-up call,Budget discussion done,2,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive3
+159,56,3,Follow-up call,Positive response from client,3,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive3
+160,57,25,Follow-up call,Budget discussion done,4,2025-11-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive25
+161,57,25,Follow-up call,"Client interested, asked for demo",4,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive25
+162,58,24,Follow-up call,Technical clarification shared,2,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive24
+163,58,24,Follow-up call,Budget discussion done,4,2026-01-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive24
+164,58,24,Follow-up call,"Client interested, asked for demo",4,2025-12-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive24
+165,59,44,Follow-up call,Budget discussion done,4,2025-11-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive44
+166,59,44,Follow-up call,Positive response from client,4,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive44
+167,60,32,Follow-up call,Budget discussion done,4,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive32
+168,60,32,Follow-up call,Technical clarification shared,2,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive32
+169,61,44,Follow-up call,Budget discussion done,3,2025-12-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive44
+170,61,44,Follow-up call,Budget discussion done,4,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive44
+171,61,44,Follow-up call,Budget discussion done,4,2025-11-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive44
+172,61,44,Follow-up call,Technical clarification shared,4,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive44
+173,62,18,Follow-up call,Pricing negotiated,4,2025-11-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+174,62,18,Follow-up call,Positive response from client,4,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+175,62,18,Follow-up call,Waiting for management approval,4,2025-12-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+176,62,18,Follow-up call,Positive response from client,4,2025-11-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive18
+177,63,42,Follow-up call,Technical clarification shared,3,2025-11-29,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive42
+178,63,42,Follow-up call,Budget discussion done,2,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive42
+179,64,40,Follow-up call,"Client interested, asked for demo",3,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive40
+180,64,40,Follow-up call,Technical clarification shared,4,2025-11-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive40
+181,64,40,Follow-up call,"Client interested, asked for demo",3,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive40
+182,64,40,Follow-up call,Technical clarification shared,2,2025-11-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive40
+183,65,8,Follow-up call,Positive response from client,3,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive8
+184,65,8,Follow-up call,Waiting for management approval,4,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive8
+185,65,8,Follow-up call,"Client interested, asked for demo",3,2025-11-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive8
+186,66,46,Follow-up call,Positive response from client,3,2025-11-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive46
+187,66,46,Follow-up call,Positive response from client,3,2025-12-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive46
+188,66,46,Follow-up call,"Client interested, asked for demo",3,2025-12-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive46
+189,67,33,Follow-up call,Technical clarification shared,4,2025-12-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive33
+190,67,33,Follow-up call,Budget discussion done,3,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive33
+191,68,42,Follow-up call,Budget discussion done,4,2025-11-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive42
+192,68,42,Follow-up call,Pricing negotiated,4,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive42
+193,69,35,Follow-up call,"Client interested, asked for demo",5,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive35
+194,69,35,Follow-up call,Pricing negotiated,5,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive35
+195,69,35,Follow-up call,Pricing negotiated,5,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive35
+196,70,46,Follow-up call,Waiting for management approval,4,2025-11-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive46
+197,70,46,Follow-up call,"Client interested, asked for demo",2,2025-11-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive46
+198,70,46,Follow-up call,Waiting for management approval,3,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive46
+199,70,46,Follow-up call,Budget discussion done,3,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive46
+200,71,24,Follow-up call,"Client interested, asked for demo",4,2025-12-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive24
+201,71,24,Follow-up call,Waiting for management approval,4,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:23:37.853,Executive24
+202,71,24,Follow-up call,Technical clarification shared,2,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive24
+203,71,24,Follow-up call,Positive response from client,2,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive24
+204,72,18,Follow-up call,Positive response from client,5,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive18
+205,72,18,Follow-up call,Pricing negotiated,5,2025-11-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive18
+206,73,34,Follow-up call,"Client interested, asked for demo",3,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive34
+207,73,34,Follow-up call,Positive response from client,2,2025-12-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive34
+208,73,34,Follow-up call,Positive response from client,4,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive34
+209,73,34,Follow-up call,Pricing negotiated,2,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive34
+210,74,25,Follow-up call,Waiting for management approval,3,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive25
+211,74,25,Follow-up call,Budget discussion done,3,2025-11-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive25
+212,74,25,Follow-up call,Positive response from client,2,2025-11-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive25
+213,74,25,Follow-up call,Positive response from client,4,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive25
+214,75,18,Follow-up call,Waiting for management approval,3,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive18
+215,75,18,Follow-up call,Waiting for management approval,3,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive18
+216,76,19,Follow-up call,Waiting for management approval,2,2026-01-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive19
+217,76,19,Follow-up call,"Client interested, asked for demo",2,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive19
+218,76,19,Follow-up call,Technical clarification shared,3,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive19
+219,76,19,Follow-up call,"Client interested, asked for demo",4,2025-11-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive19
+220,77,17,Follow-up call,Budget discussion done,4,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive17
+221,77,17,Follow-up call,Positive response from client,4,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive17
+222,77,17,Follow-up call,Waiting for management approval,3,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive17
+223,78,28,Follow-up call,Pricing negotiated,3,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive28
+224,78,28,Follow-up call,"Client interested, asked for demo",2,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive28
+225,79,37,Follow-up call,Pricing negotiated,4,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive37
+226,79,37,Follow-up call,Pricing negotiated,2,2025-11-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive37
+227,79,37,Follow-up call,Budget discussion done,3,2025-11-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive37
+228,79,37,Follow-up call,"Client interested, asked for demo",4,2025-12-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive37
+229,80,27,Follow-up call,Pricing negotiated,4,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive27
+230,80,27,Follow-up call,Waiting for management approval,2,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive27
+231,81,17,Follow-up call,"Client interested, asked for demo",4,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive17
+232,81,17,Follow-up call,Pricing negotiated,3,2025-11-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive17
+233,82,23,Follow-up call,Waiting for management approval,4,2025-11-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive23
+234,82,23,Follow-up call,Pricing negotiated,2,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive23
+235,82,23,Follow-up call,"Client interested, asked for demo",2,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive23
+236,82,23,Follow-up call,Pricing negotiated,3,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive23
+237,83,39,Follow-up call,"Client interested, asked for demo",3,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive39
+238,83,39,Follow-up call,Budget discussion done,2,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive39
+239,83,39,Follow-up call,Pricing negotiated,4,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive39
+240,84,42,Follow-up call,Pricing negotiated,4,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive42
+241,84,42,Follow-up call,Waiting for management approval,3,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive42
+242,84,42,Follow-up call,Budget discussion done,2,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive42
+243,84,42,Follow-up call,Pricing negotiated,4,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive42
+244,85,7,Follow-up call,Waiting for management approval,4,2025-11-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive7
+245,85,7,Follow-up call,Budget discussion done,2,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive7
+246,85,7,Follow-up call,Pricing negotiated,2,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive7
+247,86,7,Follow-up call,Waiting for management approval,4,2025-11-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive7
+248,86,7,Follow-up call,Positive response from client,2,2025-11-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive7
+249,86,7,Follow-up call,Positive response from client,4,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive7
+250,86,7,Follow-up call,Waiting for management approval,4,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive7
+251,87,4,Follow-up call,Waiting for management approval,2,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:30:14.943,Executive4
+252,104,8,Follow-up call,Technical clarification shared,2,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive8
+253,104,8,Follow-up call,Positive response from client,4,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive8
+254,104,8,Follow-up call,Pricing negotiated,3,2025-11-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive8
+255,105,31,Follow-up call,Technical clarification shared,4,2025-11-29,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive31
+256,105,31,Follow-up call,Pricing negotiated,2,2025-12-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive31
+257,106,23,Follow-up call,"Client interested, asked for demo",2,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive23
+258,106,23,Follow-up call,Positive response from client,3,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive23
+259,106,23,Follow-up call,"Client interested, asked for demo",2,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive23
+260,106,23,Follow-up call,Technical clarification shared,4,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive23
+261,107,45,Follow-up call,Technical clarification shared,3,2025-12-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive45
+262,107,45,Follow-up call,Positive response from client,3,2025-12-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive45
+263,107,45,Follow-up call,Waiting for management approval,4,2025-11-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive45
+264,107,45,Follow-up call,Technical clarification shared,3,2025-12-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive45
+265,108,32,Follow-up call,Technical clarification shared,2,2025-11-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive32
+266,108,32,Follow-up call,Pricing negotiated,3,2025-12-12,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive32
+267,109,32,Follow-up call,Pricing negotiated,2,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive32
+268,109,32,Follow-up call,Positive response from client,2,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive32
+269,109,32,Follow-up call,Positive response from client,2,2025-11-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive32
+270,110,17,Follow-up call,Pricing negotiated,5,2025-12-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive17
+271,110,17,Follow-up call,Budget discussion done,5,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive17
+272,110,17,Follow-up call,Budget discussion done,5,2025-11-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive17
+273,110,17,Follow-up call,"Client interested, asked for demo",5,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive17
+274,111,35,Follow-up call,Pricing negotiated,5,2025-11-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive35
+275,111,35,Follow-up call,Positive response from client,5,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive35
+276,111,35,Follow-up call,Budget discussion done,5,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive35
+277,111,35,Follow-up call,Positive response from client,5,2025-11-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive35
+278,112,21,Follow-up call,"Client interested, asked for demo",4,2025-12-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive21
+279,112,21,Follow-up call,Waiting for management approval,4,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive21
+280,113,22,Follow-up call,Pricing negotiated,2,2025-12-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive22
+281,113,22,Follow-up call,Positive response from client,2,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive22
+282,114,47,Follow-up call,Positive response from client,3,2025-12-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive47
+283,114,47,Follow-up call,Technical clarification shared,4,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive47
+284,114,47,Follow-up call,Pricing negotiated,2,2025-11-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive47
+285,115,26,Follow-up call,Technical clarification shared,3,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive26
+286,115,26,Follow-up call,Budget discussion done,2,2025-11-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive26
+287,115,26,Follow-up call,"Client interested, asked for demo",4,2025-11-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive26
+288,115,26,Follow-up call,Budget discussion done,4,2025-11-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive26
+289,116,41,Follow-up call,Pricing negotiated,4,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive41
+290,116,41,Follow-up call,Technical clarification shared,2,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive41
+291,116,41,Follow-up call,Waiting for management approval,2,2025-11-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive41
+292,116,41,Follow-up call,"Client interested, asked for demo",3,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive41
+293,117,35,Follow-up call,Waiting for management approval,4,2025-11-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive35
+294,117,35,Follow-up call,Waiting for management approval,3,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive35
+295,118,11,Follow-up call,Technical clarification shared,4,2026-01-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive11
+296,118,11,Follow-up call,Budget discussion done,2,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive11
+297,118,11,Follow-up call,Budget discussion done,2,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive11
+298,118,11,Follow-up call,Waiting for management approval,3,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive11
+299,119,21,Follow-up call,Technical clarification shared,3,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive21
+300,119,21,Follow-up call,Positive response from client,4,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive21
+301,119,21,Follow-up call,Waiting for management approval,3,2025-11-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:33:54.183,Executive21
+302,120,41,Follow-up call,Positive response from client,4,2025-11-28,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive41
+303,120,41,Follow-up call,Waiting for management approval,2,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive41
+304,121,39,Follow-up call,Technical clarification shared,4,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive39
+305,121,39,Follow-up call,Budget discussion done,2,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive39
+306,122,8,Follow-up call,Budget discussion done,2,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive8
+307,122,8,Follow-up call,Waiting for management approval,3,2025-11-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive8
+308,122,8,Follow-up call,"Client interested, asked for demo",4,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive8
+309,122,8,Follow-up call,"Client interested, asked for demo",4,2025-12-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive8
+310,123,14,Follow-up call,Budget discussion done,4,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive14
+311,123,14,Follow-up call,Budget discussion done,2,2025-11-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive14
+312,123,14,Follow-up call,"Client interested, asked for demo",2,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive14
+313,123,14,Follow-up call,Pricing negotiated,2,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive14
+314,124,18,Follow-up call,Pricing negotiated,2,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive18
+315,124,18,Follow-up call,Positive response from client,4,2025-11-06,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive18
+316,125,16,Follow-up call,Waiting for management approval,3,2025-11-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive16
+317,125,16,Follow-up call,Technical clarification shared,3,2025-11-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive16
+318,125,16,Follow-up call,Technical clarification shared,2,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive16
+319,126,30,Follow-up call,Pricing negotiated,3,2025-11-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive30
+320,126,30,Follow-up call,Positive response from client,2,2025-12-25,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive30
+321,127,37,Follow-up call,Technical clarification shared,4,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive37
+322,127,37,Follow-up call,Technical clarification shared,3,2025-11-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive37
+323,127,37,Follow-up call,Pricing negotiated,3,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive37
+324,127,37,Follow-up call,Budget discussion done,2,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive37
+325,128,20,Follow-up call,Waiting for management approval,3,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive20
+326,128,20,Follow-up call,Pricing negotiated,2,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive20
+327,128,20,Follow-up call,Waiting for management approval,3,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive20
+328,129,35,Follow-up call,Positive response from client,4,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive35
+329,129,35,Follow-up call,Pricing negotiated,3,2025-11-29,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive35
+330,129,35,Follow-up call,"Client interested, asked for demo",4,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive35
+331,129,35,Follow-up call,"Client interested, asked for demo",3,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive35
+332,130,21,Follow-up call,Waiting for management approval,5,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive21
+333,130,21,Follow-up call,Positive response from client,5,2025-12-11,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive21
+334,130,21,Follow-up call,"Client interested, asked for demo",5,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive21
+335,131,22,Follow-up call,"Client interested, asked for demo",2,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive22
+336,131,22,Follow-up call,Budget discussion done,4,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive22
+337,132,46,Follow-up call,Pricing negotiated,4,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive46
+338,132,46,Follow-up call,Waiting for management approval,4,2025-12-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive46
+339,132,46,Follow-up call,Technical clarification shared,3,2025-11-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive46
+340,133,36,Follow-up call,Budget discussion done,3,2025-11-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive36
+341,133,36,Follow-up call,Waiting for management approval,3,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive36
+342,134,20,Follow-up call,Waiting for management approval,3,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive20
+343,134,20,Follow-up call,"Client interested, asked for demo",3,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive20
+344,134,20,Follow-up call,Waiting for management approval,3,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive20
+345,135,4,Follow-up call,"Client interested, asked for demo",2,2025-12-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive4
+346,135,4,Follow-up call,Pricing negotiated,3,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive4
+347,135,4,Follow-up call,Budget discussion done,3,2025-12-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive4
+348,136,15,Follow-up call,"Client interested, asked for demo",4,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive15
+349,136,15,Follow-up call,Positive response from client,2,2025-12-20,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive15
+350,136,15,Follow-up call,Positive response from client,4,2025-12-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive15
+351,137,24,Follow-up call,Waiting for management approval,4,2025-11-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:43:53.673,Executive24
+352,87,4,Follow-up call,Pricing negotiated,4,2025-11-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive4
+353,88,40,Follow-up call,Pricing negotiated,2,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive40
+354,88,40,Follow-up call,Budget discussion done,2,2025-12-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive40
+355,88,40,Follow-up call,Technical clarification shared,2,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive40
+356,88,40,Follow-up call,Positive response from client,4,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive40
+357,89,4,Follow-up call,"Client interested, asked for demo",4,2026-01-02,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive4
+358,89,4,Follow-up call,Waiting for management approval,4,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive4
+359,89,4,Follow-up call,Budget discussion done,3,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive4
+360,90,22,Follow-up call,Technical clarification shared,3,2025-11-30,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive22
+361,90,22,Follow-up call,"Client interested, asked for demo",4,2025-11-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive22
+362,90,22,Follow-up call,Technical clarification shared,4,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive22
+363,91,34,Follow-up call,Waiting for management approval,4,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive34
+364,91,34,Follow-up call,Pricing negotiated,4,2025-11-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive34
+365,91,34,Follow-up call,"Client interested, asked for demo",2,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive34
+366,92,41,Follow-up call,Budget discussion done,2,2025-11-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive41
+367,92,41,Follow-up call,Technical clarification shared,2,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive41
+368,93,41,Follow-up call,Technical clarification shared,4,2025-11-07,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive41
+369,93,41,Follow-up call,Positive response from client,4,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive41
+370,93,41,Follow-up call,Positive response from client,2,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive41
+371,93,41,Follow-up call,Technical clarification shared,2,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive41
+372,94,28,Follow-up call,"Client interested, asked for demo",3,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive28
+373,94,28,Follow-up call,Budget discussion done,3,2025-12-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive28
+374,95,43,Follow-up call,"Client interested, asked for demo",3,2025-12-03,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive43
+375,95,43,Follow-up call,Positive response from client,4,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive43
+376,95,43,Follow-up call,Waiting for management approval,2,2025-12-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive43
+377,96,11,Follow-up call,Waiting for management approval,2,2025-12-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive11
+378,96,11,Follow-up call,Positive response from client,2,2025-11-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive11
+379,96,11,Follow-up call,Technical clarification shared,3,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive11
+380,96,11,Follow-up call,Technical clarification shared,3,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive11
+381,97,9,Follow-up call,Pricing negotiated,4,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive9
+382,97,9,Follow-up call,Positive response from client,4,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive9
+383,97,9,Follow-up call,Pricing negotiated,4,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive9
+384,98,2,Follow-up call,"Client interested, asked for demo",3,2025-12-08,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+385,98,2,Follow-up call,Budget discussion done,4,2025-12-21,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+386,98,2,Follow-up call,Budget discussion done,3,2025-11-13,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+387,99,46,Follow-up call,Budget discussion done,2,2025-12-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive46
+388,99,46,Follow-up call,"Client interested, asked for demo",3,2025-12-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive46
+389,99,46,Follow-up call,"Client interested, asked for demo",4,2025-12-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive46
+390,99,46,Follow-up call,Waiting for management approval,2,2025-12-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive46
+391,100,33,Follow-up call,Budget discussion done,4,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive33
+392,100,33,Follow-up call,Waiting for management approval,4,2025-11-18,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive33
+393,101,2,Follow-up call,Positive response from client,2,2025-12-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+394,101,2,Follow-up call,Technical clarification shared,4,2025-11-26,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+395,101,2,Follow-up call,Waiting for management approval,2,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+396,102,23,Follow-up call,"Client interested, asked for demo",2,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive23
+397,102,23,Follow-up call,Waiting for management approval,3,2025-12-23,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive23
+398,102,23,Follow-up call,Pricing negotiated,2,2025-12-15,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive23
+399,103,2,Follow-up call,Waiting for management approval,3,2025-11-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+400,103,2,Follow-up call,Technical clarification shared,2,2025-11-19,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+401,103,2,Follow-up call,Positive response from client,3,2025-12-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:20.223,Executive2
+402,137,24,Follow-up call,Positive response from client,3,2025-12-16,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive24
+403,137,24,Follow-up call,Budget discussion done,2,2025-11-05,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive24
+404,138,33,Follow-up call,Waiting for management approval,2,2025-12-09,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive33
+405,138,33,Follow-up call,Waiting for management approval,2,2025-11-17,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive33
+406,138,33,Follow-up call,Waiting for management approval,2,2025-12-27,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive33
+407,138,33,Follow-up call,Pricing negotiated,2,2025-12-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive33
+408,139,6,Follow-up call,Positive response from client,2,2026-01-01,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive6
+409,139,6,Follow-up call,Pricing negotiated,3,2025-11-14,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive6
+410,139,6,Follow-up call,Positive response from client,4,2025-12-04,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive6
+411,140,2,Follow-up call,Positive response from client,5,2025-11-10,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive2
+412,140,2,Follow-up call,Technical clarification shared,5,2025-12-24,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive2
+413,140,2,Follow-up call,Pricing negotiated,5,2025-11-22,EC2AMAZ-DUTAITC\Swast_Archie,2025-12-31 23:47:44.063,Executive2

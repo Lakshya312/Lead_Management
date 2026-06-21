@@ -1,0 +1,14 @@
+productid,productname,categoryid,is_active,added_by,added_dts
+1,CRM Software,1,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+2,Hospital ERP,1,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+3,Accounting Software,1,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+4,ECG Machine,2,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+5,X-Ray Machine,2,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+6,MRI Scanner,2,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+7,Diagnostic Monitor,2,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+8,Laptop,3,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+9,Tablet,3,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+10,POS Terminal,3,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+11,Implementation Service,4,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+12,AMC Support,4,1,EC2AMAZ-DUTAITC\Swast_Archie,2026-01-15 13:48:25.917
+17,Test0,3,0,EC2AMAZ-DUTAITC\Swast_Rajesh,2026-01-19 06:44:44.160
