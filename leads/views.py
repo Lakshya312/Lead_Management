@@ -349,7 +349,7 @@ class LeadViewSet(viewsets.ModelViewSet):
     """
     queryset = Lead.objects.select_related(
         'territoryid', 'regionid', 'productid', 'statusid', 'leadsourceid'
-    ).all()
+    ).filter(is_deleted=False)
     serializer_class = LeadSerializer
     filterset_fields = [
         'regionid', 'statusid', 'leadsourceid',
@@ -359,24 +359,17 @@ class LeadViewSet(viewsets.ModelViewSet):
     ordering_fields = ['leadid', 'personname', 'companyname', 'lead_gen_date']
     ordering = ['leadid']
 
-    # ✅ NEW — ProtectedError when Lead has existing FollowUp records
+    # ✅ NEW — Soft Delete for API
     def destroy(self, request, *args, **kwargs):
         """
-        Block deletion if this Lead has existing LeadFollowUp records.
-        Returns HTTP 409 instead of letting Django raise an unhandled ProtectedError (500).
+        Perform a soft delete by setting is_deleted=True.
         """
         try:
-            return super().destroy(request, *args, **kwargs)
-        except ProtectedError:
-            logger.warning(
-                "LeadViewSet.destroy: ProtectedError — Lead pk=%s has existing "
-                "FollowUp records. Delete blocked.",
-                kwargs.get('pk'),
-            )
-            return Response(
-                {"error": "Cannot delete this Lead because it has existing Follow-Up records. Remove those follow-ups first."},
-                status=drf_status.HTTP_409_CONFLICT,
-            )
+            instance = self.get_object()
+            instance.is_deleted = True
+            instance.save()
+            logger.info("LeadViewSet.destroy: Soft-deleted Lead pk=%s.", instance.pk)
+            return Response(status=drf_status.HTTP_204_NO_CONTENT)
         except Exception as exc:
             logger.error(
                 "LeadViewSet.destroy: Unexpected error for pk=%s — %s",
@@ -453,7 +446,7 @@ class DashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['total_leads'] = Lead.objects.count()
+            context['total_leads'] = Lead.objects.filter(is_deleted=False).count()
             context['total_products'] = Product.objects.count()
             context['total_regions'] = Region.objects.count()
             logger.info(
@@ -668,7 +661,7 @@ class LeadListView(ListView):
     context_object_name = 'leads'
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related('productid', 'statusid')
+        queryset = Lead.objects.select_related('productid', 'statusid').filter(is_deleted=False)
         query = self.request.GET.get('q')
         region = self.request.GET.get('region')
         status = self.request.GET.get('status')
@@ -741,16 +734,15 @@ class LeadDeleteView(DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
-            self.object.delete()
-            logger.info(
-                "LeadDeleteView: Lead '%s' (pk=%s) deleted successfully.",
-                self.object.personname, self.object.pk,
-            )
+            person_name = self.object.personname
+            self.object.is_deleted = True
+            self.object.save()
+            logger.info("LeadDeleteView: Lead '%s' (pk=%s) soft-deleted successfully.", person_name, self.object.pk)
             messages.success(request, "Lead deleted successfully!")
             return redirect(self.success_url)
         except ProtectedError:
             logger.warning(
-                "lead_delete: ProtectedError — Lead '%s' (pk=%s) is protected by "
+                "LeadDeleteView: ProtectedError — Lead '%s' (pk=%s) is protected by "
                 "other linked records. Delete blocked.", self.object.personname, self.object.pk,
             )
             messages.error(

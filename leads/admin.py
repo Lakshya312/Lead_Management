@@ -144,8 +144,8 @@ class ProductAdmin(ProtectedDeleteMixin, admin.ModelAdmin):
 
 @admin.register(Lead)
 class LeadAdmin(ProtectedDeleteMixin, admin.ModelAdmin):
-    list_display = ('leadid', 'personname', 'companyname', 'contactno', 'city', 'state', 'lead_gen_date', 'added_dts')
-    list_filter = ('regionid', 'statusid', 'leadsourceid')
+    list_display = ('leadid', 'personname', 'companyname', 'contactno', 'city', 'state', 'lead_gen_date', 'is_deleted')
+    list_filter = ('is_deleted', 'regionid', 'statusid', 'leadsourceid')
     search_fields = ('personname', 'companyname', 'contactno', 'email')
 
 

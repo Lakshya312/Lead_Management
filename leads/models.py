@@ -122,6 +122,7 @@ class Lead(models.Model):
     added_by = models.CharField(max_length=100, blank=True, null=True, db_column='added_by')
     added_dts = models.CharField(max_length=100, blank=True, null=True, db_column='added_dts')
     executiveid = models.IntegerField(db_column='executiveid')
+    is_deleted = models.BooleanField(default=False, db_column='is_deleted')
 
     class Meta:
         db_table = 'tbl_lead_pipeline'
