@@ -155,6 +155,7 @@ LOGGING = {
                 '[{asctime}] [{levelname}] [{name}] [{module}.{funcName}:L{lineno}]\n'
                 '  Message : {message}\n'
                 '  Path    : {pathname}\n'
+                '  Line    : {lineno}\n'
                 '--------------------------------------------------------------------------------'
             ),
             'style': '{',

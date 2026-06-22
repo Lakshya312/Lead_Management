@@ -9,3 +9,18 @@
 [2026-06-22 22:36:12] [INFO] dashboard_view: Stats fetched — leads=150, products=13, regions=4
 [2026-06-22 22:37:08] [INFO] product_add: Product 'dajkf' created by 'admin'.
 [2026-06-22 22:37:15] [INFO] product_delete: Product 'dajkf' (pk=1019) deleted successfully.
+[2026-06-22 22:51:34] [ERROR] DashboardView.get_context_data: Unexpected error — division by zero
+Traceback (most recent call last):
+  File "D:\LeadManagement\LeadManagementSystem\leads\views.py", line 457, in get_context_data
+    x = 1 / 0  # ← REMOVE THIS LINE after testing
+        ~~^~~
+ZeroDivisionError: division by zero
+[2026-06-22 22:51:43] [ERROR] DashboardView.get_context_data: Unexpected error — division by zero
+Traceback (most recent call last):
+  File "D:\LeadManagement\LeadManagementSystem\leads\views.py", line 457, in get_context_data
+    x = 1 / 0  # ← REMOVE THIS LINE after testing
+        ~~^~~
+ZeroDivisionError: division by zero
+[2026-06-22 22:52:05] [WARNING] LeadDeleteView: ProtectedError — Lead 'Person 1' (pk=1) has existing FollowUp records. Delete blocked.
+[2026-06-22 22:52:17] [WARNING] LeadDeleteView: ProtectedError — Lead 'Person 1' (pk=1) has existing FollowUp records. Delete blocked.
+[2026-06-22 22:56:55] [INFO] DashboardView: Stats fetched — leads=150, products=13, regions=4

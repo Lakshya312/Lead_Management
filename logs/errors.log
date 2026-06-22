@@ -42,3 +42,37 @@
   Message : "GET /favicon.ico HTTP/1.1" 404 5963
   Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
 --------------------------------------------------------------------------------
+[2026-06-22 22:51:34] [ERROR] [leads] [views.get_context_data:L475]
+  Message : DashboardView.get_context_data: Unexpected error — division by zero
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\LeadManagement\LeadManagementSystem\leads\views.py", line 457, in get_context_data
+    x = 1 / 0  # ← REMOVE THIS LINE after testing
+        ~~^~~
+ZeroDivisionError: division by zero
+[2026-06-22 22:51:35] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-22 22:51:35] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 5963
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-22 22:51:43] [ERROR] [leads] [views.get_context_data:L475]
+  Message : DashboardView.get_context_data: Unexpected error — division by zero
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+--------------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\LeadManagement\LeadManagementSystem\leads\views.py", line 457, in get_context_data
+    x = 1 / 0  # ← REMOVE THIS LINE after testing
+        ~~^~~
+ZeroDivisionError: division by zero
+[2026-06-22 22:52:05] [WARNING] [leads] [views.post:L754]
+  Message : LeadDeleteView: ProtectedError — Lead 'Person 1' (pk=1) has existing FollowUp records. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+--------------------------------------------------------------------------------
+[2026-06-22 22:52:17] [WARNING] [leads] [views.post:L754]
+  Message : LeadDeleteView: ProtectedError — Lead 'Person 1' (pk=1) has existing FollowUp records. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+--------------------------------------------------------------------------------
