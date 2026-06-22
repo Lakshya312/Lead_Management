@@ -750,14 +750,13 @@ class LeadDeleteView(DeleteView):
             return redirect(self.success_url)
         except ProtectedError:
             logger.warning(
-                "LeadDeleteView: ProtectedError — Lead '%s' (pk=%s) has existing "
-                "FollowUp records. Delete blocked.",
-                self.object.personname, self.object.pk,
+                "lead_delete: ProtectedError — Lead '%s' (pk=%s) is protected by "
+                "other linked records. Delete blocked.", self.object.personname, self.object.pk,
             )
             messages.error(
                 request,
-                f'Cannot delete Lead "{self.object.personname}" because it has existing Follow-Up records. '
-                f'Please remove those follow-ups first.'
+                f'Cannot delete Lead "{self.object.personname}" because it is referenced by '
+                f'other protected records in the database.'
             )
             return redirect(self.success_url)
         except Exception as exc:

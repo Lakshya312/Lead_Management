@@ -24,3 +24,12 @@ ZeroDivisionError: division by zero
 [2026-06-22 22:52:05] [WARNING] LeadDeleteView: ProtectedError — Lead 'Person 1' (pk=1) has existing FollowUp records. Delete blocked.
 [2026-06-22 22:52:17] [WARNING] LeadDeleteView: ProtectedError — Lead 'Person 1' (pk=1) has existing FollowUp records. Delete blocked.
 [2026-06-22 22:56:55] [INFO] DashboardView: Stats fetched — leads=150, products=13, regions=4
+[2026-06-22 22:59:22] [INFO] DashboardView: Stats fetched — leads=150, products=13, regions=4
+[2026-06-22 22:59:34] [WARNING] ProductDeleteView: ProtectedError — Product 'AMC Support' (pk=12) is referenced by Leads. Delete blocked.
+[2026-06-22 23:10:53] [INFO] DashboardView: Stats fetched — leads=150, products=13, regions=4
+[2026-06-22 23:11:02] [WARNING] RegionDeleteView: ProtectedError — Region 'North' (pk=1) is referenced by Territories or Leads. Delete blocked.
+[2026-06-22 23:11:11] [WARNING] RegionDeleteView: ProtectedError — Region 'South' (pk=2) is referenced by Territories or Leads. Delete blocked.
+[2026-06-22 23:11:14] [WARNING] RegionDeleteView: ProtectedError — Region 'East' (pk=3) is referenced by Territories or Leads. Delete blocked.
+[2026-06-22 23:11:17] [WARNING] RegionDeleteView: ProtectedError — Region 'West' (pk=4) is referenced by Territories or Leads. Delete blocked.
+[2026-06-22 23:11:27] [WARNING] ProductDeleteView: ProtectedError — Product 'CRM Software' (pk=1) is referenced by Leads. Delete blocked.
+[2026-06-22 23:12:13] [INFO] LeadDeleteView: Lead 'Person 2' (pk=None) deleted successfully.

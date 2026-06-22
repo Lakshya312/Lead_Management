@@ -71,7 +71,7 @@ class Territory(models.Model):
     """
     territoryid = models.AutoField(primary_key=True, db_column='territoryid')
     territoryname = models.CharField(max_length=150, db_column='territoryname')
-    regionid = models.ForeignKey(Region, on_delete=models.PROTECT, db_column='regionid')
+    regionid = models.ForeignKey(Region, on_delete=models.CASCADE, db_column='regionid')
     added_by = models.CharField(max_length=100, blank=True, null=True, db_column='added_by')
     added_dts = models.CharField(max_length=100, blank=True, null=True, db_column='added_dts')
 
@@ -135,7 +135,7 @@ class LeadFollowUp(models.Model):
     Transactional execution history log mapping dynamic lead status transformations.
     """
     followupid = models.AutoField(primary_key=True, db_column='followupid')
-    leadid = models.ForeignKey(Lead, on_delete=models.PROTECT, db_column='leadid')
+    leadid = models.ForeignKey(Lead, on_delete=models.CASCADE, db_column='leadid')
     executiveid = models.IntegerField(db_column='executiveid')
     actiontaken = models.CharField(max_length=255, db_column='actiontaken')
     remarks = models.TextField(blank=True, null=True, db_column='remarks')

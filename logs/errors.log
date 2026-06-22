@@ -76,3 +76,33 @@ ZeroDivisionError: division by zero
   Message : LeadDeleteView: ProtectedError — Lead 'Person 1' (pk=1) has existing FollowUp records. Delete blocked.
   Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
 --------------------------------------------------------------------------------
+[2026-06-22 22:59:34] [WARNING] [leads] [views.post:L641]
+  Message : ProductDeleteView: ProtectedError — Product 'AMC Support' (pk=12) is referenced by Leads. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+  Line    : 641
+--------------------------------------------------------------------------------
+[2026-06-22 23:11:02] [WARNING] [leads] [views.post:L545]
+  Message : RegionDeleteView: ProtectedError — Region 'North' (pk=1) is referenced by Territories or Leads. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+  Line    : 545
+--------------------------------------------------------------------------------
+[2026-06-22 23:11:11] [WARNING] [leads] [views.post:L545]
+  Message : RegionDeleteView: ProtectedError — Region 'South' (pk=2) is referenced by Territories or Leads. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+  Line    : 545
+--------------------------------------------------------------------------------
+[2026-06-22 23:11:14] [WARNING] [leads] [views.post:L545]
+  Message : RegionDeleteView: ProtectedError — Region 'East' (pk=3) is referenced by Territories or Leads. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+  Line    : 545
+--------------------------------------------------------------------------------
+[2026-06-22 23:11:17] [WARNING] [leads] [views.post:L545]
+  Message : RegionDeleteView: ProtectedError — Region 'West' (pk=4) is referenced by Territories or Leads. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+  Line    : 545
+--------------------------------------------------------------------------------
+[2026-06-22 23:11:27] [WARNING] [leads] [views.post:L641]
+  Message : ProductDeleteView: ProtectedError — Product 'CRM Software' (pk=1) is referenced by Leads. Delete blocked.
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+  Line    : 641
+--------------------------------------------------------------------------------
