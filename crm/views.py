@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from datetime import datetime
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib import messages
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -329,14 +330,40 @@ class Region_view:
 '''FOR LEAD'''
 class Lead_view:
     def lead_list(request):
-        leads = Lead.objects.all()
+
+        search = request.GET.get('search', '')
+
+        leads = Lead.objects.select_related(
+            'productid',
+            'regionid',
+            'statusid',
+            'leadsourceid'
+        )
+
+        if search:
+
+            leads = leads.filter(
+
+                Q(personname__istartswith=search) |
+                Q(productid__productname__istartswith=search) |
+                Q(regionid__regionname__istartswith=search)
+
+            )
+
+        if search.isdigit():
+            leads = leads | Lead.objects.filter(
+                leadid=int(search)
+            )
+
         form = LeadForm()
+
         return render(
             request,
             'lead_list.html',
             {
                 'leads': leads,
-                'form': form
+                'form': form,
+                'search': search
             }
         )
 
