@@ -15,6 +15,7 @@ urlpatterns = [
     path('regions/edit/<int:regionid>/', Region_view.edit_region, name='edit_region'),
     path('regions/delete/<int:regionid>/', Region_view.delete_region, name='delete_region'),
 
+    # for leads
     path('leads/', Lead_view.lead_list, name='lead_list'),
     path('leads/add/', Lead_view.add_lead, name='add_lead'),
     path('leads/edit/<int:leadid>/', Lead_view.edit_lead, name='edit_lead'),
