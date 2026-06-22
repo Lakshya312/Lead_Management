@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Master Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+</head>
+<body>
+
+    <div class="header-banner">
+        <span>PRODUCT MATRIX CONTROL</span>
+        <a href="{% url 'dashboard' %}" class="dashboard-back-btn">
+            <i class="bi bi-grid-1x2-fill"></i> Dashboard Hub
+        </a>
+    </div>
+
+    <div class="main-container">
+
+        <div class="table-section">
+            <div class="section-header-row">
+                <h3><i class="bi bi-layers-half text-primary"></i> Registered Products Ledger</h3>
+                <span class="live-status-pill">Active System Sync</span>
+            </div>
+            
+            <div class="table-scroll-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Code</th>
+                            <th>Product Profile</th>
+                            <th>Category Mapped</th>
+                            <th>Operational Status</th>
+                            <th>Handled By</th>
+                            <th>Timestamp</th>
+                            <th style="text-align: right;">Actions Console</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td class="id-token">#{{ product.productid }}</td>
+                            <td>
+                                <div class="product-identity-cell">
+                                    <div class="product-avatar"><i class="bi bi-box-seam-fill"></i></div>
+                                    <span class="product-name-txt">{{ product.productname }}</span>
+                                </div>
+                            </td>
+                            <td><span class="category-tag-pill">{{ product.categoryid.categoryname }}</span></td>
+                            <td>
+                                {% if product.is_active == 1 %} 
+                                    <span class="indicator-badge state-online"><i class="bi bi-shield-check"></i> Active</span>
+                                {% elif product.is_active == 0 %} 
+                                    <span class="indicator-badge state-offline"><i class="bi bi-shield-slash"></i> Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td class="user-meta-txt"><i class="bi bi-person-fill-check"></i> {{ product.added_by }}</td>
+                            <td class="chrono-stamp">{{ product.added_dts|date:"m/d/Y" }}</td>
+                            <td>
+                                <div class="action-buttons-group">
+                                    <a href="{% url 'edit_product' product.productid %}" class="action-trigger-btn edit-trigger">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'delete_product' product.productid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this product?');">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="empty-fallback-state">
+                                <i class="bi bi-folder-x"></i>
+                                <p>No active inventory tracks mapped inside the database core matrix.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-container form-section">
+            <div class="form-title-block">
+                {% if edit_mode %} 
+                    <h3><i class="bi bi-pencil-square color-edit"></i> Modify Record</h3>
+                    <p>Altering existing database rows indexes parameters.</p>
+                {% else %} 
+                    <h3><i class="bi bi-plus-circle-fill color-add"></i> Create Product</h3>
+                    <p>Append a new asset column map configuration.</p>
+                {% endif %}
+            </div>
+            
+            <form method="POST" action="{% if edit_mode %}{% url 'edit_product' form.instance.productid %}{% else %}{% url 'add_product' %}{% endif %}">
+                {% csrf_token %}
+                
+                <div class="django-injected-form-wrapper">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="form-processing-actions">
+                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
+                        {% if edit_mode %} Commit Asset Updates {% else %} Push New Asset {% endif %}
+                    </button>
+                    {% if edit_mode %}
+                        <a href="{% url 'product_list' %}" class="dismiss-action-link">
+                            Dismiss Operations
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const formElements = document.querySelectorAll('.django-injected-form-wrapper p input, .django-injected-form-wrapper p select');
+            formElements.forEach(element => {
+                if (element.type !== 'checkbox' && element.type !== 'radio') {
+                    element.classList.add('premium-cyber-input-element');
+                }
+            });
+        });
+
+        // ==========================
+        // PRODUCT NAME VALIDATION
+        // ==========================
+
+        const productInput = document.getElementById('productname');
+
+        if (productInput) {
+
+            productInput.addEventListener('input', function () {
+                this.setCustomValidity('');
+            });
+
+            productInput.addEventListener('blur', function () {
+
+                if (this.value.trim() === '') return;
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                fetch(`/check-productname/?productname=${encodeURIComponent(this.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        if (data.exists) {
+                            this.setCustomValidity(
+                                'Product with this name already exists.'
+                            );
+                        } else {
+                            this.setCustomValidity('');
+                        }
+
+                        this.reportValidity();
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

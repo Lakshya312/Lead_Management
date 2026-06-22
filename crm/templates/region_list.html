@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Region Master Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/region_list.css' %}">
+</head>
+<body>
+
+    <div class="header-banner">
+        <span>TERRITORIAL MATRIX CONTROL</span>
+        <a href="{% url 'dashboard' %}" class="dashboard-back-btn">
+            <i class="bi bi-grid-1x2-fill"></i> Dashboard Hub
+        </a>
+    </div>
+
+    <div class="main-container">
+
+        <div class="table-section">
+            <div class="section-header-row">
+                <h3><i class="bi bi-globe-americas text-info"></i> Registered Territories Ledger</h3>
+                <span class="live-status-pill">Active Region Sync</span>
+            </div>
+            
+            <div class="table-scroll-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Code</th>
+                            <th>Geographic Region Name</th>
+                            <th>Handled By</th>
+                            <th>Timestamp Logged</th>
+                            <th style="text-align: right;">Actions Console</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for region in regions %}
+                        <tr>
+                            <td class="id-token">#{{ region.regionid }}</td>
+                            <td>
+                                <div class="region-identity-cell">
+                                    <div class="region-avatar"><i class="bi bi-geo-alt-fill"></i></div>
+                                    <span class="region-name-txt">{{ region.regionname }}</span>
+                                </div>
+                            </td>
+                            <td class="user-meta-txt"><i class="bi bi-person-fill-check"></i> {{ region.added_by }}</td>
+                            <td class="chrono-stamp">{{ region.added_dts|date:"Y-m-d H:i:s" }}</td>
+                            <td>
+                                <div class="action-buttons-group">
+                                    <a href="{% url 'edit_region' region.regionid %}" class="action-trigger-btn edit-trigger">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'delete_region' region.regionid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this region?');">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-fallback-state">
+                                <i class="bi bi-geo-fill"></i>
+                                <p>No active operational territories mapped inside the database matrix.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-container form-section">
+            <div class="form-title-block">
+                {% if edit_mode %} 
+                    <h3><i class="bi bi-pencil-square color-edit"></i> Modify Zone</h3>
+                    <p>Altering existing territorial database rows parameters.</p>
+                {% else %} 
+                    <h3><i class="bi bi-plus-circle-fill color-add"></i> Create Region</h3>
+                    <p>Append a new geographic division constraint row.</p>
+                {% endif %}
+            </div>
+            
+            <form method="POST" action="{% if edit_mode %}{% url 'edit_region' form.instance.regionid %}{% else %}{% url 'add_region' %}{% endif %}">
+                {% csrf_token %}
+                
+                <div class="django-injected-form-wrapper">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="form-processing-actions">
+                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
+                        {% if edit_mode %} Commit Zone Updates {% else %} Push New Region {% endif %}
+                    </button>
+                    {% if edit_mode %}
+                        <a href="{% url 'region_list' %}" class="dismiss-action-link">
+                            Dismiss Operations
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const formElements = document.querySelectorAll(
+            '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select'
+        );
+
+        formElements.forEach(element => {
+            if (element.type !== 'checkbox' && element.type !== 'radio') {
+                element.classList.add('premium-cyber-input-element');
+            }
+        });
+
+        const regionInput = document.getElementById('regionname');
+
+        if (regionInput) {
+
+            regionInput.addEventListener('input', function () {
+                this.setCustomValidity('');
+            });
+
+            regionInput.addEventListener('blur', function () {
+
+                if (this.value.trim() === '') return;
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                fetch(`/check-regionname/?regionname=${encodeURIComponent(this.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        if (data.exists) {
+                            this.setCustomValidity(
+                                'Region with this name already exists.'
+                            );
+                        } else {
+                            this.setCustomValidity('');
+                        }
+
+                        this.reportValidity();
+                    });
+            });
+        }
+
+        });
+    </script>
+</body>
+</html>

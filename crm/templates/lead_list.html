@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Master Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/lead_list.css' %}">
+</head>
+<body>
+
+    <div class="header-banner">
+        <span>LEAD PIPELINE MANAGEMENT</span>
+        <a href="{% url 'dashboard' %}" class="dashboard-back-btn">
+            <i class="bi bi-grid-1x2-fill"></i> Dashboard Hub
+        </a>
+    </div>
+
+    <div class="main-container">
+
+        <div class="table-section">
+            <div class="section-header-row">
+                <h3><i class="bi bi-people-fill text-indigo"></i> Active Intake Lead Pipelines</h3>
+                <span class="live-status-pill">Data Stream Live</span>
+            </div>
+            
+            <div class="table-scroll-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Contact Profile Name</th>
+                            <th>Company</th>
+                            <th>Contact Phone</th>
+                            <th>Target Asset</th>
+                            <th>Territory</th>
+                            <th>Workflow Status</th>
+                            <th>Origin Source</th>
+                            <th>Date Assigned</th>
+                            <th style="text-align: right;">Action Matrix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lead in leads %}
+                        <tr>
+                            <td class="id-token">#{{ lead.leadid }}</td>
+                            <td>
+                                <div class="lead-identity-cell">
+                                    <div class="lead-avatar">{{ lead.personname|slice:":1" }}</div>
+                                    <span class="lead-name-txt">{{ lead.personname }}</span>
+                                </div>
+                            </td>
+                            <td><span class="badge-tag-pill company-tag">{{ lead.companyname }}</span></td>
+                            <td class="chrono-stamp"><i class="bi bi-telephone text-slate"></i> {{ lead.contactno }}</td>
+                            <td><span class="fw-semibold text-white">{{ lead.productid.productname }}</span></td>
+                            <td><span class="badge-tag-pill region-tag"><i class="bi bi-geo-alt"></i> {{ lead.regionid.regionname }}</td>
+                            <td>
+                                <span class="indicator-badge status-workflow">
+                                    <i class="bi bi-lightning-charge-fill"></i> {{ lead.statusid.statusname }}
+                                </span>
+                            </td>
+                            <td class="user-meta-txt">{{ lead.leadsourceid.leadsourcename }}</td>
+                            <td class="chrono-stamp">{{ lead.lead_gen_date }}</td>
+                            <td>
+                                <div class="action-buttons-group">
+                                    <a href="{% url 'edit_lead' lead.leadid %}" class="action-trigger-btn edit-trigger">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'delete_lead' lead.leadid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this lead?');">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="10" class="empty-fallback-state">
+                                <i class="bi bi-folder-x"></i>
+                                <p>No active pipeline leads mapped inside database tables.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-container form-section">
+            <div class="form-title-block">
+                {% if edit_mode %} 
+                    <h3><i class="bi bi-pencil-square color-edit"></i> Modify Lead Profile</h3>
+                    <p>Altering existing pipeline tracking row indices data properties.</p>
+                {% else %} 
+                    <h3><i class="bi bi-plus-circle-fill color-add"></i> Intake Lead Account</h3>
+                    <p>Append a new business channel contact into core matrix.</p>
+                {% endif %}
+            </div>
+            
+            <form method="POST" action="{% if edit_mode %}{% url 'edit_lead' form.instance.leadid %}{% else %}{% url 'add_lead' %}{% endif %}">
+                {% csrf_token %}
+                
+                <div class="django-injected-form-wrapper">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="form-processing-actions">
+                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
+                        {% if edit_mode %} Save Profile Changes {% else %} Append Lead Record {% endif %}
+                    </button>
+                    {% if edit_mode %}
+                        <a href="{% url 'lead_list' %}" class="dismiss-action-link">
+                            Dismiss System Operations
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // Apply styling classes
+            const formElements = document.querySelectorAll(
+                '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select, .django-injected-form-wrapper p textarea'
+            );
+
+            formElements.forEach(element => {
+                if (element.type !== 'checkbox' && element.type !== 'radio') {
+                    element.classList.add('premium-cyber-input-element');
+                }
+            });
+
+            // ==========================
+            // PERSON NAME VALIDATION
+            // ==========================
+
+            const personInput = document.getElementById('personname');
+
+            if (personInput) {
+
+                personInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                personInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-personname/?personname=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this name already exists. Add another name.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Person Name Validation Error:', error);
+                        });
+                });
+            }
+
+            // ==========================
+            // CONTACT NUMBER VALIDATION
+            // ==========================
+
+            const contactInput = document.getElementById('contactno');
+
+            if (contactInput) {
+
+                contactInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                contactInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-contactno/?contactno=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this contact number already exists.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Contact Validation Error:', error);
+                        });
+                });
+            }
+
+            // ==========================
+            // EMAIL VALIDATION
+            // ==========================
+
+            const emailInput = document.getElementById('email');
+
+            if (emailInput) {
+
+                emailInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                emailInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-email/?email=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this email already exists.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Email Validation Error:', error);
+                        });
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>
