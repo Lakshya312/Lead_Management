@@ -26,3 +26,19 @@
   Message : RegionDeleteView: ProtectedError — Region 'North' (pk=1) is referenced by Territories or Leads. Delete blocked.
   Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
 --------------------------------------------------------------------------------
+[2026-06-22 16:04:49] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-22 16:04:49] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 5963
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-22 22:35:48] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
+[2026-06-22 22:35:48] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 5963
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+--------------------------------------------------------------------------------
