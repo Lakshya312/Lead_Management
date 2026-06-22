@@ -64,8 +64,8 @@ LeadManagementSystem/
 │   ├── Lead_Follow_Up.csv
 │   └── ... (other CSV files)
 │
-└── docs/                      # Project documentation
-    └── Internship Training Plan_updated PDF_File.pdf
+└── 
+    └──
 ```
 
 ## Data Models
