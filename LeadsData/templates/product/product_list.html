@@ -177,6 +177,22 @@
         color: #334155;
     }
 
+    .status-active {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .status-inactive {
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
     .edit-btn,
     .delete-btn {
         border: none;
@@ -246,6 +262,27 @@
             </a>
         {% endif %}
 
+        <form method="POST" action="{% url 'upload_products_excel' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file"
+                   name="excel_file"
+                   accept=".xlsx"
+                   hidden
+                   id="excelFile"
+                   onchange="showUploadButton()">
+
+            <label for="excelFile" class="btn btn-primary">
+                Browse File
+            </label>
+
+            <button type="submit"
+                    class="btn btn-success"
+                    id="uploadBtn"
+                    style="display: none;">
+                Upload
+            </button>
+        </form>
+
         <form method="GET">
             <div class="input-group search-box">
                 <input type="text"
@@ -270,6 +307,7 @@
                     <th style="width: 90px;">ID</th>
                     <th>Product Name</th>
                     <th>Category</th>
+                    <th>Status</th>
                     <th style="width: 210px;">Action</th>
                 </tr>
             </thead>
@@ -304,6 +342,14 @@
                     </td>
 
                     <td>
+                        {% if p.Is_Active %}
+                            <span class="status-active">🟢 Active</span>
+                        {% else %}
+                            <span class="status-inactive">🔴 Inactive</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
                         {% if request.user.userprofile.role == "Admin" or p.Added_By == request.user.username %}
                             <a href="/products/edit/{{ p.ProductID }}/"
                                class="edit-btn">
@@ -331,5 +377,11 @@
     </div>
 
 </div>
+
+<script>
+function showUploadButton() {
+    document.getElementById("uploadBtn").style.display = "inline-block";
+}
+</script>
 
 {% endblock %}

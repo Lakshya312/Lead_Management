@@ -48,6 +48,8 @@ urlpatterns = [
     path("api/products/", views.product_api, name="product_api"),
     path("api/products/<int:id>/", views.product_detail_api, name="product_detail_api"),
 
+    path("products/upload-excel/", views.upload_products_excel, name="upload_products_excel"),
+
     # REGION
     path("regions/", views.region_list, name="region_list"),
     path("regions/add/", views.add_region, name="add_region"),

@@ -13,7 +13,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models.deletion import ProtectedError
 from django.utils import timezone
 from functools import wraps
-
+from openpyxl import load_workbook
 
 # ================ DECORATOR ================
 def allowed_roles(roles=[]):
@@ -136,6 +136,95 @@ def add_product(request):
     })
 
 @allowed_roles(["Admin", "Manager"])
+def upload_products_excel(request):
+
+    if request.method == "POST":
+        excel_file = request.FILES.get("excel_file")
+
+        if not excel_file:
+            messages.error(request, "Please upload an Excel file.")
+            return redirect("product_list")
+
+        if not excel_file.name.endswith(".xlsx"):
+            messages.error(request, "Only .xlsx files are allowed.")
+            return redirect("product_list")
+
+        wb = load_workbook(excel_file)
+        sheet = wb.active
+
+        errors = []
+
+        for row_no, row in enumerate(
+                sheet.iter_rows(min_row=2, values_only=True),
+                start=2):
+
+            product_name = row[0]
+            category_name = row[1]
+            is_active_value = row[2]
+
+            # Product Name Validation
+            if not product_name or str(product_name).strip() == "":
+                errors.append(
+                    f"Row {row_no}: Product Name cannot be empty."
+                )
+                continue
+
+            # Category Validation
+            if not category_name or str(category_name).strip() == "":
+                errors.append(
+                    f"Row {row_no}: Category cannot be empty."
+                )
+                continue
+
+            category, created = Product_Category.objects.get_or_create(
+                CategoryName=str(category_name).strip(),
+                defaults={
+                    "Added_By": request.user.username
+                }
+            )
+
+            # IsActive Validation
+            if is_active_value is None or str(is_active_value).strip() == "":
+                is_active = True
+            else:
+                is_active = str(
+                    is_active_value
+                ).strip().lower() in [
+                                "true", "yes", "1", "active"
+                            ]
+
+            # Duplicate Validation
+            if Product.objects.filter(
+                    ProductName=str(product_name).strip(),
+                    Category=category
+            ).exists():
+                errors.append(
+                    f"Row {row_no}: Product '{product_name}' already exists."
+                )
+                continue
+
+            Product.objects.create(
+                ProductName=str(product_name).strip(),
+                Category=category,
+                Is_Active=is_active,
+                Added_By=request.user.username
+            )
+
+    if errors:
+        for error in errors:
+            messages.error(request, error)
+    else:
+        messages.success(
+            request,
+            "Products uploaded successfully."
+        )
+
+        #messages.success(request, "Products uploaded successfully.")
+        #return redirect("product_list")
+
+    return redirect("product_list")
+
+@allowed_roles(["Admin", "Manager"])
 def edit_product(request, id):
 
     if request.user.userprofile.role == "Admin":
@@ -159,6 +248,8 @@ def edit_product(request, id):
         category = get_object_or_404(Product_Category, CategoryID=category_id)
 
         product.Category = category
+        product.Is_Active = request.POST.get("Is_Active") == "True"
+
         product.save()
 
         messages.success(request, "Product updated successfully.")
