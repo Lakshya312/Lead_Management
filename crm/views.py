@@ -4,6 +4,8 @@ from .forms import *
 from datetime import datetime
 from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib import messages
+from django.contrib.auth import authenticate , login, logout
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 from rest_framework.response import Response
@@ -13,9 +15,50 @@ from rest_framework import status
 import getpass
 from .utils import log_error
 
+'''FOR LOGIN'''
+
+class Login_view:
+    def login_view(request):
+
+        if request.method == 'POST':
+
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(
+                request,
+                username=username,
+                password=password
+            )
+
+            if user:
+
+                login(request, user)
+
+                return redirect('dashboard')
+
+            messages.error(
+                request,
+                'Invalid username or password.'
+            )
+
+        return render(
+            request,
+            'login.html'
+        )
+
+'''FOR LOGOUT'''
+
+class Logout_view:
+    def logout_view(request):
+
+        logout(request)
+
+        return redirect('login')
+
 '''FOR PRODUCTS'''
 class Product_view:
-
+    @login_required(login_url='login')
     def product_list(request):
 
         search = request.GET.get('search', '')
@@ -50,6 +93,7 @@ class Product_view:
             }
         )
 
+    @login_required(login_url='login')
     @staticmethod
     def add_product(request):
 
@@ -109,6 +153,7 @@ class Product_view:
 
             return redirect('product_list')
 
+    @login_required(login_url='login')
     @staticmethod
     def edit_product(request, productid):
 
@@ -160,6 +205,7 @@ class Product_view:
 
             return redirect('product_list')
 
+    @login_required(login_url='login')
     @staticmethod
     def delete_product(request, productid):
 
@@ -191,7 +237,7 @@ class Product_view:
 '''FOR REGION'''
 
 class Region_view:
-
+    @login_required(login_url='login')
     def region_list(request):
 
         search = request.GET.get('search', '')
@@ -224,6 +270,7 @@ class Region_view:
             }
         )
 
+    @login_required(login_url='login')
     @staticmethod
     def add_region(request):
 
@@ -276,7 +323,7 @@ class Region_view:
 
             return redirect('region_list')
 
-
+    @login_required(login_url='login')
     @staticmethod
     def edit_region(request, regionid):
 
@@ -336,7 +383,7 @@ class Region_view:
 
             return redirect('region_list')
 
-
+    @login_required(login_url='login')
     @staticmethod
     def delete_region(request, regionid):
 
@@ -367,6 +414,7 @@ class Region_view:
 
 '''FOR LEAD'''
 class Lead_view:
+    @login_required(login_url='login')
     def lead_list(request):
 
         search = request.GET.get('search', '')
@@ -408,6 +456,7 @@ class Lead_view:
             }
         )
 
+    @login_required(login_url='login')
     @staticmethod
     def add_lead(request):
 
@@ -468,6 +517,7 @@ class Lead_view:
 
             return redirect('lead_list')
 
+    @login_required(login_url='login')
     @staticmethod
     def edit_lead(request, leadid):
 
@@ -520,6 +570,7 @@ class Lead_view:
 
         return redirect('lead_list')
 
+    @login_required(login_url='login')
     @staticmethod
     def delete_lead(request, leadid):
 
@@ -549,6 +600,7 @@ class Lead_view:
         return redirect('lead_list')
     
 '''DASHBOARD'''
+@login_required(login_url='login')
 def dashboard(request):
     return render(request, 'dashboard.html')
 
