@@ -54,7 +54,6 @@ class Product_view:
     def add_product(request):
 
         try:
-
             if request.method == 'POST':
 
                 form = ProductForm(request.POST)
@@ -74,13 +73,11 @@ class Product_view:
                     )
 
                     product.added_dts = datetime.now()
-
                     product.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else "System"
                     )
-
                     product.save()
 
                     messages.success(
