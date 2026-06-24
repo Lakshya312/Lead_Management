@@ -203,14 +203,16 @@ class Region_view:
 
         if search:
 
-            regions = regions.filter(
-                Q(regionname__istartswith=search)
-            )
-
             if search.isdigit():
 
-                regions = regions | Region.objects.filter(
+                regions = regions.filter(
                     regionid=int(search)
+                )
+
+            else:
+
+                regions = regions.filter(
+                    regionname__istartswith=search
                 )
 
         form = RegionForm()
@@ -381,18 +383,20 @@ class Lead_view:
 
         if search:
 
-            leads = leads.filter(
-
-                Q(personname__istartswith=search) |
-                Q(productid__productname__icontains=search) |
-                Q(regionid__regionname__istartswith=search)
-
-            )
-
             if search.isdigit():
 
-                leads = leads | Lead.objects.filter(
+                leads = leads.filter(
                     leadid=int(search)
+                )
+
+            else:
+
+                leads = leads.filter(
+
+                    Q(personname__istartswith=search) |
+                    Q(productid__productname__icontains=search) |
+                    Q(regionid__regionname__istartswith=search)
+
                 )
 
         form = LeadForm()
