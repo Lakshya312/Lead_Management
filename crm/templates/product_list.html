@@ -25,7 +25,21 @@
                 <h3><i class="bi bi-layers-half text-primary"></i> Registered Products Ledger</h3>
                 <span class="live-status-pill">Active System Sync</span>
             </div>
-            
+            <form method="GET" class="search-form-console">
+                <div class="search-input-group">
+                    <i class="bi bi-search search-field-icon"></i>
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search Product ID or Product Name..."
+                        class="premium-cyber-input-element search-input-override"
+                    >
+                </div>
+                <button type="submit" class="search-action-btn">
+                    <i class="bi bi-funnel-fill"></i> Filter Matrix
+                </button>
+            </form>
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>

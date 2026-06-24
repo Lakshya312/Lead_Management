@@ -25,7 +25,21 @@
                 <h3><i class="bi bi-globe-americas text-info"></i> Registered Territories Ledger</h3>
                 <span class="live-status-pill">Active Region Sync</span>
             </div>
-            
+            <form method="GET" class="search-form-console">
+                <div class="search-input-group">
+                    <i class="bi bi-search search-field-icon"></i>
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search Region ID or Region Name..."
+                        class="premium-cyber-input-element search-input-override"
+                    >
+                </div>
+                <button type="submit" class="search-action-btn">
+                    <i class="bi bi-funnel-fill"></i> Filter Matrix
+                </button>
+            </form>
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>

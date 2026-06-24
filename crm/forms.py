@@ -183,9 +183,19 @@ class LeadForm(forms.ModelForm):
         self.fields['leadsourceid'].empty_label = "--- Select Lead Source ---"
 
     def clean_personname(self):
+
         value = self.cleaned_data['personname']
 
-        if Lead.objects.filter(personname=value).exists():
+        qs = Lead.objects.filter(
+            personname=value
+        )
+
+        if self.instance.pk:
+            qs = qs.exclude(
+                pk=self.instance.pk
+            )
+
+        if qs.exists():
             raise forms.ValidationError(
                 "Lead with this name already exists. Add another name."
             )
@@ -194,9 +204,19 @@ class LeadForm(forms.ModelForm):
 
 
     def clean_contactno(self):
+
         value = self.cleaned_data['contactno']
 
-        if Lead.objects.filter(contactno=value).exists():
+        qs = Lead.objects.filter(
+            contactno=value
+        )
+
+        if self.instance.pk:
+            qs = qs.exclude(
+                pk=self.instance.pk
+            )
+
+        if qs.exists():
             raise forms.ValidationError(
                 "Lead with this contact number already exists."
             )
@@ -205,9 +225,19 @@ class LeadForm(forms.ModelForm):
 
 
     def clean_email(self):
+
         value = self.cleaned_data['email']
 
-        if Lead.objects.filter(email=value).exists():
+        qs = Lead.objects.filter(
+            email=value
+        )
+
+        if self.instance.pk:
+            qs = qs.exclude(
+                pk=self.instance.pk
+            )
+
+        if qs.exists():
             raise forms.ValidationError(
                 "Lead with this email already exists."
             )

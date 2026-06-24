@@ -17,13 +17,35 @@ from .utils import log_error
 class Product_view:
 
     def product_list(request):
-        products = Product.objects.all()
+
+        search = request.GET.get('search', '')
+
+        products = Product.objects.select_related(
+            'categoryid'
+        )
+
+        if search:
+
+            products = products.filter(
+                Q(productname__icontains=search)
+            )
+
+            if search.isdigit():
+
+                products = products | Product.objects.filter(
+                    productid=int(search)
+                )
+
         form = ProductForm()
 
         return render(
             request,
             'product_list.html',
-            {'products': products, 'form': form}
+            {
+                'products': products,
+                'form': form,
+                'search': search
+            }
         )
 
     @staticmethod
@@ -173,7 +195,22 @@ class Region_view:
 
     def region_list(request):
 
+        search = request.GET.get('search', '')
+
         regions = Region.objects.all()
+
+        if search:
+
+            regions = regions.filter(
+                Q(regionname__istartswith=search)
+            )
+
+            if search.isdigit():
+
+                regions = regions | Region.objects.filter(
+                    regionid=int(search)
+                )
+
         form = RegionForm()
 
         return render(
@@ -181,10 +218,10 @@ class Region_view:
             'region_list.html',
             {
                 'regions': regions,
-                'form': form
+                'form': form,
+                'search': search
             }
         )
-
 
     @staticmethod
     def add_region(request):
@@ -345,15 +382,16 @@ class Lead_view:
             leads = leads.filter(
 
                 Q(personname__istartswith=search) |
-                Q(productid__productname__istartswith=search) |
+                Q(productid__productname__icontains=search) |
                 Q(regionid__regionname__istartswith=search)
 
             )
 
-        if search.isdigit():
-            leads = leads | Lead.objects.filter(
-                leadid=int(search)
-            )
+            if search.isdigit():
+
+                leads = leads | Lead.objects.filter(
+                    leadid=int(search)
+                )
 
         form = LeadForm()
 
@@ -371,7 +409,6 @@ class Lead_view:
     def add_lead(request):
 
         try:
-            1/0
             if request.method == 'POST':
 
                 form = LeadForm(request.POST)

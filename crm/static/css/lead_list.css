@@ -84,6 +84,72 @@ body {
 }
 
 /* ==========================================
+   CYBER SEARCH CONSOLE ROW GRID ARCHITECTURE
+   ========================================== */
+   .search-form-console {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+/* Flexbox Group Wrapper for Input & Embedded Vector Icon */
+.search-input-group {
+    position: relative;
+    flex: 1; /* Automatically forces the input bar to take up remaining available space */
+}
+
+/* Immersive Embedded Field Search Icon */
+.search-field-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-slate);
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Custom override rule tweaks for deep alignment inside the search field */
+form.search-form-console input.premium-cyber-input-element.search-input-override {
+    padding-left: 56px !important; /* Increased to 56px to ensure total clearance */
+    margin-top: 0 !important;
+    width: 100%;
+}
+
+/* Streamlined Inline Filtering CTA Trigger Button */
+.search-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--glow-primary);
+    border: none;
+    border-radius: var(--radius-input);
+    box-shadow: 0 4px 12px var(--glow-primary-rgba);
+    cursor: pointer;
+    white-space: nowrap; /* Prevents button text from breaking onto a second line */
+    height: 47px; /* Explicitly matches the native input height profile */
+    transition: all 0.3s var(--ease-curve);
+}
+
+.search-action-btn:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+}
+
+.search-action-btn:active {
+    transform: scale(0.98);
+}
+
+/* ==========================================
    FLUID ROW WORKSPACE SPLIT (100% SCALE PROPORTIONS)
    ========================================== */
 .main-container {
