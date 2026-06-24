@@ -26,14 +26,16 @@ class Product_view:
 
         if search:
 
-            products = products.filter(
-                Q(productname__icontains=search)
-            )
-
             if search.isdigit():
 
-                products = products | Product.objects.filter(
+                products = products.filter(
                     productid=int(search)
+                )
+
+            else:
+
+                products = products.filter(
+                    productname__icontains=search
                 )
 
         form = ProductForm()
