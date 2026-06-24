@@ -22,6 +22,78 @@
     --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* ==========================================
+   SECURE LOGOUT CONNECT ACTION LAYER
+   ========================================== */
+   .dashboard-logout-btn {
+    text-decoration: none;
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 700;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.dashboard-logout-btn:hover {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    transform: translateY(-1px);
+}
+
+.dashboard-logout-btn:active {
+    transform: scale(0.98);
+}
+
+/* ==========================================
+   SECURE LOGOUT ACTION LAYER (TOP RIGHT PIN)
+   ========================================== */
+   .dashboard-logout-btn {
+    position: absolute;
+    top: 30px; /* Pushes it down cleanly relative to the window edge */
+    right: 30px; /* Puts it perfectly in the right corner */
+    z-index: 100; /* Ensures it sits safely on top of all underlying elements */
+    
+    text-decoration: none;
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 700;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.dashboard-logout-btn:hover {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    transform: translateY(-1px);
+}
+
+.dashboard-logout-btn:active {
+    transform: scale(0.98);
+}
+
+/* Ensure the body acts as a solid reference grid point for the absolute position placement */
+body {
+    position: relative;
+}
+
 /* Base Body Environment Defaults */
 * {
     box-sizing: border-box;
