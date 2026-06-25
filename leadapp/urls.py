@@ -1,8 +1,18 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path(
+    "",
+    views.login_view,
+    name="index"
+),
+path(
+    "home/",
+    views.home,
+    name="home"
+),
     path(
         "products/",
         views.product_list,
@@ -92,4 +102,20 @@ urlpatterns = [
         'api/leads/<int:pk>/',
         views.lead_detail_api
     ),
+    path(
+    "products/upload/",
+    views.product_bulk_upload,
+    name="product_bulk_upload"
+),
+path(
+    "login/",
+    views.login_view,
+    name="login"
+),
+
+path(
+    "logout/",
+    views.logout_view,
+    name="logout"
+),
 ]

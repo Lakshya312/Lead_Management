@@ -244,3 +244,9 @@ class LeadForm(forms.ModelForm):
                 attrs={"class": "form-control"}
             ),
         }
+
+class ProductUploadForm(forms.Form):
+
+    excel_file = forms.FileField(
+        label="Select Excel File"
+    )

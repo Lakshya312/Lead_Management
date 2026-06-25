@@ -122,4 +122,63 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+import os
+LOGGING = {
+    "formatters": {
+
+    "verbose": {
+
+        "format":
+        "%(asctime)s | %(levelname)s | %(filename)s | Line:%(lineno)d | %(message)s"
+    },
+},
+    "version": 1,
+
+    "disable_existing_loggers": False,
+
+"handlers": {
+
+    "file": {
+
+        "level": "ERROR",
+
+        "class": "logging.FileHandler",
+
+        "filename": os.path.join(
+            BASE_DIR,
+            "logs",
+            "error.log"
+        ),
+
+        "formatter": "verbose",
+    },
+},
+    "loggers": {
+
+        "django": {
+
+            "handlers": ["file"],
+
+            "level": "ERROR",
+
+            "propagate": True,
+        },
+
+        "leadapp": {
+
+            "handlers": ["file"],
+
+            "level": "ERROR",
+
+            "propagate": True,
+        },
+    },
+}
+
+STATIC_URL = 'static/'
+
+LOGIN_URL = "login"
+
+LOGIN_REDIRECT_URL = "home"
+
+LOGOUT_REDIRECT_URL = "login"

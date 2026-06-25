@@ -1,0 +1,16 @@
+# Ignore Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+# SQLite database
+db.sqlite3
+
+# Log files
+*.log
+logs/

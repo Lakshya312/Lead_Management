@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+    <h2>
+        Product Upload
+    </h2>
+{% if errors %}
+
+<div class="alert alert-danger">
+
+    <strong>Please correct the following errors:</strong>
+
+    <ul class="mb-0 mt-2">
+
+        {% for error in errors %}
+
+            <li>{{ error }}</li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+{% endif %}
+    <form
+        method="post"
+        enctype="multipart/form-data"
+    >
+
+        {% csrf_token %}
+
+        <div class="mb-3">
+
+    <label class="form-label">
+        Select Excel File
+    </label>
+
+    <input
+        type="file"
+        name="excel_file"
+        id="excel_file"
+        class="form-control"
+        onchange="showFileName()"
+    >
+
+</div>
+
+<p id="fileName"></p>
+
+        <button
+            type="submit"
+            class="btn btn-success"
+        >
+            Upload
+        </button>
+
+    </form>
+
+</div>
+<script>
+
+function showFileName() {
+
+    var file =
+        document.getElementById(
+            "excel_file"
+        );
+
+    var fileName =
+        file.files[0].name;
+
+    document.getElementById(
+        "fileName"
+    ).innerHTML =
+        "Selected File : " + fileName;
+}
+
+</script>
+{% endblock %}

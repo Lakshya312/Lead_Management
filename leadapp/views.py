@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Region ,Lead
+from .models import Product, Region ,Lead ,ProductCategory
 from .forms import ProductForm, RegionForm ,LeadForm
 from django.utils import timezone
 from rest_framework.decorators import api_view
@@ -11,7 +11,47 @@ from .serializer import (
     LeadSerializer
 )
 import getpass
+import logging
+logger = logging.getLogger("leadapp")
+from .forms import ProductUploadForm
 from django.db.models import Q  
+import pandas as pd
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+        if user is not None:
+            login(
+                request,
+                user
+            )
+            return redirect("home")
+        else:
+            messages.error(
+                request,
+                "Invalid Username or Password"
+            )
+    return render(
+        request,
+        "login.html"
+    )
+
+def logout_view(request):
+
+    logout(request)
+
+    return redirect("login")
 
 @api_view(['GET', 'POST'])
 def product_api(request):
@@ -39,11 +79,23 @@ def product_api(request):
 
         if serializer.is_valid():
 
-            serializer.save(
+            try:
+                serializer.save(
                 Added_By=getpass.getuser(),
                 Added_Dts=timezone.now()
             )
-
+            except Exception as e:
+                logger.error(
+                    f"Product Save Error: {str(e)}"
+                )
+                return Response(
+                    {
+                        "Success": False,
+                        "Message": str(e)
+                    },
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+                
             return Response(
                 {
                     "Success": True,
@@ -53,14 +105,17 @@ def product_api(request):
                 status=status.HTTP_201_CREATED
             )
 
-        return Response(
-            {
-                "Success": False,
-                "Message": "Validation Failed",
-                "Errors": serializer.errors
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
+    logger.error(
+        f"Product Validation Error: {serializer.errors}"
+    )
+
+    return Response(
+        {
+            "Success": False,
+            "Errors": serializer.errors
+        },
+        status=status.HTTP_400_BAD_REQUEST
+    )
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -348,35 +403,81 @@ def lead_detail_api(request, pk):
             "Deleted_Data": deleted_data
         })
     
+@login_required   
 def home(request):
-    return render(request, "home.html")
-# PRODUCT CRUD
+    product_count = Product.objects.count()
+    region_count = Region.objects.count()
+    lead_count = Lead.objects.count()
+    try:
+        x = 10 / 0
+    except Exception as e:
+        logger.error(f"Test Error: {str(e)}")
 
+    return render(request, "home.html",{
+        "product_count": product_count,
+        "region_count": region_count,
+        "lead_count": lead_count
+    })
+
+@login_required
 def product_list(request):
-    search = request.GET.get("search", "")
-    products = Product.objects.all()
-    if search:
-        products = products.filter(
-            Q(ProductName__icontains=search) |
-            Q(ProductID__icontains=search)
-        )
-        
-    return render(request, "product_list.html", {"products": products})
 
+    search = request.GET.get("search", "")
+
+    products = Product.objects.all()
+
+    if search:
+
+        query = Q(
+            ProductName__icontains=search
+        )
+
+        if search.isdigit():
+
+            query |= Q(
+                ProductID=int(search)
+            )
+
+        products = products.filter(query)
+
+    return render(
+        request,
+        "product_list.html",
+        {
+            "products": products
+        }
+    )
+
+@login_required
 def product_add(request):
 
-    form = ProductForm(request.POST or None)
+    form = ProductForm(
+        request.POST or None
+    )
 
     if form.is_valid():
 
-        product = form.save(commit=False)
+        try:
 
-        product.Added_By = getpass.getuser()
-        product.Added_Dts = timezone.now()
+            product = form.save(
+                commit=False
+            )
 
-        product.save()
+            product.Added_By = getpass.getuser()
 
-        return redirect("product_list")
+            product.Added_Dts = timezone.now()
+
+            product.save()
+
+            return redirect(
+                "product_list"
+            )
+
+        except Exception as e:
+
+            logger.error(
+                f"Product Save Error: {str(e)}"
+            )
 
     return render(
         request,
@@ -384,7 +485,7 @@ def product_add(request):
         {"form": form}
     )
 
-
+@login_required
 def product_edit(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
@@ -399,7 +500,7 @@ def product_edit(request, pk):
 
     return render(request, "product_form.html", {"form": form})
 
-
+@login_required
 def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
 
@@ -415,7 +516,7 @@ def product_delete(request, pk):
 
 
 # REGION CRUD
-
+@login_required
 def region_list(request):
     search = request.GET.get("search", "")
     regions = Region.objects.all()
@@ -431,7 +532,7 @@ def region_list(request):
         {"regions": regions}
     )
 
-
+@login_required
 def region_add(request):
 
     form = RegionForm(request.POST or None)
@@ -452,7 +553,7 @@ def region_add(request):
         "region_form.html",
         {"form": form}
     )
-
+@login_required
 def region_edit(request, pk):
     region = get_object_or_404(
         Region,
@@ -474,7 +575,7 @@ def region_edit(request, pk):
         {"form": form}
     )
 
-
+@login_required
 def region_delete(request, pk):
     region = get_object_or_404(
         Region,
@@ -490,7 +591,7 @@ def region_delete(request, pk):
         "confirm_delete.html",
         {"object": region}
     )
-
+@login_required
 def lead_list(request):
     search = request.GET.get("search","")
     leads = Lead.objects.all()
@@ -505,7 +606,7 @@ def lead_list(request):
         "lead_list.html",
         {"leads": leads}
     )
-
+@login_required
 def lead_add(request):
 
     form = LeadForm(request.POST or None)
@@ -526,7 +627,7 @@ def lead_add(request):
         "lead_form.html",
         {"form": form}
     )
-
+@login_required
 def lead_edit(request, pk):
 
     lead = Lead.objects.get(pk=pk)
@@ -547,6 +648,7 @@ def lead_edit(request, pk):
         "lead_form.html",
         {"form": form}
     )
+@login_required
 def lead_delete(request, pk):
 
     lead = Lead.objects.get(pk=pk)
@@ -561,4 +663,132 @@ def lead_delete(request, pk):
         request,
         "confirm_delete.html",
         {"object": lead}
+    )
+@login_required
+def product_bulk_upload(request):
+
+    if request.method == "POST":
+
+        form = ProductUploadForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            excel_file = request.FILES["excel_file"]
+
+            df = pd.read_excel(excel_file)
+
+            errors = []
+
+            # -----------------------------
+            # FIRST LOOP : ONLY VALIDATION
+            # -----------------------------
+            for index, row in df.iterrows():
+
+                product_name = str(
+                    row["ProductName"]
+                ).strip()
+
+                category_name = str(
+                    row["Category"]
+                ).strip()
+
+                # Validation 1
+                if pd.isna(row["ProductName"]) or product_name == "":
+
+                    errors.append(
+                        f"Row {index+2}: Product Name cannot be empty."
+                    )
+
+                # Validation 2
+                elif Product.objects.filter(
+                    ProductName__iexact=product_name
+                ).exists():
+
+                    errors.append(
+                        f"Row {index+2}: '{product_name}' already exists."
+                    )
+
+                # Validation 3
+                elif pd.isna(row["Category"]) or category_name == "":
+
+                    errors.append(
+                        f"Row {index+2}: Category cannot be empty."
+                    )
+
+                else:
+
+                    if not ProductCategory.objects.filter(
+                        CategoryName=category_name
+                    ).exists():
+
+                        errors.append(
+                            f"Row {index+2}: Category '{category_name}' does not exist."
+                        )
+
+            # -----------------------------
+            # IF ERRORS FOUND
+            # -----------------------------
+            if errors:
+
+                for error in errors:
+                  return render(
+        request,
+        "product_bulk_upload.html",
+        {
+            "form": form,
+            "errors": errors
+        }
+    )
+
+            # -----------------------------
+            # SECOND LOOP : INSERT DATA
+            # -----------------------------
+            for index, row in df.iterrows():
+
+                category = ProductCategory.objects.get(
+                    CategoryName=row["Category"]
+                )
+
+                is_active = row["IsActive"]
+
+                if pd.isna(is_active):
+
+                    is_active = True
+
+                Product.objects.create(
+
+                    ProductName=row["ProductName"].strip(),
+
+                    CategoryID=category,
+
+                    Is_Active=is_active,
+
+                    Added_By=getpass.getuser(),
+
+                    Added_Dts=timezone.now()
+
+                )
+
+            messages.success(
+                request,
+                "Products Uploaded Successfully."
+            )
+
+            return redirect(
+                "product_list"
+            )
+
+    else:
+
+        form = ProductUploadForm()
+
+    return render(
+        request,
+        "product_bulk_upload.html",
+        {
+            "form": form
+        }
     )
