@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2026-06-21 12:20:08.679646 : ZeroDivisionError : division by zero
 2026-06-21 12:23:51.712396 : ValueError : invalid literal for int() with base 10: 'abc'
 2026-06-21 13:11:41.301159 : ZeroDivisionError : division by zero
@@ -8,3 +9,14 @@
 2026-06-22 15:56:49.243575 : ZeroDivisionError : division by zero
 2026-06-22 16:06:21.504697 : ZeroDivisionError : division by zero
 2026-06-22 16:13:13.842986 : ZeroDivisionError : division by zero
+=======
+
+============================================================
+Time        : 2026-06-24 22:35:38.779357
+Error Type  : ZeroDivisionError
+Message     : division by zero
+File        : /Users/lakshya/Lead_Management/crm/views.py
+Function    : product_api
+Line Number : 586
+============================================================
+>>>>>>> lakshya-dev

@@ -25,11 +25,45 @@
                 <h3><i class="bi bi-layers-half text-primary"></i> Registered Products Ledger</h3>
                 <span class="live-status-pill">Active System Sync</span>
             </div>
+<<<<<<< HEAD
+=======
+            <form method="GET" class="search-form-console">
+                <div class="search-input-group">
+                    <i class="bi bi-search search-field-icon"></i>
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search Product ID or Product Name..."
+                        class="premium-cyber-input-element search-input-override"
+                    >
+                </div>
+                <button type="submit" class="search-action-btn">
+                    <i class="bi bi-funnel-fill"></i> Filter
+                </button>
+                <button type="button" class="bulk-modal-toggle-btn" id="open-bulk-modal">
+                    <i class="bi bi-database-fill-up"></i> Bulk Import
+                </button>
+            </form>
+        
+            <div id="bulk-action-bar" style="display: none;" class="bulk-action-floating-panel">
+                <span id="selected-count-txt">0 Assets Selected</span>
+                <button type="button" id="execute-bulk-delete-btn" class="action-trigger-btn delete-trigger" style="width: auto; padding: 0 16px; height: 38px; gap: 6px; font-weight: 700;">
+                    <i class="bi bi-trash3-fill"></i> Delete Selected
+                </button>
+            </div>
+>>>>>>> lakshya-dev
             
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>
                         <tr>
+<<<<<<< HEAD
+=======
+                            <th style="width: 45px; text-align: center;">
+                                <input type="checkbox" id="master-select-checkbox">
+                            </th>
+>>>>>>> lakshya-dev
                             <th>ID Code</th>
                             <th>Product Profile</th>
                             <th>Category Mapped</th>
@@ -41,7 +75,14 @@
                     </thead>
                     <tbody>
                         {% for product in products %}
+<<<<<<< HEAD
                         <tr>
+=======
+                        <tr data-row-id="{{ product.productid }}">
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="row-select-checkbox" value="{{ product.productid }}">
+                            </td>
+>>>>>>> lakshya-dev
                             <td class="id-token">#{{ product.productid }}</td>
                             <td>
                                 <div class="product-identity-cell">
@@ -61,18 +102,35 @@
                             <td class="chrono-stamp">{{ product.added_dts|date:"m/d/Y" }}</td>
                             <td>
                                 <div class="action-buttons-group">
+<<<<<<< HEAD
                                     <a href="{% url 'edit_product' product.productid %}" class="action-trigger-btn edit-trigger">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     <a href="{% url 'delete_product' product.productid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this product?');">
                                         <i class="bi bi-trash3-fill"></i>
                                     </a>
+=======
+                                    <button type="button" class="action-trigger-btn edit-trigger single-edit-btn" 
+                                            data-id="{{ product.productid }}" 
+                                            data-name="{{ product.productname }}" 
+                                            data-category="{{ product.categoryid.categoryid }}" 
+                                            data-active="{{ product.is_active }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button type="button" class="action-trigger-btn delete-trigger single-delete-btn" data-id="{{ product.productid }}">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+>>>>>>> lakshya-dev
                                 </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
+<<<<<<< HEAD
                             <td colspan="7" class="empty-fallback-state">
+=======
+                            <td colspan="8" class="empty-fallback-state">
+>>>>>>> lakshya-dev
                                 <i class="bi bi-folder-x"></i>
                                 <p>No active inventory tracks mapped inside the database core matrix.</p>
                             </td>
@@ -94,6 +152,7 @@
                 {% endif %}
             </div>
             
+<<<<<<< HEAD
             <form method="POST" action="{% if edit_mode %}{% url 'edit_product' form.instance.productid %}{% else %}{% url 'add_product' %}{% endif %}">
                 {% csrf_token %}
                 
@@ -110,12 +169,23 @@
                             Dismiss Operations
                         </a>
                     {% endif %}
+=======
+            <form method="POST" action="{% url 'add_product' %}" id="add-product-form" data-mode="add">
+                {% csrf_token %}
+                <div class="django-injected-form-wrapper">
+                    {{ form.as_p }}
+                </div>
+                <div class="form-processing-actions">
+                    <button type="submit" class="submit-core-action-btn">Push New Asset</button>
+                    <a href="#" id="cancel-edit-btn" class="dismiss-action-link" style="display: none;">Dismiss Operations</a>
+>>>>>>> lakshya-dev
                 </div>
             </form>
         </div>
 
     </div>
 
+<<<<<<< HEAD
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const formElements = document.querySelectorAll('.django-injected-form-wrapper p input, .django-injected-form-wrapper p select');
@@ -164,5 +234,68 @@
             });
         }
     </script>
+=======
+    <div class="cyber-modal-overlay" id="bulkImportModal" {% if import_summary %}style="display: flex;"{% endif %}>
+        <div class="cyber-modal-window">
+            
+            <div class="cyber-modal-header">
+                <h3><i class="bi bi-cpu-fill text-indigo"></i> Bulk Asset Control Matrix</h3>
+                <button type="button" class="modal-close-x-trigger" id="close-bulk-modal">&times;</button>
+            </div>
+
+            <div class="cyber-modal-body">
+                <div class="bulk-upload-console-card">
+                    <form method="POST" action="{% url 'import_products' %}" enctype="multipart/form-data" class="bulk-upload-form">
+                        {% csrf_token %}
+                        <div class="file-drop-zone-wrapper">
+                            <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
+                            <input type="file" name="product_file" accept=".csv, .xlsx" required class="native-file-picker">
+                            <span class="upload-placeholder-txt">Drop CSV/Excel file here or click to browse</span>
+                            <button type="button" id="clear-file-btn" style="display: none; background: transparent; border: none; color: var(--glow-danger); z-index: 10; cursor: pointer; padding: 0 4px;">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="bulk-execute-btn">
+                            <i class="bi bi-database-fill-up"></i> Import
+                        </button>
+                    </form>
+                </div>
+
+                {% if import_summary %}
+                <div class="import-summary-matrix">
+                    <div class="summary-matrix-header">
+                        <h4><i class="bi bi-terminal-box text-indigo"></i> Processing Summary Report</h4>
+                        <span class="report-badge-pill">Sync Finished</span>
+                    </div>
+                    <div class="summary-counter-grid">
+                        <div class="metric-block-card metrics-success">
+                            <div class="m-val">{{ import_summary.imported }}</div>
+                            <div class="m-lbl">Rows Committed</div>
+                        </div>
+                        <div class="metric-block-card metrics-skipped">
+                            <div class="m-val">{{ import_summary.skipped }}</div>
+                            <div class="m-lbl">Rows Rejected</div>
+                        </div>
+                    </div>
+
+                    {% if import_summary.errors %}
+                    <div class="audit-exception-logs-box">
+                        <h5><i class="bi bi-bug-fill text-danger"></i> Validation Log Exceptions</h5>
+                        <ul class="exception-log-lines">
+                            {% for error in import_summary.errors %}
+                                <li><i class="bi bi-caret-right-fill log-bullet"></i> {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{% static 'scripts/product_list.js' %}"> </script>
+>>>>>>> lakshya-dev
 </body>
 </html>

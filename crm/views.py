@@ -2,9 +2,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from datetime import datetime
+<<<<<<< HEAD
 from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.db.models import Q
+=======
+from django.http import JsonResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate , login, logout
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+import re
+>>>>>>> lakshya-dev
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -12,6 +21,7 @@ from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
 from rest_framework import status
 import getpass
 from .utils import log_error
+<<<<<<< HEAD
 
 '''FOR PRODUCTS'''
 class Product_view:
@@ -41,6 +51,242 @@ class Product_view:
                         '-productid'
                     ).first()
 
+=======
+import json
+from django.views.decorators.http import require_POST
+import pandas as pd
+
+@login_required(login_url='login')
+def import_products(request):
+    if request.method != 'POST':
+        return redirect('product_list')
+
+    uploaded_file = request.FILES.get('product_file')
+
+    if not uploaded_file:
+        messages.error(request, "Please select a file.")
+        return redirect('product_list')
+
+    try:
+        # 1. Parse File Engine
+        if uploaded_file.name.endswith('.csv'):
+            df = pd.read_csv(uploaded_file)
+        elif uploaded_file.name.endswith('.xlsx'):
+            df = pd.read_excel(uploaded_file)
+        else:
+            messages.error(request, "Only CSV and Excel files are allowed.")
+            return redirect('product_list')
+
+        # Standardize expected headers to avoid column mismatch errors
+        required_columns = ['ProductName', 'CategoryID', 'Is_Active']
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, "Missing required columns: ProductName, CategoryID, or Is_Active")
+            return redirect('product_list')
+
+        last_product = Product.objects.order_by('-productid').first()
+        next_id = last_product.productid + 1 if last_product else 1
+
+        imported = 0
+        skipped = 0
+        errors = []
+        
+        for index, row in df.iterrows():
+            # Clean text properties and handle NaN cases safely
+            product_name = str(row['ProductName']).strip() if pd.notna(row['ProductName']) else ""
+            category_id = row['CategoryID']
+            is_active = row['Is_Active']
+
+            row_num = index + 2  # Human-readable row index layout line position
+
+            # 2. Strict Validations
+            if not product_name or product_name.lower() == "nan":
+                errors.append(f"Row {row_num}: Empty Product Name")
+                skipped += 1
+                continue
+
+            if not re.match(r'^[A-Za-z0-9 ]+$', product_name):
+                errors.append(f"Row {row_num}: Invalid characters in Product Name ('{product_name}')")
+                skipped += 1
+                continue
+
+            # Check if category ID is a valid number, then parse to integer safely
+            if pd.isna(category_id) or not str(category_id).strip().replace('.0', '').isdigit():
+                errors.append(f"Row {row_num}: Invalid Category ID mapping format")
+                skipped += 1
+                continue
+            category_id = int(float(category_id))
+
+            if not ProductCategory.objects.filter(categoryid=category_id).exists():
+                errors.append(f"Row {row_num}: Category ID {category_id} does not exist in the database")
+                skipped += 1
+                continue
+
+            # Normalize Is_Active from floats or strings safely
+            if pd.isna(is_active) or str(is_active).strip().replace('.0', '') not in ['0', '1']:
+                errors.append(f"Row {row_num}: Invalid Is_Active status value (must be 0 or 1)")
+                skipped += 1
+                continue
+            is_active = int(float(is_active))
+
+            if Product.objects.filter(productname__iexact=product_name).exists():
+                errors.append(f"Row {row_num}: Duplicate Product Name ('{product_name}') detected")
+                skipped += 1
+                continue
+
+            # 3. Create Record (Let DB auto-increment handle productid automatically)
+            Product.objects.create(
+                productid=next_id,
+                productname=product_name,
+                categoryid_id=category_id,
+                is_active=is_active,
+                added_by=request.user.username,
+                added_dts=datetime.now()
+            )
+            imported += 1
+            next_id+=1
+
+        # Flash success/warning message summary counts instantly
+        if imported > 0:
+            messages.success(request, f"Successfully imported {imported} products into core matrix.")
+        if skipped > 0:
+            messages.warning(request, f"Skipped {skipped} rows due to validation conflicts.")
+
+        # Save summary to session safely
+        request.session['import_summary'] = {
+            'imported': imported,
+            'skipped': skipped,
+            'errors': errors
+        }
+
+    except Exception as e:
+        log_error(e)
+        # Fallback log wrapper handle
+        print(f"CRITICAL BULK IMPORT ERROR: {str(e)}")
+        messages.error(request, "Something went wrong during data stream import parsing.")
+
+    return redirect('product_list')
+
+'''FOR LOGIN'''
+
+class Login_view:
+    def login_view(request):
+
+        if request.method == 'POST':
+
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(
+                request,
+                username=username,
+                password=password
+            )
+
+            if user:
+
+                login(request, user)
+
+                return redirect('dashboard')
+
+            messages.error(
+                request,
+                'Invalid username or password.'
+            )
+
+        return render(
+            request,
+            'login.html'
+        )
+
+'''FOR LOGOUT'''
+
+class Logout_view:
+    def logout_view(request):
+
+        logout(request)
+
+        return redirect('login')
+
+'''FOR PRODUCTS'''
+class Product_view:
+    @login_required(login_url='login')
+    def product_list(request):
+        search = request.GET.get('search', '')
+        products = Product.objects.select_related('categoryid')
+
+        if search:
+            if search.isdigit():
+                products = products.filter(productid=int(search))
+            else:
+                products = products.filter(productname__icontains=search)
+
+        # 1. Handle Inline Asynchronous Form Record Add Submissions
+        if request.method == 'POST':
+            form = ProductForm(request.POST)
+            if form.is_valid():
+                try:
+                    # Calculate the manual sequential primary key for your SQL Server setup
+                    last_product = Product.objects.order_by('-productid').first()
+                    next_id = last_product.productid + 1 if last_product else 1
+                    
+                    new_prod = form.save(commit=False)
+                    new_prod.productid = next_id
+                    new_prod.added_by = request.user.username
+                    new_prod.added_dts = datetime.now()
+                    new_prod.save()
+
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'product': {
+                                'id': new_prod.productid,
+                                'name': new_prod.productname,
+                                'category': new_prod.categoryid.categoryname if new_prod.categoryid else "N/A",
+                                'is_active': getattr(new_prod, 'is_active', 1), # Fallback safety default
+                                'added_by': new_prod.added_by,
+                                'added_dts': new_prod.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
+                    
+                    messages.success(request, "Product added successfully.")
+                    return redirect('product_list')
+                    
+                except Exception as e:
+                    log_error(e)
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+                    messages.error(request, "Error saving product down to database.")
+            else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': form.errors.as_json()}, status=400)
+
+        else:
+            # Instantiates a clean fallback structure on a default GET request routing loop
+            form = ProductForm()
+
+        import_summary = request.session.pop('import_summary', None)
+        
+        return render(
+            request,
+            'product_list.html',
+            {
+                'products': products,
+                'form': form,
+                'search': search,
+                'import_summary': import_summary
+            }
+        )
+
+    @login_required(login_url='login')
+    @staticmethod # Keeps your staticmethod decorator intact
+    def add_product(request):
+        try:
+            if request.method == 'POST':
+                form = ProductForm(request.POST)
+
+                if form.is_valid():
+                    last_product = Product.objects.order_by('-productid').first()
+>>>>>>> lakshya-dev
                     product = form.save(commit=False)
 
                     product.productid = (
@@ -50,12 +296,16 @@ class Product_view:
                     )
 
                     product.added_dts = datetime.now()
+<<<<<<< HEAD
 
+=======
+>>>>>>> lakshya-dev
                     product.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else "System"
                     )
+<<<<<<< HEAD
 
                     product.save()
 
@@ -68,6 +318,37 @@ class Product_view:
 
             products = Product.objects.all()
 
+=======
+                    product.save()
+
+                    # ==========================================
+                    # NEW: ASYNC AJAX FETCH INTERCEPTOR HANDLER
+                    # ==========================================
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'product': {
+                                'id': product.productid,
+                                'name': product.productname,
+                                'category': product.categoryid.categoryname if product.categoryid else "N/A",
+                                'is_active': getattr(product, 'is_active', 1), # Safely tracks 1 or 0
+                                'added_by': product.added_by,
+                                'added_dts': product.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
+
+                    # Fallback for standard traditional form reloads
+                    messages.success(request, "Product added successfully.")
+                    return redirect('product_list')
+                
+                else:
+                    # If form is invalid and it's an AJAX call, return errors
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid data formats.'}, status=400)
+
+            # Fallback render block for GET requests or fallback sequences
+            products = Product.objects.all()
+>>>>>>> lakshya-dev
             return render(
                 request,
                 'product_list.html',
@@ -78,13 +359,22 @@ class Product_view:
             )
 
         except Exception as e:
+<<<<<<< HEAD
 
             log_error(e)
 
+=======
+            log_error(e)
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+
+>>>>>>> lakshya-dev
             messages.error(
                 request,
                 f"{type(e).__name__}: {str(e)}"
             )
+<<<<<<< HEAD
 
             return redirect('product_list')
 
@@ -117,6 +407,46 @@ class Product_view:
                 )
 
                 return redirect('product_list')
+=======
+            return redirect('product_list')
+
+    @login_required(login_url='login')
+    @staticmethod # Keeps your staticmethod decorator intact
+    def edit_product(request, productid):
+        try:
+            product = get_object_or_404(Product, pk=productid)
+
+            form = ProductForm(request.POST or None, instance=product)
+
+            if request.method == 'POST':
+                if form.is_valid():
+                    product = form.save(commit=False)
+                    product.added_dts = datetime.now()
+                    product.save()
+
+                    # ==========================================
+                    # ASYNC AJAX FETCH INTERCEPTOR HANDLER
+                    # ==========================================
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'product': {
+                                'id': product.productid,
+                                'name': product.productname,
+                                'category': product.categoryid.categoryname if product.categoryid else "N/A",
+                                'is_active': getattr(product, 'is_active', 1),
+                                'added_by': product.added_by if product.added_by else "System",
+                                'added_dts': product.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
+
+                    messages.success(request, "Product updated successfully.")
+                    return redirect('product_list')
+                
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
+>>>>>>> lakshya-dev
 
             return render(
                 request,
@@ -129,6 +459,7 @@ class Product_view:
             )
 
         except Exception as e:
+<<<<<<< HEAD
 
             log_error(e)
 
@@ -166,21 +497,94 @@ class Product_view:
             )
 
         return redirect('product_list')
+=======
+            log_error(e)
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+            return redirect('product_list')
+
+    @login_required(login_url='login')
+    @staticmethod
+    def delete_product(request, productid):
+        try:
+            product = get_object_or_404(Product, pk=productid)
+            product.delete()
+
+            # Check if the deletion request was initiated via asynchronous JS Fetch
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.method == 'POST':
+                return JsonResponse({'success': True})
+
+            messages.success(request, "Product deleted successfully.")
+
+        except Exception as e:
+            log_error(e)
+            
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+                
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+
+        return redirect('product_list')
+    
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_delete_products(request):
+        try:
+            # Load string data array from request body input stream
+            data = json.loads(request.body)
+            product_ids = data.get('product_ids', [])
+
+            if not product_ids:
+                return JsonResponse({'success': False, 'error': 'No asset records targeted.'}, status=400)
+
+            # Fire bulk filtration delete directly against SQL Server
+            deleted_count, _ = Product.objects.filter(productid__in=product_ids).delete()
+
+            return JsonResponse({
+                'success': True,
+                'message': f'Successfully cleared {deleted_count} tracks from core ledger rows.'
+            })
+
+        except Exception as e:
+            # Log to your text file tool if available
+            if 'log_error' in globals():
+                log_error(e)
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+>>>>>>> lakshya-dev
 
 '''FOR REGION'''
 
 class Region_view:
+<<<<<<< HEAD
 
     def region_list(request):
 
         regions = Region.objects.all()
         form = RegionForm()
 
+=======
+    @login_required(login_url='login')
+    def region_list(request):
+        search = request.GET.get('search', '')
+        regions = Region.objects.all()
+
+        if search:
+            if search.isdigit():
+                regions = regions.filter(regionid=int(search))
+            else:
+                regions = regions.filter(regionname__istartswith=search)
+
+        form = RegionForm()
+>>>>>>> lakshya-dev
         return render(
             request,
             'region_list.html',
             {
                 'regions': regions,
+<<<<<<< HEAD
                 'form': form
             }
         )
@@ -201,18 +605,37 @@ class Region_view:
                         '-regionid'
                     ).first()
 
+=======
+                'form': form,
+                'search': search
+            }
+        )
+
+    @login_required(login_url='login')
+    @staticmethod
+    def add_region(request):
+        try:
+            if request.method == 'POST':
+                form = RegionForm(request.POST)
+                if form.is_valid():
+                    last_region = Region.objects.order_by('-regionid').first()
+>>>>>>> lakshya-dev
                     region = form.save(commit=False)
 
                     region.regionid = (
                         last_region.regionid + 1
                         if last_region else 1
                     )
+<<<<<<< HEAD
 
+=======
+>>>>>>> lakshya-dev
                     region.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else 'System'
                     )
+<<<<<<< HEAD
 
                     region.added_dts = datetime.now()
 
@@ -224,10 +647,33 @@ class Region_view:
                     )
 
                     return redirect('region_list')
+=======
+                    region.added_dts = datetime.now()
+                    region.save()
+
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'region': {
+                                'id': region.regionid,
+                                'name': region.regionname,
+                                'added_by': region.added_by,
+                                'added_dts': region.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
+
+                    messages.success(request, "Region added successfully.")
+                    return redirect('region_list')
+                
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
+>>>>>>> lakshya-dev
 
             return redirect('region_list')
 
         except Exception as e:
+<<<<<<< HEAD
 
             log_error(e)
 
@@ -277,6 +723,50 @@ class Region_view:
 
             regions = Region.objects.all()
 
+=======
+            log_error(e)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+            return redirect('region_list')
+
+    @login_required(login_url='login')
+    @staticmethod
+    def edit_region(request, regionid):
+        try:
+            region = get_object_or_404(Region, pk=regionid)
+            form = RegionForm(request.POST or None, instance=region)
+
+            if request.method == 'POST':
+                if form.is_valid():
+                    region = form.save(commit=False)
+                    region.added_dts = datetime.now()
+                    region.added_by = (
+                        request.user.username
+                        if request.user.is_authenticated
+                        else 'System'
+                    )
+                    region.save()
+
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'region': {
+                                'id': region.regionid,
+                                'name': region.regionname,
+                                'added_by': region.added_by,
+                                'added_dts': region.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
+
+                    messages.success(request, "Region updated successfully.")
+                    return redirect('region_list')
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
+
+            regions = Region.objects.all()
+>>>>>>> lakshya-dev
             return render(
                 request,
                 'region_list.html',
@@ -288,6 +778,7 @@ class Region_view:
             )
 
         except Exception as e:
+<<<<<<< HEAD
 
             log_error(e)
 
@@ -331,6 +822,135 @@ class Region_view:
 class Lead_view:
     def lead_list(request):
 
+=======
+            log_error(e)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+            return redirect('region_list')
+
+    @login_required(login_url='login')
+    @staticmethod
+    def delete_region(request, regionid):
+        try:
+            region = get_object_or_404(Region, pk=regionid)
+            region.delete()
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.method == 'POST':
+                return JsonResponse({'success': True})
+
+            messages.success(request, "Region deleted successfully.")
+        except Exception as e:
+            log_error(e)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+
+        return redirect('region_list')
+
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_delete_regions(request):
+        try:
+            data = json.loads(request.body)
+            region_ids = data.get('region_ids', [])
+
+            if not region_ids:
+                return JsonResponse({'success': False, 'error': 'No asset records targeted.'}, status=400)
+
+            deleted_count, _ = Region.objects.filter(regionid__in=region_ids).delete()
+            return JsonResponse({'success': True, 'message': f'Successfully cleared {deleted_count} tracks.'})
+        except Exception as e:
+            log_error(e)
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_upload_regions(request):
+        try:
+            # 1. Capture incoming multi-part spreadsheet file streams
+            if 'bulk_file' not in request.FILES:
+                return JsonResponse({'success': False, 'error': 'No file stream payload parsed.'}, status=400)
+                
+            uploaded_file = request.FILES['bulk_file']
+            filename = uploaded_file.name
+
+            if filename.endswith('.csv'):
+                df = pd.read_csv(uploaded_file)
+            elif filename.endswith(('.xls', '.xlsx')):
+                df = pd.read_excel(uploaded_file)
+            else:
+                return JsonResponse({'success': False, 'error': 'Unsupported format extension. Use CSV or Excel.'}, status=400)
+
+            # Ensure our target column map identifier key is present inside the matrix header
+            target_col = 'Region Name'
+            if target_col not in df.columns:
+                return JsonResponse({'success': False, 'error': f"Missing required column header token: '{target_col}'"}, status=400)
+
+            success_count = 0
+            skipped_count = 0
+            exception_logs = []
+
+            # 2. Open an isolated runtime processing cycle loop across rows
+            for index, row in df.iterrows():
+                row_num = index + 2  # Offsets array indexing to map cleanly onto physical sheet rows
+                raw_region_name = str(row[target_col]).strip()
+
+                # Layer A: Check for blank entries or Pandas string artifacts
+                if not raw_region_name or raw_region_name.lower() in ['nan', 'null', '']:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Rejected due to blank cell mapping context.")
+                    continue
+
+                # Layer B: Enforce validation matrix patterns (Allows letter structures, spaces, and hyphens)
+                import re
+                if not re.match(r'^[A-Za-z -]+$', raw_region_name):
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: '{raw_region_name}' contains illegal characters.")
+                    continue
+
+                # Layer C: Scan database constraints for pre-existing records (Case-insensitive)
+                if Region.objects.filter(regionname__iexact=raw_region_name).exists():
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Zone record '{raw_region_name}' already exists inside core ledger.")
+                    continue
+
+                try:
+                    # Calculate the sequential primary key values manually
+                    last_region = Region.objects.order_by('-regionid').first()
+                    next_id = (last_region.regionid + 1) if last_region else 1
+
+                    # 3. Commit unique object rows to the database
+                    Region.objects.create(
+                        regionid=next_id,
+                        regionname=raw_region_name,
+                        added_by=request.user.username if request.user.is_authenticated else "System",
+                        added_dts=datetime.now()
+                    )
+                    success_count += 1
+                except Exception as e:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Processing anomaly dropped row line -> {str(e)}")
+
+            # Store processing matrix inside session storage to serve as post-import ledger report layout updates
+            request.session['import_summary'] = {
+                'success_count': success_count,
+                'skipped_count': skipped_count,
+                'exception_logs': exception_logs,
+                'filename': filename
+            }
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            log_error(e)
+            return JsonResponse({'success': False, 'error': f"Critical ingestion failure: {str(e)}"}, status=500)
+
+'''FOR LEAD'''
+class Lead_view:
+    @login_required(login_url='login')
+    def lead_list(request):
+>>>>>>> lakshya-dev
         search = request.GET.get('search', '')
 
         leads = Lead.objects.select_related(
@@ -341,6 +961,7 @@ class Lead_view:
         )
 
         if search:
+<<<<<<< HEAD
 
             leads = leads.filter(
 
@@ -357,6 +978,18 @@ class Lead_view:
 
         form = LeadForm()
 
+=======
+            if search.isdigit():
+                leads = leads.filter(leadid=int(search))
+            else:
+                leads = leads.filter(
+                    Q(personname__istartswith=search) |
+                    Q(productid__productname__icontains=search) |
+                    Q(regionid__regionname__istartswith=search)
+                )
+
+        form = LeadForm()
+>>>>>>> lakshya-dev
         return render(
             request,
             'lead_list.html',
@@ -367,6 +1000,7 @@ class Lead_view:
             }
         )
 
+<<<<<<< HEAD
     @staticmethod
     def add_lead(request):
 
@@ -414,10 +1048,62 @@ class Lead_view:
                         'form': form
                     }
                 )
+=======
+    @login_required(login_url='login')
+    @staticmethod
+    def add_lead(request):
+        try:
+            if request.method == 'POST':
+                form = LeadForm(request.POST)
+                if form.is_valid():
+                    last_lead = Lead.objects.order_by('-leadid').first()
+                    lead = form.save(commit=False)
+
+                    lead.leadid = (last_lead.leadid + 1 if last_lead else 1)
+                    lead.added_by = (
+                        request.user.username 
+                        if request.user.is_authenticated 
+                        else "System"
+                    )
+                    lead.added_dts = datetime.now()
+                    # Django native date fields fallback tracking
+                    if hasattr(lead, 'lead_gen_date') and not lead.lead_gen_date:
+                        lead.lead_gen_date = datetime.now().date()
+                    
+                    lead.save()
+
+                    # Return full string representations back to the frontend row constructor
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'lead': {
+                                'id': lead.leadid,
+                                'name': lead.personname,
+                                'company': lead.companyname,
+                                'phone': lead.contactno if lead.contactno else "N/A",
+                                'product': lead.productid.productname if lead.productid else "N/A",
+                                'region': lead.regionid.regionname if lead.regionid else "N/A",
+                                'status': lead.statusid.statusname if lead.statusid else "N/A",
+                                'source': lead.leadsourceid.leadsourcename if lead.leadsourceid else "N/A",
+                                'date': lead.lead_gen_date.strftime("%m/%d/%Y") if hasattr(lead, 'lead_gen_date') and lead.lead_gen_date else datetime.now().strftime("%m/%d/%Y")
+                            }
+                        })
+
+                    messages.success(request, "Lead added successfully.")
+                    return redirect('lead_list')
+
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Validation failure. Check your inputs.'}, status=400)
+
+                    leads = Lead.objects.all()
+                    return render(request, 'lead_list.html', {'leads': leads, 'form': form})
+>>>>>>> lakshya-dev
 
             return redirect('lead_list')
 
         except Exception as e:
+<<<<<<< HEAD
 
             log_error(e)
 
@@ -509,6 +1195,95 @@ class Lead_view:
         return redirect('lead_list')
     
 '''DASHBOARD'''
+=======
+            log_error(e)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+            return redirect('lead_list')
+
+    @login_required(login_url='login')
+    @staticmethod
+    def edit_lead(request, leadid):
+        try:
+            lead = get_object_or_404(Lead, pk=leadid)
+            form = LeadForm(request.POST or None, instance=lead)
+
+            if request.method == 'POST':
+                if form.is_valid():
+                    lead = form.save(commit=False)
+                    lead.added_dts = datetime.now()
+                    lead.save()
+
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'lead': {
+                                'id': lead.leadid,
+                                'name': lead.personname,
+                                'company': lead.companyname,
+                                'phone': lead.contactno if lead.contactno else "N/A",
+                                'product': lead.productid.productname if lead.productid else "N/A",
+                                'region': lead.regionid.regionname if lead.regionid else "N/A",
+                                'status': lead.statusid.statusname if lead.statusid else "N/A",
+                                'source': lead.leadsourceid.leadsourcename if lead.leadsourceid else "N/A"
+                            }
+                        })
+
+                    messages.success(request, "Lead updated successfully.")
+                    return redirect('lead_list')
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Form parsing contains invalid entities.'}, status=400)
+
+            leads = Lead.objects.all()
+            return render(request, 'lead_list.html', {'leads': leads, 'form': form, 'edit_mode': True})
+
+        except Exception as e:
+            log_error(e)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+            return redirect('lead_list')
+
+    @login_required(login_url='login')
+    @staticmethod
+    def delete_lead(request, leadid):
+        try:
+            lead = get_object_or_404(Lead, pk=leadid)
+            lead.delete()
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.method == 'POST':
+                return JsonResponse({'success': True})
+
+            messages.success(request, "Lead deleted successfully.")
+        except Exception as e:
+            log_error(e)
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+
+        return redirect('lead_list')
+
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_delete_leads(request):
+        try:
+            data = json.loads(request.body)
+            lead_ids = data.get('lead_ids', [])
+
+            if not lead_ids:
+                return JsonResponse({'success': False, 'error': 'No asset records targeted.'}, status=400)
+
+            deleted_count, _ = Lead.objects.filter(leadid__in=lead_ids).delete()
+            return JsonResponse({'success': True, 'message': f'Successfully cleared {deleted_count} tracks from core ledger rows.'})
+        except Exception as e:
+            log_error(e)
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    
+'''DASHBOARD'''
+@login_required(login_url='login')
+>>>>>>> lakshya-dev
 def dashboard(request):
     return render(request, 'dashboard.html')
 
