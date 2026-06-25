@@ -36,6 +36,50 @@ body {
 }
 
 /* ==========================================
+   SINGLE EXPORT DROPDOWN COMPONENT THEME
+   ========================================== */
+   .export-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.export-dropdown-menu {
+    display: none; /* Controlled dynamically via JS */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #141c2f;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: var(--radius-input);
+    z-index: 1000;
+    min-width: 170px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.export-option-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.export-option-link:hover {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981 !important;
+}
+
+.export-option-link:not(:first-child) {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================
    HEADER BANNER OVERHAUL 
    ========================================== */
 .header-banner {
@@ -95,6 +139,32 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     animation: fadeInDown 0.3s var(--ease-curve) both;
     width: 100%;
+}
+
+/* ==========================================
+   EXPORT UTILITY ACTION BUTTON THEME
+   ========================================== */
+   .export-ledger-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: var(--radius-input);
+    cursor: pointer;
+    white-space: nowrap;
+    height: 47px;
+    transition: all 0.3s var(--ease-curve);
+}
+
+.export-ledger-btn:hover {
+    background: var(--glow-primary);
+    box-shadow: 0 4px 15px var(--glow-primary-rgba);
 }
 
 /* ==========================================

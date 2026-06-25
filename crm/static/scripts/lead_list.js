@@ -137,6 +137,12 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Safe reference check for form dropdown fields value extraction
+                    const currentProductId = pId ? pId.value : "";
+                    const currentRegionId = rId ? rId.value : "";
+                    const currentStatusId = sId ? sId.value : "";
+                    const currentLeadSourceId = lsId ? lsId.value : "";
+
                     if (mode === 'edit') {
                         // Live Update specific row columns parameters text contents nodes
                         const targetRow = document.querySelector(`tr[data-row-id="${data.lead.id}"]`);
@@ -156,10 +162,10 @@ document.addEventListener("DOMContentLoaded", function() {
                                 editBtn.setAttribute('data-personname', data.lead.name);
                                 editBtn.setAttribute('data-companyname', data.lead.company);
                                 editBtn.setAttribute('data-contactno', data.lead.phone);
-                                editBtn.setAttribute('data-productid', pId.value);
-                                editBtn.setAttribute('data-regionid', rId.value);
-                                editBtn.setAttribute('data-statusid', sId.value);
-                                editBtn.setAttribute('data-leadsourceid', lsId.value);
+                                editBtn.setAttribute('data-productid', currentProductId);
+                                editBtn.setAttribute('data-regionid', currentRegionId);
+                                editBtn.setAttribute('data-statusid', currentStatusId);
+                                editBtn.setAttribute('data-leadsourceid', currentLeadSourceId);
                             }
 
                             targetRow.style.background = 'rgba(99, 102, 241, 0.15)';
@@ -193,8 +199,8 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <div class="action-buttons-group">
                                     <button type="button" class="action-trigger-btn edit-trigger single-edit-btn" 
                                             data-id="${data.lead.id}" data-personname="${data.lead.name}" data-companyname="${data.lead.company}" 
-                                            data-contactno="${data.lead.phone}" data-productid="${pId.value}" data-regionid="${rId.value}" 
-                                            data-statusid="${sId.value}" data-leadsourceid="${lsId.value}">
+                                            data-contactno="${data.lead.phone}" data-productid="${currentProductId}" data-regionid="${currentRegionId}" 
+                                            data-statusid="${currentStatusId}" data-leadsourceid="${currentLeadSourceId}">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <button type="button" class="action-trigger-btn delete-trigger single-delete-btn" data-id="${data.lead.id}"><i class="bi bi-trash3-fill"></i></button>
@@ -285,4 +291,95 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // ==========================================
+    // 7. SINGLE BUTTON DUAL EXPORT ENGINE (EXCEL & CSV)
+    // ==========================================
+    const menuTrigger = document.getElementById('exportMenuTrigger');
+    const dropdownMenu = document.getElementById('exportDropdownMenu');
+    const exportOptions = document.querySelectorAll('.export-option-link');
+
+    if (menuTrigger && dropdownMenu) {
+        menuTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+        document.addEventListener('click', function() {
+            dropdownMenu.style.display = 'none';
+        });
+    }
+
+    if (exportOptions.length > 0) {
+        exportOptions.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (dropdownMenu) dropdownMenu.style.display = 'none';
+
+                const selectedFormat = this.getAttribute('data-format');
+                const staticTable = document.querySelector('table');
+                if (!staticTable) return;
+
+                const virtualTable = staticTable.cloneNode(true);
+                const targetRows = virtualTable.querySelectorAll('tr');
+                const pageTitle = document.title.replace(/\s+/g, '_').toLowerCase();
+                const dateStamp = new Date().toISOString().slice(0, 10);
+                const filename = `${pageTitle}_export_${dateStamp}`;
+
+                virtualTable.querySelectorAll('.empty-fallback-state').forEach(el => el.closest('tr').remove());
+
+                targetRows.forEach(row => {
+                    const cells = row.querySelectorAll('th, td');
+                    cells.forEach((cell, idx) => {
+                        if (idx === 0 || idx === (cells.length - 1)) {
+                            cell.remove();
+                        } else {
+                            cell.textContent = cell.textContent.replace(/\s+/g, ' ').trim();
+                        }
+                    });
+                });
+
+                if (selectedFormat === 'xlsx') {
+                    if (typeof XLSX !== 'undefined') {
+                        const workSheet = XLSX.utils.table_to_sheet(virtualTable);
+                        const workBook = XLSX.utils.book_new();
+                        const colWidths = [];
+                        for (let col in workSheet) {
+                            if (col[0] === '!') continue;
+                            const cellValue = workSheet[col].v ? String(workSheet[col].v) : '';
+                            const cellLen = cellValue.length + 4;
+                            const colIdx = col.replace(/[0-9]/g, '');
+                            if (!colWidths[colIdx] || colWidths[colIdx] < cellLen) colWidths[colIdx] = cellLen;
+                        }
+                        workSheet['!cols'] = Object.keys(colWidths).map(k => ({ wch: colWidths[k] }));
+                        XLSX.utils.book_append_sheet(workBook, workSheet, "Data Ledger");
+                        XLSX.writeFile(workBook, `${filename}.xlsx`);
+                    } else {
+                        alert("Export Error: SheetJS library (XLSX) is missing in template header.");
+                    }
+                } else if (selectedFormat === 'csv') {
+                    let csvContent = [];
+                    const rows = virtualTable.querySelectorAll('tr');
+                    rows.forEach(row => {
+                        let rowData = [];
+                        const cells = row.querySelectorAll('th, td');
+                        cells.forEach(cell => {
+                            let cleanText = cell.textContent.replace(/"/g, '""');
+                            if (cleanText.includes(',') || cleanText.includes('"') || cleanText.includes('\n')) {
+                                cleanText = `"${cleanText}"`;
+                            }
+                            rowData.push(cleanText);
+                        });
+                        if (rowData.length > 0) csvContent.push(rowData.join(','));
+                    });
+                    const csvBlob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(csvBlob);
+                    downloadLink.setAttribute('download', `${filename}.csv`);
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                }
+            });
+        });
+    }
 });
