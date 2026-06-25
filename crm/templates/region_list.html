@@ -19,6 +19,34 @@
     </div>
 
     <div class="main-container">
+        {% if import_summary %}
+        <div class="import-summary-matrix animate-fade-in">
+            <div class="summary-matrix-header">
+                <h4><i class="bi bi-clipboard2-data-fill text-indigo"></i> Regional Ingestion Summary Matrix</h4>
+                <span class="report-badge-pill">Source: {{ import_summary.filename }}</span>
+            </div>
+            <div class="summary-counter-grid">
+                <div class="metric-block-card metrics-success">
+                    <span class="m-val">{{ import_summary.success_count }}</span>
+                    <span class="m-lbl">Zones Committed Successfully</span>
+                </div>
+                <div class="metric-block-card metrics-skipped">
+                    <span class="m-val">{{ import_summary.skipped_count }}</span>
+                    <span class="m-lbl">Rows Dropped / Filtered Out</span>
+                </div>
+            </div>
+            {% if import_summary.exception_logs %}
+            <div class="audit-exception-logs-box">
+                <h5>Pipeline Disconnect Exception Trace Logs</h5>
+                <ul class="exception-log-lines">
+                    {% for log in import_summary.exception_logs %}
+                        <li><i class="bi bi-exclamation-triangle-fill log-bullet"></i> {{ log }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
 
         <div class="table-section">
             <div class="section-header-row">
@@ -39,11 +67,26 @@
                 <button type="submit" class="search-action-btn">
                     <i class="bi bi-funnel-fill"></i> Filter Matrix
                 </button>
+
+                <button type="button" class="bulk-modal-toggle-btn" id="open-bulk-modal">
+                    <i class="bi bi-database-fill-up"></i> Bulk Import
+                </button>
             </form>
+
+            <div id="bulk-action-bar" style="display: none; margin-bottom: 15px;" class="bulk-action-floating-panel">
+                <span id="selected-count-txt">0 Regions Selected</span>
+                <button type="button" id="execute-bulk-delete-btn" class="action-trigger-btn delete-trigger" style="width: auto; padding: 0 16px; height: 38px; gap: 6px; font-weight: 700;">
+                    <i class="bi bi-trash3-fill"></i> Delete Selected
+                </button>
+            </div>
+
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>
                         <tr>
+                            <th style="width: 45px; text-align: center;">
+                                <input type="checkbox" id="master-select-checkbox">
+                            </th>
                             <th>ID Code</th>
                             <th>Geographic Region Name</th>
                             <th>Handled By</th>
@@ -53,7 +96,10 @@
                     </thead>
                     <tbody>
                         {% for region in regions %}
-                        <tr>
+                        <tr data-row-id="{{ region.regionid }}">
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="row-select-checkbox" value="{{ region.regionid }}">
+                            </td>
                             <td class="id-token">#{{ region.regionid }}</td>
                             <td>
                                 <div class="region-identity-cell">
@@ -62,21 +108,23 @@
                                 </div>
                             </td>
                             <td class="user-meta-txt"><i class="bi bi-person-fill-check"></i> {{ region.added_by }}</td>
-                            <td class="chrono-stamp">{{ region.added_dts|date:"Y-m-d H:i:s" }}</td>
+                            <td class="chrono-stamp">{{ region.added_dts|date:"m/d/Y" }}</td>
                             <td>
                                 <div class="action-buttons-group">
-                                    <a href="{% url 'edit_region' region.regionid %}" class="action-trigger-btn edit-trigger">
+                                    <button type="button" class="action-trigger-btn edit-trigger single-edit-btn" 
+                                            data-id="{{ region.regionid }}" 
+                                            data-name="{{ region.regionname }}">
                                         <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a href="{% url 'delete_region' region.regionid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this region?');">
+                                    </button>
+                                    <button type="button" class="action-trigger-btn delete-trigger single-delete-btn" data-id="{{ region.regionid }}">
                                         <i class="bi bi-trash3-fill"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="empty-fallback-state">
+                            <td colspan="6" class="empty-fallback-state">
                                 <i class="bi bi-geo-fill"></i>
                                 <p>No active operational territories mapped inside the database matrix.</p>
                             </td>
@@ -89,16 +137,11 @@
 
         <div class="form-container form-section">
             <div class="form-title-block">
-                {% if edit_mode %} 
-                    <h3><i class="bi bi-pencil-square color-edit"></i> Modify Zone</h3>
-                    <p>Altering existing territorial database rows parameters.</p>
-                {% else %} 
-                    <h3><i class="bi bi-plus-circle-fill color-add"></i> Create Region</h3>
-                    <p>Append a new geographic division constraint row.</p>
-                {% endif %}
+                <h3><i class="bi bi-plus-circle-fill color-add"></i> Create Region</h3>
+                <p>Append a new geographic division constraint row.</p>
             </div>
             
-            <form method="POST" action="{% if edit_mode %}{% url 'edit_region' form.instance.regionid %}{% else %}{% url 'add_region' %}{% endif %}">
+            <form method="POST" action="{% url 'add_region' %}" id="add-product-form" data-mode="add">
                 {% csrf_token %}
                 
                 <div class="django-injected-form-wrapper">
@@ -106,68 +149,40 @@
                 </div>
 
                 <div class="form-processing-actions">
-                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
-                        {% if edit_mode %} Commit Zone Updates {% else %} Push New Region {% endif %}
-                    </button>
-                    {% if edit_mode %}
-                        <a href="{% url 'region_list' %}" class="dismiss-action-link">
-                            Dismiss Operations
-                        </a>
-                    {% endif %}
+                    <button type="submit" class="submit-core-action-btn">Push New Region</button>
+                    <a href="#" id="cancel-edit-btn" class="dismiss-action-link" style="display: none;">
+                        Dismiss Operations
+                    </a>
                 </div>
             </form>
         </div>
 
     </div>
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    <div class="cyber-modal-overlay" id="bulkImportModal">
+        <div class="cyber-modal-window">
+            <div class="cyber-modal-header">
+                <h3><i class="bi bi-cpu-fill text-info"></i> Bulk Territory Control Matrix</h3>
+                <button type="button" class="modal-close-x-trigger" id="close-bulk-modal">&times;</button>
+            </div>
+            <div class="cyber-modal-body">
+                <form id="bulk-upload-form" class="bulk-upload-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="file-drop-zone-wrapper">
+                        <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
+                        <span class="upload-placeholder-txt">Drop CSV/Excel region schema file here or click to browse</span>
+                        <input type="file" name="bulk_file" class="native-file-picker" accept=".csv, .xls, .xlsx" required>
+                    </div>
+                    <button type="submit" class="bulk-execute-btn">
+                        <i class="bi bi-terminal-plus"></i> Import
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-        const formElements = document.querySelectorAll(
-            '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select'
-        );
-
-        formElements.forEach(element => {
-            if (element.type !== 'checkbox' && element.type !== 'radio') {
-                element.classList.add('premium-cyber-input-element');
-            }
-        });
-
-        const regionInput = document.getElementById('regionname');
-
-        if (regionInput) {
-
-            regionInput.addEventListener('input', function () {
-                this.setCustomValidity('');
-            });
-
-            regionInput.addEventListener('blur', function () {
-
-                if (this.value.trim() === '') return;
-
-                if (!this.checkValidity()) {
-                    this.reportValidity();
-                    return;
-                }
-
-                fetch(`/check-regionname/?regionname=${encodeURIComponent(this.value)}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        if (data.exists) {
-                            this.setCustomValidity(
-                                'Region with this name already exists.'
-                            );
-                        } else {
-                            this.setCustomValidity('');
-                        }
-
-                        this.reportValidity();
-                    });
-            });
-        }
-
-        });
+    <script src="{% static 'scripts/region_list.js' %}">
+    
     </script>
 </body>
 </html>

@@ -60,7 +60,7 @@ class RegionForm(forms.ModelForm):
 
         widgets = {
             'regionname': forms.TextInput(attrs={
-            'pattern': '^[A-Za-z ]+$',
+            'pattern': '^[A-Za-z -]+$',
             'title': 'Only letters and spaces are allowed.',
             'required':True,
             'id':'regionname'

@@ -422,27 +422,16 @@ class Product_view:
 class Region_view:
     @login_required(login_url='login')
     def region_list(request):
-
         search = request.GET.get('search', '')
-
         regions = Region.objects.all()
 
         if search:
-
             if search.isdigit():
-
-                regions = regions.filter(
-                    regionid=int(search)
-                )
-
+                regions = regions.filter(regionid=int(search))
             else:
-
-                regions = regions.filter(
-                    regionname__istartswith=search
-                )
+                regions = regions.filter(regionname__istartswith=search)
 
         form = RegionForm()
-
         return render(
             request,
             'region_list.html',
@@ -456,95 +445,88 @@ class Region_view:
     @login_required(login_url='login')
     @staticmethod
     def add_region(request):
-
         try:
-
             if request.method == 'POST':
-
                 form = RegionForm(request.POST)
-
                 if form.is_valid():
-
-                    last_region = Region.objects.order_by(
-                        '-regionid'
-                    ).first()
-
+                    last_region = Region.objects.order_by('-regionid').first()
                     region = form.save(commit=False)
 
                     region.regionid = (
                         last_region.regionid + 1
                         if last_region else 1
                     )
-
                     region.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else 'System'
                     )
-
                     region.added_dts = datetime.now()
-
                     region.save()
 
-                    messages.success(
-                        request,
-                        "Region added successfully."
-                    )
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'region': {
+                                'id': region.regionid,
+                                'name': region.regionname,
+                                'added_by': region.added_by,
+                                'added_dts': region.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
 
+                    messages.success(request, "Region added successfully.")
                     return redirect('region_list')
+                
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
 
             return redirect('region_list')
 
         except Exception as e:
-
             log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
             return redirect('region_list')
 
     @login_required(login_url='login')
     @staticmethod
     def edit_region(request, regionid):
-
         try:
+            region = get_object_or_404(Region, pk=regionid)
+            form = RegionForm(request.POST or None, instance=region)
 
-            region = get_object_or_404(
-                Region,
-                pk=regionid
-            )
+            if request.method == 'POST':
+                if form.is_valid():
+                    region = form.save(commit=False)
+                    region.added_dts = datetime.now()
+                    region.added_by = (
+                        request.user.username
+                        if request.user.is_authenticated
+                        else 'System'
+                    )
+                    region.save()
 
-            form = RegionForm(
-                request.POST or None,
-                instance=region
-            )
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'region': {
+                                'id': region.regionid,
+                                'name': region.regionname,
+                                'added_by': region.added_by,
+                                'added_dts': region.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
 
-            if request.method == 'POST' and form.is_valid():
-
-                region = form.save(commit=False)
-
-                region.added_dts = datetime.now()
-
-                region.added_by = (
-                    request.user.username
-                    if request.user.is_authenticated
-                    else 'System'
-                )
-
-                region.save()
-
-                messages.success(
-                    request,
-                    "Region updated successfully."
-                )
-
-                return redirect('region_list')
+                    messages.success(request, "Region updated successfully.")
+                    return redirect('region_list')
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
 
             regions = Region.objects.all()
-
             return render(
                 request,
                 'region_list.html',
@@ -556,50 +538,133 @@ class Region_view:
             )
 
         except Exception as e:
-
             log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
             return redirect('region_list')
 
     @login_required(login_url='login')
     @staticmethod
     def delete_region(request, regionid):
-
         try:
-
-            region = get_object_or_404(
-                Region,
-                pk=regionid
-            )
-
+            region = get_object_or_404(Region, pk=regionid)
             region.delete()
 
-            messages.success(
-                request,
-                "Region deleted successfully."
-            )
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.method == 'POST':
+                return JsonResponse({'success': True})
 
+            messages.success(request, "Region deleted successfully.")
         except Exception as e:
-
             log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
 
         return redirect('region_list')
+
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_delete_regions(request):
+        try:
+            data = json.loads(request.body)
+            region_ids = data.get('region_ids', [])
+
+            if not region_ids:
+                return JsonResponse({'success': False, 'error': 'No asset records targeted.'}, status=400)
+
+            deleted_count, _ = Region.objects.filter(regionid__in=region_ids).delete()
+            return JsonResponse({'success': True, 'message': f'Successfully cleared {deleted_count} tracks.'})
+        except Exception as e:
+            log_error(e)
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_upload_regions(request):
+        try:
+            # 1. Capture incoming multi-part spreadsheet file streams
+            if 'bulk_file' not in request.FILES:
+                return JsonResponse({'success': False, 'error': 'No file stream payload parsed.'}, status=400)
+                
+            uploaded_file = request.FILES['bulk_file']
+            filename = uploaded_file.name
+
+            if filename.endswith('.csv'):
+                df = pd.read_csv(uploaded_file)
+            elif filename.endswith(('.xls', '.xlsx')):
+                df = pd.read_excel(uploaded_file)
+            else:
+                return JsonResponse({'success': False, 'error': 'Unsupported format extension. Use CSV or Excel.'}, status=400)
+
+            # Ensure our target column map identifier key is present inside the matrix header
+            target_col = 'Region Name'
+            if target_col not in df.columns:
+                return JsonResponse({'success': False, 'error': f"Missing required column header token: '{target_col}'"}, status=400)
+
+            success_count = 0
+            skipped_count = 0
+            exception_logs = []
+
+            # 2. Open an isolated runtime processing cycle loop across rows
+            for index, row in df.iterrows():
+                row_num = index + 2  # Offsets array indexing to map cleanly onto physical sheet rows
+                raw_region_name = str(row[target_col]).strip()
+
+                # Layer A: Check for blank entries or Pandas string artifacts
+                if not raw_region_name or raw_region_name.lower() in ['nan', 'null', '']:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Rejected due to blank cell mapping context.")
+                    continue
+
+                # Layer B: Enforce validation matrix patterns (Allows letter structures, spaces, and hyphens)
+                import re
+                if not re.match(r'^[A-Za-z -]+$', raw_region_name):
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: '{raw_region_name}' contains illegal characters.")
+                    continue
+
+                # Layer C: Scan database constraints for pre-existing records (Case-insensitive)
+                if Region.objects.filter(regionname__iexact=raw_region_name).exists():
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Zone record '{raw_region_name}' already exists inside core ledger.")
+                    continue
+
+                try:
+                    # Calculate the sequential primary key values manually
+                    last_region = Region.objects.order_by('-regionid').first()
+                    next_id = (last_region.regionid + 1) if last_region else 1
+
+                    # 3. Commit unique object rows to the database
+                    Region.objects.create(
+                        regionid=next_id,
+                        regionname=raw_region_name,
+                        added_by=request.user.username if request.user.is_authenticated else "System",
+                        added_dts=datetime.now()
+                    )
+                    success_count += 1
+                except Exception as e:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Processing anomaly dropped row line -> {str(e)}")
+
+            # Store processing matrix inside session storage to serve as post-import ledger report layout updates
+            request.session['import_summary'] = {
+                'success_count': success_count,
+                'skipped_count': skipped_count,
+                'exception_logs': exception_logs,
+                'filename': filename
+            }
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            log_error(e)
+            return JsonResponse({'success': False, 'error': f"Critical ingestion failure: {str(e)}"}, status=500)
 
 '''FOR LEAD'''
 class Lead_view:
     @login_required(login_url='login')
     def lead_list(request):
-
         search = request.GET.get('search', '')
 
         leads = Lead.objects.select_related(
@@ -610,25 +675,16 @@ class Lead_view:
         )
 
         if search:
-
             if search.isdigit():
-
-                leads = leads.filter(
-                    leadid=int(search)
-                )
-
+                leads = leads.filter(leadid=int(search))
             else:
-
                 leads = leads.filter(
-
                     Q(personname__istartswith=search) |
                     Q(productid__productname__icontains=search) |
                     Q(regionid__regionname__istartswith=search)
-
                 )
 
         form = LeadForm()
-
         return render(
             request,
             'lead_list.html',
@@ -642,145 +698,140 @@ class Lead_view:
     @login_required(login_url='login')
     @staticmethod
     def add_lead(request):
-
         try:
             if request.method == 'POST':
-
                 form = LeadForm(request.POST)
-
                 if form.is_valid():
-
                     last_lead = Lead.objects.order_by('-leadid').first()
-
                     lead = form.save(commit=False)
 
-                    lead.leadid = (
-                        last_lead.leadid + 1
-                        if last_lead else 1
-                    )
-
+                    lead.leadid = (last_lead.leadid + 1 if last_lead else 1)
                     lead.added_by = (
-                        request.user.username
-                        if request.user.is_authenticated
+                        request.user.username 
+                        if request.user.is_authenticated 
                         else "System"
                     )
-
                     lead.added_dts = datetime.now()
-
+                    # Django native date fields fallback tracking
+                    if hasattr(lead, 'lead_gen_date') and not lead.lead_gen_date:
+                        lead.lead_gen_date = datetime.now().date()
+                    
                     lead.save()
 
-                    messages.success(
-                        request,
-                        "Lead added successfully."
-                    )
+                    # Return full string representations back to the frontend row constructor
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'lead': {
+                                'id': lead.leadid,
+                                'name': lead.personname,
+                                'company': lead.companyname,
+                                'phone': lead.contactno if lead.contactno else "N/A",
+                                'product': lead.productid.productname if lead.productid else "N/A",
+                                'region': lead.regionid.regionname if lead.regionid else "N/A",
+                                'status': lead.statusid.statusname if lead.statusid else "N/A",
+                                'source': lead.leadsourceid.leadsourcename if lead.leadsourceid else "N/A",
+                                'date': lead.lead_gen_date.strftime("%m/%d/%Y") if hasattr(lead, 'lead_gen_date') and lead.lead_gen_date else datetime.now().strftime("%m/%d/%Y")
+                            }
+                        })
 
+                    messages.success(request, "Lead added successfully.")
                     return redirect('lead_list')
 
-                leads = Lead.objects.all()
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Validation failure. Check your inputs.'}, status=400)
 
-                return render(
-                    request,
-                    'lead_list.html',
-                    {
-                        'leads': leads,
-                        'form': form
-                    }
-                )
+                    leads = Lead.objects.all()
+                    return render(request, 'lead_list.html', {'leads': leads, 'form': form})
 
             return redirect('lead_list')
 
         except Exception as e:
-
             log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
             return redirect('lead_list')
 
     @login_required(login_url='login')
     @staticmethod
     def edit_lead(request, leadid):
-
         try:
+            lead = get_object_or_404(Lead, pk=leadid)
+            form = LeadForm(request.POST or None, instance=lead)
 
-            lead = get_object_or_404(
-                Lead,
-                pk=leadid
-            )
+            if request.method == 'POST':
+                if form.is_valid():
+                    lead = form.save(commit=False)
+                    lead.added_dts = datetime.now()
+                    lead.save()
 
-            form = LeadForm(
-                request.POST or None,
-                instance=lead
-            )
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'lead': {
+                                'id': lead.leadid,
+                                'name': lead.personname,
+                                'company': lead.companyname,
+                                'phone': lead.contactno if lead.contactno else "N/A",
+                                'product': lead.productid.productname if lead.productid else "N/A",
+                                'region': lead.regionid.regionname if lead.regionid else "N/A",
+                                'status': lead.statusid.statusname if lead.statusid else "N/A",
+                                'source': lead.leadsourceid.leadsourcename if lead.leadsourceid else "N/A"
+                            }
+                        })
 
-            if request.method == 'POST' and form.is_valid():
-
-                lead = form.save(commit=False)
-
-                lead.added_dts = datetime.now()
-                lead.save()
-
-                messages.success(
-                    request,
-                    "Lead updated successfully."
-                )
-
-                return redirect('lead_list')
+                    messages.success(request, "Lead updated successfully.")
+                    return redirect('lead_list')
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Form parsing contains invalid entities.'}, status=400)
 
             leads = Lead.objects.all()
-
-            return render(
-                request,
-                'lead_list.html',
-                {
-                    'leads': leads,
-                    'form': form,
-                    'edit_mode': True
-                }
-            )
+            return render(request, 'lead_list.html', {'leads': leads, 'form': form, 'edit_mode': True})
 
         except Exception as e:
-
             log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-        return redirect('lead_list')
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
+            return redirect('lead_list')
 
     @login_required(login_url='login')
     @staticmethod
     def delete_lead(request, leadid):
-
         try:
-
-            lead = get_object_or_404(
-                Lead,
-                pk=leadid
-            )
-
+            lead = get_object_or_404(Lead, pk=leadid)
             lead.delete()
 
-            messages.success(
-                request,
-                "Lead deleted successfully."
-            )
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.method == 'POST':
+                return JsonResponse({'success': True})
 
+            messages.success(request, "Lead deleted successfully.")
         except Exception as e:
-
             log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
 
         return redirect('lead_list')
+
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_delete_leads(request):
+        try:
+            data = json.loads(request.body)
+            lead_ids = data.get('lead_ids', [])
+
+            if not lead_ids:
+                return JsonResponse({'success': False, 'error': 'No asset records targeted.'}, status=400)
+
+            deleted_count, _ = Lead.objects.filter(leadid__in=lead_ids).delete()
+            return JsonResponse({'success': True, 'message': f'Successfully cleared {deleted_count} tracks from core ledger rows.'})
+        except Exception as e:
+            log_error(e)
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
     
 '''DASHBOARD'''
 @login_required(login_url='login')
