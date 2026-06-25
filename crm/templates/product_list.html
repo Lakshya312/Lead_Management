@@ -37,57 +37,27 @@
                     >
                 </div>
                 <button type="submit" class="search-action-btn">
-                    <i class="bi bi-funnel-fill"></i> Filter Matrix
+                    <i class="bi bi-funnel-fill"></i> Filter
+                </button>
+                <button type="button" class="bulk-modal-toggle-btn" id="open-bulk-modal">
+                    <i class="bi bi-database-fill-up"></i> Bulk Import
                 </button>
             </form>
-
-            <div class="bulk-upload-console-card">
-                <form method="POST" action="{% url 'import_products' %}" enctype="multipart/form-data" class="bulk-upload-form">
-                    {% csrf_token %}
-                    <div class="file-drop-zone-wrapper">
-                        <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
-                        <input type="file" name="product_file" accept=".csv, .xlsx" required class="native-file-picker">
-                        <span class="upload-placeholder-txt">Drop CSV/Excel file here or click to browse</span>
-                    </div>
-                    <button type="submit" class="bulk-execute-btn">
-                        <i class="bi bi-database-fill-up"></i> Bulk Import
-                    </button>
-                </form>
+        
+            <div id="bulk-action-bar" style="display: none;" class="bulk-action-floating-panel">
+                <span id="selected-count-txt">0 Assets Selected</span>
+                <button type="button" id="execute-bulk-delete-btn" class="action-trigger-btn delete-trigger" style="width: auto; padding: 0 16px; height: 38px; gap: 6px; font-weight: 700;">
+                    <i class="bi bi-trash3-fill"></i> Delete Selected
+                </button>
             </div>
             
-            {% if import_summary %}
-            <div class="import-summary-matrix">
-                <div class="summary-matrix-header">
-                    <h4><i class="bi bi-terminal-box text-indigo"></i> Bulk Import Audit Ledger</h4>
-                    <span class="report-badge-pill">Sync Complete</span>
-                </div>
-                <div class="summary-counter-grid">
-                    <div class="metric-block-card metrics-success">
-                        <div class="m-val">{{ import_summary.imported }}</div>
-                        <div class="m-lbl">Rows Comitted</div>
-                    </div>
-                    <div class="metric-block-card metrics-skipped">
-                        <div class="m-val">{{ import_summary.skipped }}</div>
-                        <div class="m-lbl">Rows Rejected</div>
-                    </div>
-                </div>
-            
-                {% if import_summary.errors %}
-                <div class="audit-exception-logs-box">
-                    <h5><i class="bi bi-bug-fill text-danger"></i> Validation Log Exceptions</h5>
-                    <ul class="exception-log-lines">
-                        {% for error in import_summary.errors %}
-                            <li><i class="bi bi-caret-right-fill log-bullet"></i> {{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-            </div>
-            {% endif %}
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>
                         <tr>
+                            <th style="width: 45px; text-align: center;">
+                                <input type="checkbox" id="master-select-checkbox">
+                            </th>
                             <th>ID Code</th>
                             <th>Product Profile</th>
                             <th>Category Mapped</th>
@@ -99,7 +69,10 @@
                     </thead>
                     <tbody>
                         {% for product in products %}
-                        <tr>
+                        <tr data-row-id="{{ product.productid }}">
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="row-select-checkbox" value="{{ product.productid }}">
+                            </td>
                             <td class="id-token">#{{ product.productid }}</td>
                             <td>
                                 <div class="product-identity-cell">
@@ -119,18 +92,22 @@
                             <td class="chrono-stamp">{{ product.added_dts|date:"m/d/Y" }}</td>
                             <td>
                                 <div class="action-buttons-group">
-                                    <a href="{% url 'edit_product' product.productid %}" class="action-trigger-btn edit-trigger">
+                                    <button type="button" class="action-trigger-btn edit-trigger single-edit-btn" 
+                                            data-id="{{ product.productid }}" 
+                                            data-name="{{ product.productname }}" 
+                                            data-category="{{ product.categoryid.categoryid }}" 
+                                            data-active="{{ product.is_active }}">
                                         <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a href="{% url 'delete_product' product.productid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this product?');">
+                                    </button>
+                                    <button type="button" class="action-trigger-btn delete-trigger single-delete-btn" data-id="{{ product.productid }}">
                                         <i class="bi bi-trash3-fill"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="7" class="empty-fallback-state">
+                            <td colspan="8" class="empty-fallback-state">
                                 <i class="bi bi-folder-x"></i>
                                 <p>No active inventory tracks mapped inside the database core matrix.</p>
                             </td>
@@ -152,91 +129,80 @@
                 {% endif %}
             </div>
             
-            <form method="POST" action="{% if edit_mode %}{% url 'edit_product' form.instance.productid %}{% else %}{% url 'add_product' %}{% endif %}">
+            <form method="POST" action="{% url 'add_product' %}" id="add-product-form" data-mode="add">
                 {% csrf_token %}
-                
                 <div class="django-injected-form-wrapper">
                     {{ form.as_p }}
                 </div>
-
                 <div class="form-processing-actions">
-                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
-                        {% if edit_mode %} Commit Asset Updates {% else %} Push New Asset {% endif %}
-                    </button>
-                    {% if edit_mode %}
-                        <a href="{% url 'product_list' %}" class="dismiss-action-link">
-                            Dismiss Operations
-                        </a>
-                    {% endif %}
+                    <button type="submit" class="submit-core-action-btn">Push New Asset</button>
+                    <a href="#" id="cancel-edit-btn" class="dismiss-action-link" style="display: none;">Dismiss Operations</a>
                 </div>
             </form>
         </div>
 
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const formElements = document.querySelectorAll('.django-injected-form-wrapper p input, .django-injected-form-wrapper p select');
-            formElements.forEach(element => {
-                if (element.type !== 'checkbox' && element.type !== 'radio') {
-                    element.classList.add('premium-cyber-input-element');
-                }
-            });
+    <div class="cyber-modal-overlay" id="bulkImportModal" {% if import_summary %}style="display: flex;"{% endif %}>
+        <div class="cyber-modal-window">
+            
+            <div class="cyber-modal-header">
+                <h3><i class="bi bi-cpu-fill text-indigo"></i> Bulk Asset Control Matrix</h3>
+                <button type="button" class="modal-close-x-trigger" id="close-bulk-modal">&times;</button>
+            </div>
 
-            const filePicker = document.querySelector('.native-file-picker');
-            const uploadText = document.querySelector('.upload-placeholder-txt');
+            <div class="cyber-modal-body">
+                <div class="bulk-upload-console-card">
+                    <form method="POST" action="{% url 'import_products' %}" enctype="multipart/form-data" class="bulk-upload-form">
+                        {% csrf_token %}
+                        <div class="file-drop-zone-wrapper">
+                            <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
+                            <input type="file" name="product_file" accept=".csv, .xlsx" required class="native-file-picker">
+                            <span class="upload-placeholder-txt">Drop CSV/Excel file here or click to browse</span>
+                            <button type="button" id="clear-file-btn" style="display: none; background: transparent; border: none; color: var(--glow-danger); z-index: 10; cursor: pointer; padding: 0 4px;">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </button>
+                        </div>
+                        <button type="submit" class="bulk-execute-btn">
+                            <i class="bi bi-database-fill-up"></i> Import
+                        </button>
+                    </form>
+                </div>
 
-            if (filePicker && uploadText) {
-                filePicker.addEventListener('change', function() {
-                    if (this.files && this.files.length > 0) {
-                        // Extracts the selected filename and injects it into our layout card text field
-                        uploadText.textContent = `Selected: ${this.files[0].name}`;
-                        uploadText.style.color = 'var(--glow-success)'; // Swaps text color to green to indicate active staging
-                    } else {
-                        uploadText.textContent = "Drop CSV/Excel file here or click to browse";
-                        uploadText.style.color = 'var(--text-slate)';
-                    }
-                });
-            }
-        });
+                {% if import_summary %}
+                <div class="import-summary-matrix">
+                    <div class="summary-matrix-header">
+                        <h4><i class="bi bi-terminal-box text-indigo"></i> Processing Summary Report</h4>
+                        <span class="report-badge-pill">Sync Finished</span>
+                    </div>
+                    <div class="summary-counter-grid">
+                        <div class="metric-block-card metrics-success">
+                            <div class="m-val">{{ import_summary.imported }}</div>
+                            <div class="m-lbl">Rows Committed</div>
+                        </div>
+                        <div class="metric-block-card metrics-skipped">
+                            <div class="m-val">{{ import_summary.skipped }}</div>
+                            <div class="m-lbl">Rows Rejected</div>
+                        </div>
+                    </div>
 
-        // ==========================
-        // PRODUCT NAME VALIDATION
-        // ==========================
+                    {% if import_summary.errors %}
+                    <div class="audit-exception-logs-box">
+                        <h5><i class="bi bi-bug-fill text-danger"></i> Validation Log Exceptions</h5>
+                        <ul class="exception-log-lines">
+                            {% for error in import_summary.errors %}
+                                <li><i class="bi bi-caret-right-fill log-bullet"></i> {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
 
-        const productInput = document.getElementById('productname');
+        </div>
+    </div>
 
-        if (productInput) {
-
-            productInput.addEventListener('input', function () {
-                this.setCustomValidity('');
-            });
-
-            productInput.addEventListener('blur', function () {
-
-                if (this.value.trim() === '') return;
-
-                if (!this.checkValidity()) {
-                    this.reportValidity();
-                    return;
-                }
-
-                fetch(`/check-productname/?productname=${encodeURIComponent(this.value)}`)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        if (data.exists) {
-                            this.setCustomValidity(
-                                'Product with this name already exists.'
-                            );
-                        } else {
-                            this.setCustomValidity('');
-                        }
-
-                        this.reportValidity();
-                    });
-            });
-        }
-    </script>
+    <script src="{% static 'scripts/product_list.js' %}"> </script>
 </body>
 </html>

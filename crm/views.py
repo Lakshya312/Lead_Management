@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from datetime import datetime
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate , login, logout
 from django.contrib.auth.decorators import login_required
@@ -15,10 +15,9 @@ from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
 from rest_framework import status
 import getpass
 from .utils import log_error
-
+import json
+from django.views.decorators.http import require_POST
 import pandas as pd
-
-'''FOR IMPORTING'''
 
 @login_required(login_url='login')
 def import_products(request):
@@ -175,32 +174,61 @@ class Logout_view:
 class Product_view:
     @login_required(login_url='login')
     def product_list(request):
-
         search = request.GET.get('search', '')
-
-        products = Product.objects.select_related(
-            'categoryid'
-        )
+        products = Product.objects.select_related('categoryid')
 
         if search:
-
             if search.isdigit():
-
-                products = products.filter(
-                    productid=int(search)
-                )
-
+                products = products.filter(productid=int(search))
             else:
+                products = products.filter(productname__icontains=search)
 
-                products = products.filter(
-                    productname__icontains=search
-                )
+        # 1. Handle Inline Asynchronous Form Record Add Submissions
+        if request.method == 'POST':
+            form = ProductForm(request.POST)
+            if form.is_valid():
+                try:
+                    # Calculate the manual sequential primary key for your SQL Server setup
+                    last_product = Product.objects.order_by('-productid').first()
+                    next_id = last_product.productid + 1 if last_product else 1
+                    
+                    new_prod = form.save(commit=False)
+                    new_prod.productid = next_id
+                    new_prod.added_by = request.user.username
+                    new_prod.added_dts = datetime.now()
+                    new_prod.save()
 
-        form = ProductForm()
-        import_summary = request.session.pop(
-            'import_summary',
-            None
-        )
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'product': {
+                                'id': new_prod.productid,
+                                'name': new_prod.productname,
+                                'category': new_prod.categoryid.categoryname if new_prod.categoryid else "N/A",
+                                'is_active': getattr(new_prod, 'is_active', 1), # Fallback safety default
+                                'added_by': new_prod.added_by,
+                                'added_dts': new_prod.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
+                    
+                    messages.success(request, "Product added successfully.")
+                    return redirect('product_list')
+                    
+                except Exception as e:
+                    log_error(e)
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+                    messages.error(request, "Error saving product down to database.")
+            else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': form.errors.as_json()}, status=400)
+
+        else:
+            # Instantiates a clean fallback structure on a default GET request routing loop
+            form = ProductForm()
+
+        import_summary = request.session.pop('import_summary', None)
+        
         return render(
             request,
             'product_list.html',
@@ -208,25 +236,19 @@ class Product_view:
                 'products': products,
                 'form': form,
                 'search': search,
-                'import_summary':import_summary
+                'import_summary': import_summary
             }
         )
 
     @login_required(login_url='login')
-    @staticmethod
+    @staticmethod # Keeps your staticmethod decorator intact
     def add_product(request):
-
         try:
             if request.method == 'POST':
-
                 form = ProductForm(request.POST)
 
                 if form.is_valid():
-
-                    last_product = Product.objects.order_by(
-                        '-productid'
-                    ).first()
-
+                    last_product = Product.objects.order_by('-productid').first()
                     product = form.save(commit=False)
 
                     product.productid = (
@@ -243,15 +265,33 @@ class Product_view:
                     )
                     product.save()
 
-                    messages.success(
-                        request,
-                        "Product added successfully."
-                    )
+                    # ==========================================
+                    # NEW: ASYNC AJAX FETCH INTERCEPTOR HANDLER
+                    # ==========================================
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'product': {
+                                'id': product.productid,
+                                'name': product.productname,
+                                'category': product.categoryid.categoryname if product.categoryid else "N/A",
+                                'is_active': getattr(product, 'is_active', 1), # Safely tracks 1 or 0
+                                'added_by': product.added_by,
+                                'added_dts': product.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
 
+                    # Fallback for standard traditional form reloads
+                    messages.success(request, "Product added successfully.")
                     return redirect('product_list')
+                
+                else:
+                    # If form is invalid and it's an AJAX call, return errors
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid data formats.'}, status=400)
 
+            # Fallback render block for GET requests or fallback sequences
             products = Product.objects.all()
-
             return render(
                 request,
                 'product_list.html',
@@ -262,46 +302,53 @@ class Product_view:
             )
 
         except Exception as e:
-
             log_error(e)
+
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
 
             messages.error(
                 request,
                 f"{type(e).__name__}: {str(e)}"
             )
-
             return redirect('product_list')
 
     @login_required(login_url='login')
-    @staticmethod
+    @staticmethod # Keeps your staticmethod decorator intact
     def edit_product(request, productid):
-
         try:
+            product = get_object_or_404(Product, pk=productid)
 
-            product = get_object_or_404(
-                Product,
-                pk=productid
-            )
+            form = ProductForm(request.POST or None, instance=product)
 
-            form = ProductForm(
-                request.POST or None,
-                instance=product
-            )
+            if request.method == 'POST':
+                if form.is_valid():
+                    product = form.save(commit=False)
+                    product.added_dts = datetime.now()
+                    product.save()
 
-            if form.is_valid():
+                    # ==========================================
+                    # ASYNC AJAX FETCH INTERCEPTOR HANDLER
+                    # ==========================================
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({
+                            'success': True,
+                            'product': {
+                                'id': product.productid,
+                                'name': product.productname,
+                                'category': product.categoryid.categoryname if product.categoryid else "N/A",
+                                'is_active': getattr(product, 'is_active', 1),
+                                'added_by': product.added_by if product.added_by else "System",
+                                'added_dts': product.added_dts.strftime("%m/%d/%Y")
+                            }
+                        })
 
-                product = form.save(commit=False)
-
-                product.added_dts = datetime.now()
-
-                product.save()
-
-                messages.success(
-                    request,
-                    "Product updated successfully."
-                )
-
-                return redirect('product_list')
+                    messages.success(request, "Product updated successfully.")
+                    return redirect('product_list')
+                
+                else:
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
 
             return render(
                 request,
@@ -314,44 +361,61 @@ class Product_view:
             )
 
         except Exception as e:
-
             log_error(e)
 
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
 
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
             return redirect('product_list')
 
     @login_required(login_url='login')
     @staticmethod
     def delete_product(request, productid):
-
         try:
-
-            product = get_object_or_404(
-                Product,
-                pk=productid
-            )
-
+            product = get_object_or_404(Product, pk=productid)
             product.delete()
 
-            messages.success(
-                request,
-                "Product deleted successfully."
-            )
+            # Check if the deletion request was initiated via asynchronous JS Fetch
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.method == 'POST':
+                return JsonResponse({'success': True})
+
+            messages.success(request, "Product deleted successfully.")
 
         except Exception as e:
-
             log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
+            
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
+                
+            messages.error(request, f"{type(e).__name__}: {str(e)}")
 
         return redirect('product_list')
+    
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_delete_products(request):
+        try:
+            # Load string data array from request body input stream
+            data = json.loads(request.body)
+            product_ids = data.get('product_ids', [])
+
+            if not product_ids:
+                return JsonResponse({'success': False, 'error': 'No asset records targeted.'}, status=400)
+
+            # Fire bulk filtration delete directly against SQL Server
+            deleted_count, _ = Product.objects.filter(productid__in=product_ids).delete()
+
+            return JsonResponse({
+                'success': True,
+                'message': f'Successfully cleared {deleted_count} tracks from core ledger rows.'
+            })
+
+        except Exception as e:
+            # Log to your text file tool if available
+            if 'log_error' in globals():
+                log_error(e)
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 '''FOR REGION'''
 

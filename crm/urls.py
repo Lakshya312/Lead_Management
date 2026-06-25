@@ -2,6 +2,7 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+
     # for importing
     path('products/import/',import_products,name='import_products'),
 
@@ -17,6 +18,7 @@ urlpatterns = [
     path('products/add/', Product_view.add_product, name='add_product'),
     path('products/edit/<int:productid>/', Product_view.edit_product, name='edit_product'),
     path('products/delete/<int:productid>/', Product_view.delete_product, name='delete_product'),
+    path('products/bulk-delete/', Product_view.bulk_delete_products, name='bulk_delete_products'),
 
     # for regions
     path('regions/', Region_view.region_list, name='region_list'),
