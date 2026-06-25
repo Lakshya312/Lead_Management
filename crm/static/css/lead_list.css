@@ -127,6 +127,8 @@ body {
     filter: brightness(1.1);
 }
 
+<<<<<<< HEAD
+=======
 .bulk-action-floating-panel {
     background: rgba(20, 28, 47, 0.95);
     backdrop-filter: blur(12px);
@@ -233,6 +235,7 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     transform: scale(0.98);
 }
 
+>>>>>>> lakshya-dev
 /* ==========================================
    FLUID ROW WORKSPACE SPLIT (100% SCALE PROPORTIONS)
    ========================================== */

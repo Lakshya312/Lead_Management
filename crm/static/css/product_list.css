@@ -1,7 +1,11 @@
 /* ==========================================
    ALIGNMENT MATRIX: DASHBOARD THEME DESIGN TOKENS
    ========================================== */
+<<<<<<< HEAD
+   :root {
+=======
 :root {
+>>>>>>> lakshya-dev
     --bg-universe: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     --glass-card: rgba(30, 41, 59, 0.7);
     --glass-border: rgba(255, 255, 255, 0.08);
@@ -85,6 +89,7 @@ body {
 }
 
 /* ==========================================
+<<<<<<< HEAD
    SINGLE EXPORT DROPDOWN COMPONENT THEME
    ========================================== */
    .export-dropdown-wrapper {
@@ -129,6 +134,17 @@ body {
 }
 
 /* ==========================================
+=======
+<<<<<<< HEAD
+   PARENT LAYOUT GRID GRID CONTROL
+   ========================================== */
+   .main-container {
+    display: flex;
+    gap: 24px;              /* Reduced from 35px to free up horizontal space */
+    align-items: flex-start;
+    max-width: 100%;        /* Changed from 1650px to stay perfectly fluid within margins */
+=======
+>>>>>>> main
    CYBER SEARCH CONSOLE ROW GRID ARCHITECTURE
    ========================================== */
 .search-form-console {
@@ -372,6 +388,7 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     gap: 24px;
     align-items: flex-start;
     max-width: 100%;
+>>>>>>> lakshya-dev
     margin: 0 auto;
     animation: scaleInUp 0.7s var(--ease-curve) 0.1s both;
 }
@@ -379,17 +396,29 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
 /* ==========================================
    LEFT COMPONENT: CYBER RECORD DATA MATRIX
    ========================================== */
+<<<<<<< HEAD
+   .table-section {
+=======
 .table-section {
+>>>>>>> lakshya-dev
     flex: 3;
     background: var(--glass-card);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
+<<<<<<< HEAD
+    padding: 24px;          /* Reduced from 35px to expand table field visibility space */
+    border-radius: var(--radius-box);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    transition: border-color 0.4s var(--ease-curve), box-shadow 0.4s var(--ease-curve);
+    overflow: hidden;       /* Keeps the glass edges super clean */
+=======
     padding: 24px;
     border-radius: var(--radius-box);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     transition: border-color 0.4s var(--ease-curve), box-shadow 0.4s var(--ease-curve);
     overflow: hidden;
+>>>>>>> lakshya-dev
 }
 
 .table-section:hover {
@@ -444,7 +473,11 @@ table {
 }
 
 th, td {
+<<<<<<< HEAD
+    padding: 14px 16px;     /* Reduced from 18px 24px to completely eliminate column crowding */
+=======
     padding: 14px 16px;
+>>>>>>> lakshya-dev
     text-align: left;
     border-bottom: 1px solid var(--glass-border);
 }
@@ -513,6 +546,10 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 .user-meta-txt { color: var(--text-slate); font-size: 14px; }
 .chrono-stamp { font-family: monospace; color: var(--text-slate); font-size: 13px; }
 
+<<<<<<< HEAD
+/* TABLE CONSOLE CONTROLS CLICK TRIGGER TRIGGERS */
+=======
+>>>>>>> lakshya-dev
 .action-buttons-group {
     display: flex;
     gap: 8px;
@@ -546,16 +583,27 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 /* ==========================================
    RIGHT COMPONENT: GLASS INPUT TERMINAL CARD
    ========================================== */
+<<<<<<< HEAD
+   .form-section {
+=======
 .form-section {
+>>>>>>> lakshya-dev
     flex: 1;
     background: var(--glass-card);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
+<<<<<<< HEAD
+    padding: 28px;          /* Adjusted from 35px for tight column proportions */
+    border-radius: var(--radius-box);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    min-width: 320px;       /* Reduced from 380px so it fits smaller laptops gracefully */
+=======
     padding: 28px;
     border-radius: var(--radius-box);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     min-width: 320px;
+>>>>>>> lakshya-dev
     position: sticky;
     top: 40px;
     transition: border-color 0.4s var(--ease-curve), box-shadow 0.4s var(--ease-curve);
@@ -576,6 +624,10 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 .color-add { color: var(--glow-product); }
 .color-edit { color: var(--glow-primary); }
 
+<<<<<<< HEAD
+/* Auto-Rendered Django Field Mappings Wrappers Layout */
+=======
+>>>>>>> lakshya-dev
 .django-injected-form-wrapper p { margin-bottom: 22px; }
 .django-injected-form-wrapper label {
     font-size: 12px;
@@ -587,6 +639,10 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     letter-spacing: 0.04em;
 }
 
+<<<<<<< HEAD
+/* JavaScript Target Styling Hooks Input Boxes Fields */
+=======
+>>>>>>> lakshya-dev
 .premium-cyber-input-element {
     width: 100%;
     background: rgba(15, 23, 42, 0.5) !important;
@@ -603,6 +659,10 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     outline: none !important;
 }
 
+<<<<<<< HEAD
+/* Checkbox alignment settings layout modifications */
+=======
+>>>>>>> lakshya-dev
 .django-injected-form-wrapper input[type="checkbox"] {
     width: 20px;
     height: 20px;
@@ -611,6 +671,10 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     vertical-align: middle;
 }
 
+<<<<<<< HEAD
+/* WORKSPACE TRANSACTION EXECUTION FOOTER CONTROLS LINKS BUTTONS */
+=======
+>>>>>>> lakshya-dev
 .form-processing-actions {
     margin-top: 35px;
     display: flex;
@@ -652,7 +716,11 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scaleInUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
+<<<<<<< HEAD
+/* View footprint break maps layout configuration restrictions */
+=======
 /* Responsive adjustments */
+>>>>>>> lakshya-dev
 @media (max-width: 1250px) {
     .main-container { flex-direction: column; align-items: stretch; }
     .form-section { position: relative; top: 0; width: 100%; }

@@ -35,6 +35,8 @@ body {
     min-height: 100vh;
 }
 
+<<<<<<< HEAD
+=======
 .bulk-action-floating-panel {
     background: rgba(20, 28, 47, 0.95);
     backdrop-filter: blur(12px);
@@ -317,6 +319,7 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     to { transform: rotate(360deg); }
 }
 
+>>>>>>> lakshya-dev
 /* ==========================================
    HEADER BANNER OVERHAUL (WITH DIRECT HUB LINK)
    ========================================== */

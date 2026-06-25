@@ -25,6 +25,8 @@
                 <h3><i class="bi bi-people-fill text-indigo"></i> Active Intake Lead Pipelines</h3>
                 <span class="live-status-pill">Data Stream Live</span>
             </div>
+<<<<<<< HEAD
+=======
             <form method="GET" class="search-form-console">
                 <div class="search-input-group">
                     <i class="bi bi-search search-field-icon"></i>
@@ -60,14 +62,18 @@
                     <i class="bi bi-trash3-fill"></i> Delete Selected
                 </button>
             </div>
+>>>>>>> lakshya-dev
             
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>
                         <tr>
+<<<<<<< HEAD
+=======
                             <th style="width: 45px; text-align: center;">
                                 <input type="checkbox" id="master-select-checkbox">
                             </th>
+>>>>>>> lakshya-dev
                             <th>ID</th>
                             <th>Contact Profile Name</th>
                             <th>Company</th>
@@ -82,10 +88,14 @@
                     </thead>
                     <tbody>
                         {% for lead in leads %}
+<<<<<<< HEAD
+                        <tr>
+=======
                         <tr data-row-id="{{ lead.leadid }}">
                             <td style="text-align: center;">
                                 <input type="checkbox" class="row-select-checkbox" value="{{ lead.leadid }}">
                             </td>
+>>>>>>> lakshya-dev
                             <td class="id-token">#{{ lead.leadid }}</td>
                             <td>
                                 <div class="lead-identity-cell">
@@ -96,7 +106,11 @@
                             <td><span class="badge-tag-pill company-tag">{{ lead.companyname }}</span></td>
                             <td class="chrono-stamp"><i class="bi bi-telephone text-slate"></i> {{ lead.contactno }}</td>
                             <td><span class="fw-semibold text-white">{{ lead.productid.productname }}</span></td>
+<<<<<<< HEAD
+                            <td><span class="badge-tag-pill region-tag"><i class="bi bi-geo-alt"></i> {{ lead.regionid.regionname }}</td>
+=======
                             <td><span class="badge-tag-pill region-tag"><i class="bi bi-geo-alt"></i> {{ lead.regionid.regionname }}</span></td>
+>>>>>>> lakshya-dev
                             <td>
                                 <span class="indicator-badge status-workflow">
                                     <i class="bi bi-lightning-charge-fill"></i> {{ lead.statusid.statusname }}
@@ -106,6 +120,14 @@
                             <td class="chrono-stamp">{{ lead.lead_gen_date }}</td>
                             <td>
                                 <div class="action-buttons-group">
+<<<<<<< HEAD
+                                    <a href="{% url 'edit_lead' lead.leadid %}" class="action-trigger-btn edit-trigger">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'delete_lead' lead.leadid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this lead?');">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+=======
                                     <button type="button" class="action-trigger-btn edit-trigger single-edit-btn" 
                                             data-id="{{ lead.leadid }}"
                                             data-personname="{{ lead.personname }}"
@@ -120,12 +142,17 @@
                                     <button type="button" class="action-trigger-btn delete-trigger single-delete-btn" data-id="{{ lead.leadid }}">
                                         <i class="bi bi-trash3-fill"></i>
                                     </button>
+>>>>>>> lakshya-dev
                                 </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
+<<<<<<< HEAD
+                            <td colspan="10" class="empty-fallback-state">
+=======
                             <td colspan="11" class="empty-fallback-state">
+>>>>>>> lakshya-dev
                                 <i class="bi bi-folder-x"></i>
                                 <p>No active pipeline leads mapped inside database tables.</p>
                             </td>
@@ -138,11 +165,24 @@
 
         <div class="form-container form-section">
             <div class="form-title-block">
+<<<<<<< HEAD
+                {% if edit_mode %} 
+                    <h3><i class="bi bi-pencil-square color-edit"></i> Modify Lead Profile</h3>
+                    <p>Altering existing pipeline tracking row indices data properties.</p>
+                {% else %} 
+                    <h3><i class="bi bi-plus-circle-fill color-add"></i> Intake Lead Account</h3>
+                    <p>Append a new business channel contact into core matrix.</p>
+                {% endif %}
+            </div>
+            
+            <form method="POST" action="{% if edit_mode %}{% url 'edit_lead' form.instance.leadid %}{% else %}{% url 'add_lead' %}{% endif %}">
+=======
                 <h3><i class="bi bi-plus-circle-fill color-add"></i> Intake Lead Account</h3>
                 <p>Append a new business channel contact into core matrix.</p>
             </div>
             
             <form method="POST" action="{% url 'add_lead' %}" id="add-product-form" data-mode="add">
+>>>>>>> lakshya-dev
                 {% csrf_token %}
                 
                 <div class="django-injected-form-wrapper">
@@ -150,18 +190,170 @@
                 </div>
 
                 <div class="form-processing-actions">
+<<<<<<< HEAD
+                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
+                        {% if edit_mode %} Save Profile Changes {% else %} Append Lead Record {% endif %}
+                    </button>
+                    {% if edit_mode %}
+                        <a href="{% url 'lead_list' %}" class="dismiss-action-link">
+                            Dismiss System Operations
+                        </a>
+                    {% endif %}
+=======
                     <button type="submit" class="submit-core-action-btn">Append Lead Record</button>
                     <a href="#" id="cancel-edit-btn" class="dismiss-action-link" style="display: none;">
                         Dismiss System Operations
                     </a>
+>>>>>>> lakshya-dev
                 </div>
             </form>
         </div>
 
     </div>
 
+<<<<<<< HEAD
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // Apply styling classes
+            const formElements = document.querySelectorAll(
+                '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select, .django-injected-form-wrapper p textarea'
+            );
+
+            formElements.forEach(element => {
+                if (element.type !== 'checkbox' && element.type !== 'radio') {
+                    element.classList.add('premium-cyber-input-element');
+                }
+            });
+
+            // ==========================
+            // PERSON NAME VALIDATION
+            // ==========================
+
+            const personInput = document.getElementById('personname');
+
+            if (personInput) {
+
+                personInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                personInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-personname/?personname=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this name already exists. Add another name.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Person Name Validation Error:', error);
+                        });
+                });
+            }
+
+            // ==========================
+            // CONTACT NUMBER VALIDATION
+            // ==========================
+
+            const contactInput = document.getElementById('contactno');
+
+            if (contactInput) {
+
+                contactInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                contactInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-contactno/?contactno=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this contact number already exists.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Contact Validation Error:', error);
+                        });
+                });
+            }
+
+            // ==========================
+            // EMAIL VALIDATION
+            // ==========================
+
+            const emailInput = document.getElementById('email');
+
+            if (emailInput) {
+
+                emailInput.addEventListener('input', function () {
+                    this.setCustomValidity('');
+                });
+
+                emailInput.addEventListener('blur', function () {
+
+                    if (this.value.trim() === '') return;
+
+                    if (!this.checkValidity()) {
+                        this.reportValidity();
+                        return;
+                    }
+
+                    fetch(`/check-email/?email=${encodeURIComponent(this.value)}`)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.exists) {
+                                this.setCustomValidity(
+                                    'Lead with this email already exists.'
+                                );
+                            } else {
+                                this.setCustomValidity('');
+                            }
+
+                            this.reportValidity();
+                        })
+                        .catch(error => {
+                            console.error('Email Validation Error:', error);
+                        });
+                });
+            }
+
+        });
+=======
     <script src="{% static 'scripts/lead_list.js' %}">
         
+>>>>>>> lakshya-dev
     </script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>

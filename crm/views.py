@@ -2,12 +2,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from datetime import datetime
+<<<<<<< HEAD
+from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib import messages
+from django.db.models import Q
+=======
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate , login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 import re
+>>>>>>> lakshya-dev
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -15,6 +21,37 @@ from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
 from rest_framework import status
 import getpass
 from .utils import log_error
+<<<<<<< HEAD
+
+'''FOR PRODUCTS'''
+class Product_view:
+
+    def product_list(request):
+        products = Product.objects.all()
+        form = ProductForm()
+
+        return render(
+            request,
+            'product_list.html',
+            {'products': products, 'form': form}
+        )
+
+    @staticmethod
+    def add_product(request):
+
+        try:
+
+            if request.method == 'POST':
+
+                form = ProductForm(request.POST)
+
+                if form.is_valid():
+
+                    last_product = Product.objects.order_by(
+                        '-productid'
+                    ).first()
+
+=======
 import json
 from django.views.decorators.http import require_POST
 import pandas as pd
@@ -249,6 +286,7 @@ class Product_view:
 
                 if form.is_valid():
                     last_product = Product.objects.order_by('-productid').first()
+>>>>>>> lakshya-dev
                     product = form.save(commit=False)
 
                     product.productid = (
@@ -258,11 +296,29 @@ class Product_view:
                     )
 
                     product.added_dts = datetime.now()
+<<<<<<< HEAD
+
+=======
+>>>>>>> lakshya-dev
                     product.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else "System"
                     )
+<<<<<<< HEAD
+
+                    product.save()
+
+                    messages.success(
+                        request,
+                        "Product added successfully."
+                    )
+
+                    return redirect('product_list')
+
+            products = Product.objects.all()
+
+=======
                     product.save()
 
                     # ==========================================
@@ -292,6 +348,7 @@ class Product_view:
 
             # Fallback render block for GET requests or fallback sequences
             products = Product.objects.all()
+>>>>>>> lakshya-dev
             return render(
                 request,
                 'product_list.html',
@@ -302,15 +359,55 @@ class Product_view:
             )
 
         except Exception as e:
+<<<<<<< HEAD
+
+            log_error(e)
+
+=======
             log_error(e)
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
 
+>>>>>>> lakshya-dev
             messages.error(
                 request,
                 f"{type(e).__name__}: {str(e)}"
             )
+<<<<<<< HEAD
+
+            return redirect('product_list')
+
+    @staticmethod
+    def edit_product(request, productid):
+
+        try:
+
+            product = get_object_or_404(
+                Product,
+                pk=productid
+            )
+
+            form = ProductForm(
+                request.POST or None,
+                instance=product
+            )
+
+            if form.is_valid():
+
+                product = form.save(commit=False)
+
+                product.added_dts = datetime.now()
+
+                product.save()
+
+                messages.success(
+                    request,
+                    "Product updated successfully."
+                )
+
+                return redirect('product_list')
+=======
             return redirect('product_list')
 
     @login_required(login_url='login')
@@ -349,6 +446,7 @@ class Product_view:
                 else:
                     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                         return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
+>>>>>>> lakshya-dev
 
             return render(
                 request,
@@ -361,6 +459,45 @@ class Product_view:
             )
 
         except Exception as e:
+<<<<<<< HEAD
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('product_list')
+
+    @staticmethod
+    def delete_product(request, productid):
+
+        try:
+
+            product = get_object_or_404(
+                Product,
+                pk=productid
+            )
+
+            product.delete()
+
+            messages.success(
+                request,
+                "Product deleted successfully."
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+        return redirect('product_list')
+=======
             log_error(e)
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -416,10 +553,19 @@ class Product_view:
             if 'log_error' in globals():
                 log_error(e)
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
+>>>>>>> lakshya-dev
 
 '''FOR REGION'''
 
 class Region_view:
+<<<<<<< HEAD
+
+    def region_list(request):
+
+        regions = Region.objects.all()
+        form = RegionForm()
+
+=======
     @login_required(login_url='login')
     def region_list(request):
         search = request.GET.get('search', '')
@@ -432,11 +578,34 @@ class Region_view:
                 regions = regions.filter(regionname__istartswith=search)
 
         form = RegionForm()
+>>>>>>> lakshya-dev
         return render(
             request,
             'region_list.html',
             {
                 'regions': regions,
+<<<<<<< HEAD
+                'form': form
+            }
+        )
+
+
+    @staticmethod
+    def add_region(request):
+
+        try:
+
+            if request.method == 'POST':
+
+                form = RegionForm(request.POST)
+
+                if form.is_valid():
+
+                    last_region = Region.objects.order_by(
+                        '-regionid'
+                    ).first()
+
+=======
                 'form': form,
                 'search': search
             }
@@ -450,17 +619,35 @@ class Region_view:
                 form = RegionForm(request.POST)
                 if form.is_valid():
                     last_region = Region.objects.order_by('-regionid').first()
+>>>>>>> lakshya-dev
                     region = form.save(commit=False)
 
                     region.regionid = (
                         last_region.regionid + 1
                         if last_region else 1
                     )
+<<<<<<< HEAD
+
+=======
+>>>>>>> lakshya-dev
                     region.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else 'System'
                     )
+<<<<<<< HEAD
+
+                    region.added_dts = datetime.now()
+
+                    region.save()
+
+                    messages.success(
+                        request,
+                        "Region added successfully."
+                    )
+
+                    return redirect('region_list')
+=======
                     region.added_dts = datetime.now()
                     region.save()
 
@@ -481,10 +668,62 @@ class Region_view:
                 else:
                     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                         return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
+>>>>>>> lakshya-dev
 
             return redirect('region_list')
 
         except Exception as e:
+<<<<<<< HEAD
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('region_list')
+
+
+    @staticmethod
+    def edit_region(request, regionid):
+
+        try:
+
+            region = get_object_or_404(
+                Region,
+                pk=regionid
+            )
+
+            form = RegionForm(
+                request.POST or None,
+                instance=region
+            )
+
+            if request.method == 'POST' and form.is_valid():
+
+                region = form.save(commit=False)
+
+                region.added_dts = datetime.now()
+
+                region.added_by = (
+                    request.user.username
+                    if request.user.is_authenticated
+                    else 'System'
+                )
+
+                region.save()
+
+                messages.success(
+                    request,
+                    "Region updated successfully."
+                )
+
+                return redirect('region_list')
+
+            regions = Region.objects.all()
+
+=======
             log_error(e)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
@@ -527,6 +766,7 @@ class Region_view:
                         return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
 
             regions = Region.objects.all()
+>>>>>>> lakshya-dev
             return render(
                 request,
                 'region_list.html',
@@ -538,6 +778,51 @@ class Region_view:
             )
 
         except Exception as e:
+<<<<<<< HEAD
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('region_list')
+
+
+    @staticmethod
+    def delete_region(request, regionid):
+
+        try:
+
+            region = get_object_or_404(
+                Region,
+                pk=regionid
+            )
+
+            region.delete()
+
+            messages.success(
+                request,
+                "Region deleted successfully."
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+        return redirect('region_list')
+
+'''FOR LEAD'''
+class Lead_view:
+    def lead_list(request):
+
+=======
             log_error(e)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
@@ -665,6 +950,7 @@ class Region_view:
 class Lead_view:
     @login_required(login_url='login')
     def lead_list(request):
+>>>>>>> lakshya-dev
         search = request.GET.get('search', '')
 
         leads = Lead.objects.select_related(
@@ -675,6 +961,24 @@ class Lead_view:
         )
 
         if search:
+<<<<<<< HEAD
+
+            leads = leads.filter(
+
+                Q(personname__istartswith=search) |
+                Q(productid__productname__istartswith=search) |
+                Q(regionid__regionname__istartswith=search)
+
+            )
+
+        if search.isdigit():
+            leads = leads | Lead.objects.filter(
+                leadid=int(search)
+            )
+
+        form = LeadForm()
+
+=======
             if search.isdigit():
                 leads = leads.filter(leadid=int(search))
             else:
@@ -685,6 +989,7 @@ class Lead_view:
                 )
 
         form = LeadForm()
+>>>>>>> lakshya-dev
         return render(
             request,
             'lead_list.html',
@@ -695,6 +1000,55 @@ class Lead_view:
             }
         )
 
+<<<<<<< HEAD
+    @staticmethod
+    def add_lead(request):
+
+        try:
+            1/0
+            if request.method == 'POST':
+
+                form = LeadForm(request.POST)
+
+                if form.is_valid():
+
+                    last_lead = Lead.objects.order_by('-leadid').first()
+
+                    lead = form.save(commit=False)
+
+                    lead.leadid = (
+                        last_lead.leadid + 1
+                        if last_lead else 1
+                    )
+
+                    lead.added_by = (
+                        request.user.username
+                        if request.user.is_authenticated
+                        else "System"
+                    )
+
+                    lead.added_dts = datetime.now()
+
+                    lead.save()
+
+                    messages.success(
+                        request,
+                        "Lead added successfully."
+                    )
+
+                    return redirect('lead_list')
+
+                leads = Lead.objects.all()
+
+                return render(
+                    request,
+                    'lead_list.html',
+                    {
+                        'leads': leads,
+                        'form': form
+                    }
+                )
+=======
     @login_required(login_url='login')
     @staticmethod
     def add_lead(request):
@@ -744,10 +1098,104 @@ class Lead_view:
 
                     leads = Lead.objects.all()
                     return render(request, 'lead_list.html', {'leads': leads, 'form': form})
+>>>>>>> lakshya-dev
 
             return redirect('lead_list')
 
         except Exception as e:
+<<<<<<< HEAD
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+            return redirect('lead_list')
+
+    @staticmethod
+    def edit_lead(request, leadid):
+
+        try:
+
+            lead = get_object_or_404(
+                Lead,
+                pk=leadid
+            )
+
+            form = LeadForm(
+                request.POST or None,
+                instance=lead
+            )
+
+            if request.method == 'POST' and form.is_valid():
+
+                lead = form.save(commit=False)
+
+                lead.added_dts = datetime.now()
+                lead.save()
+
+                messages.success(
+                    request,
+                    "Lead updated successfully."
+                )
+
+                return redirect('lead_list')
+
+            leads = Lead.objects.all()
+
+            return render(
+                request,
+                'lead_list.html',
+                {
+                    'leads': leads,
+                    'form': form,
+                    'edit_mode': True
+                }
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+        return redirect('lead_list')
+
+    @staticmethod
+    def delete_lead(request, leadid):
+
+        try:
+
+            lead = get_object_or_404(
+                Lead,
+                pk=leadid
+            )
+
+            lead.delete()
+
+            messages.success(
+                request,
+                "Lead deleted successfully."
+            )
+
+        except Exception as e:
+
+            log_error(e)
+
+            messages.error(
+                request,
+                f"{type(e).__name__}: {str(e)}"
+            )
+
+        return redirect('lead_list')
+    
+'''DASHBOARD'''
+=======
             log_error(e)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
@@ -835,6 +1283,7 @@ class Lead_view:
     
 '''DASHBOARD'''
 @login_required(login_url='login')
+>>>>>>> lakshya-dev
 def dashboard(request):
     return render(request, 'dashboard.html')
 

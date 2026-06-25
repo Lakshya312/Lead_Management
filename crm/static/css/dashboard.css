@@ -22,6 +22,8 @@
     --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+<<<<<<< HEAD
+=======
 /* ==========================================
    SECURE LOGOUT CONNECT ACTION LAYER
    ========================================== */
@@ -94,6 +96,7 @@ body {
     position: relative;
 }
 
+>>>>>>> lakshya-dev
 /* Base Body Environment Defaults */
 * {
     box-sizing: border-box;

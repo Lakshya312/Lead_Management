@@ -25,6 +25,8 @@
                 <h3><i class="bi bi-layers-half text-primary"></i> Registered Products Ledger</h3>
                 <span class="live-status-pill">Active System Sync</span>
             </div>
+<<<<<<< HEAD
+=======
             <form method="GET" class="search-form-console">
                 <div class="search-input-group">
                     <i class="bi bi-search search-field-icon"></i>
@@ -63,14 +65,18 @@
                     <i class="bi bi-trash3-fill"></i> Delete Selected
                 </button>
             </div>
+>>>>>>> lakshya-dev
             
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>
                         <tr>
+<<<<<<< HEAD
+=======
                             <th style="width: 45px; text-align: center;">
                                 <input type="checkbox" id="master-select-checkbox">
                             </th>
+>>>>>>> lakshya-dev
                             <th>ID Code</th>
                             <th>Product Profile</th>
                             <th>Category Mapped</th>
@@ -82,10 +88,14 @@
                     </thead>
                     <tbody>
                         {% for product in products %}
+<<<<<<< HEAD
+                        <tr>
+=======
                         <tr data-row-id="{{ product.productid }}">
                             <td style="text-align: center;">
                                 <input type="checkbox" class="row-select-checkbox" value="{{ product.productid }}">
                             </td>
+>>>>>>> lakshya-dev
                             <td class="id-token">#{{ product.productid }}</td>
                             <td>
                                 <div class="product-identity-cell">
@@ -105,6 +115,14 @@
                             <td class="chrono-stamp">{{ product.added_dts|date:"m/d/Y" }}</td>
                             <td>
                                 <div class="action-buttons-group">
+<<<<<<< HEAD
+                                    <a href="{% url 'edit_product' product.productid %}" class="action-trigger-btn edit-trigger">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'delete_product' product.productid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this product?');">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+=======
                                     <button type="button" class="action-trigger-btn edit-trigger single-edit-btn" 
                                             data-id="{{ product.productid }}" 
                                             data-name="{{ product.productname }}" 
@@ -115,12 +133,17 @@
                                     <button type="button" class="action-trigger-btn delete-trigger single-delete-btn" data-id="{{ product.productid }}">
                                         <i class="bi bi-trash3-fill"></i>
                                     </button>
+>>>>>>> lakshya-dev
                                 </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
+<<<<<<< HEAD
+                            <td colspan="7" class="empty-fallback-state">
+=======
                             <td colspan="8" class="empty-fallback-state">
+>>>>>>> lakshya-dev
                                 <i class="bi bi-folder-x"></i>
                                 <p>No active inventory tracks mapped inside the database core matrix.</p>
                             </td>
@@ -142,6 +165,24 @@
                 {% endif %}
             </div>
             
+<<<<<<< HEAD
+            <form method="POST" action="{% if edit_mode %}{% url 'edit_product' form.instance.productid %}{% else %}{% url 'add_product' %}{% endif %}">
+                {% csrf_token %}
+                
+                <div class="django-injected-form-wrapper">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="form-processing-actions">
+                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
+                        {% if edit_mode %} Commit Asset Updates {% else %} Push New Asset {% endif %}
+                    </button>
+                    {% if edit_mode %}
+                        <a href="{% url 'product_list' %}" class="dismiss-action-link">
+                            Dismiss Operations
+                        </a>
+                    {% endif %}
+=======
             <form method="POST" action="{% url 'add_product' %}" id="add-product-form" data-mode="add">
                 {% csrf_token %}
                 <div class="django-injected-form-wrapper">
@@ -150,12 +191,63 @@
                 <div class="form-processing-actions">
                     <button type="submit" class="submit-core-action-btn">Push New Asset</button>
                     <a href="#" id="cancel-edit-btn" class="dismiss-action-link" style="display: none;">Dismiss Operations</a>
+>>>>>>> lakshya-dev
                 </div>
             </form>
         </div>
 
     </div>
 
+<<<<<<< HEAD
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const formElements = document.querySelectorAll('.django-injected-form-wrapper p input, .django-injected-form-wrapper p select');
+            formElements.forEach(element => {
+                if (element.type !== 'checkbox' && element.type !== 'radio') {
+                    element.classList.add('premium-cyber-input-element');
+                }
+            });
+        });
+
+        // ==========================
+        // PRODUCT NAME VALIDATION
+        // ==========================
+
+        const productInput = document.getElementById('productname');
+
+        if (productInput) {
+
+            productInput.addEventListener('input', function () {
+                this.setCustomValidity('');
+            });
+
+            productInput.addEventListener('blur', function () {
+
+                if (this.value.trim() === '') return;
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                fetch(`/check-productname/?productname=${encodeURIComponent(this.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        if (data.exists) {
+                            this.setCustomValidity(
+                                'Product with this name already exists.'
+                            );
+                        } else {
+                            this.setCustomValidity('');
+                        }
+
+                        this.reportValidity();
+                    });
+            });
+        }
+    </script>
+=======
     <div class="cyber-modal-overlay" id="bulkImportModal" {% if import_summary %}style="display: flex;"{% endif %}>
         <div class="cyber-modal-window">
             
@@ -217,6 +309,10 @@
     </div>
 
     <script src="{% static 'scripts/product_list.js' %}"> </script>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+=======
+>>>>>>> lakshya-dev
+>>>>>>> main
 </body>
 </html>

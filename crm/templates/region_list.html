@@ -19,6 +19,8 @@
     </div>
 
     <div class="main-container">
+<<<<<<< HEAD
+=======
         {% if import_summary %}
         <div class="import-summary-matrix animate-fade-in">
             <div class="summary-matrix-header">
@@ -47,12 +49,16 @@
             {% endif %}
         </div>
         {% endif %}
+>>>>>>> lakshya-dev
 
         <div class="table-section">
             <div class="section-header-row">
                 <h3><i class="bi bi-globe-americas text-info"></i> Registered Territories Ledger</h3>
                 <span class="live-status-pill">Active Region Sync</span>
             </div>
+<<<<<<< HEAD
+            
+=======
             <form method="GET" class="search-form-console">
                 <div class="search-input-group">
                     <i class="bi bi-search search-field-icon"></i>
@@ -94,13 +100,17 @@
                 </button>
             </div>
 
+>>>>>>> lakshya-dev
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>
                         <tr>
+<<<<<<< HEAD
+=======
                             <th style="width: 45px; text-align: center;">
                                 <input type="checkbox" id="master-select-checkbox">
                             </th>
+>>>>>>> lakshya-dev
                             <th>ID Code</th>
                             <th>Geographic Region Name</th>
                             <th>Handled By</th>
@@ -110,10 +120,14 @@
                     </thead>
                     <tbody>
                         {% for region in regions %}
+<<<<<<< HEAD
+                        <tr>
+=======
                         <tr data-row-id="{{ region.regionid }}">
                             <td style="text-align: center;">
                                 <input type="checkbox" class="row-select-checkbox" value="{{ region.regionid }}">
                             </td>
+>>>>>>> lakshya-dev
                             <td class="id-token">#{{ region.regionid }}</td>
                             <td>
                                 <div class="region-identity-cell">
@@ -122,6 +136,17 @@
                                 </div>
                             </td>
                             <td class="user-meta-txt"><i class="bi bi-person-fill-check"></i> {{ region.added_by }}</td>
+<<<<<<< HEAD
+                            <td class="chrono-stamp">{{ region.added_dts|date:"Y-m-d H:i:s" }}</td>
+                            <td>
+                                <div class="action-buttons-group">
+                                    <a href="{% url 'edit_region' region.regionid %}" class="action-trigger-btn edit-trigger">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'delete_region' region.regionid %}" class="action-trigger-btn delete-trigger" onclick="return confirm('Delete this region?');">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </a>
+=======
                             <td class="chrono-stamp">{{ region.added_dts|date:"m/d/Y" }}</td>
                             <td>
                                 <div class="action-buttons-group">
@@ -133,12 +158,17 @@
                                     <button type="button" class="action-trigger-btn delete-trigger single-delete-btn" data-id="{{ region.regionid }}">
                                         <i class="bi bi-trash3-fill"></i>
                                     </button>
+>>>>>>> lakshya-dev
                                 </div>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
+<<<<<<< HEAD
+                            <td colspan="5" class="empty-fallback-state">
+=======
                             <td colspan="6" class="empty-fallback-state">
+>>>>>>> lakshya-dev
                                 <i class="bi bi-geo-fill"></i>
                                 <p>No active operational territories mapped inside the database matrix.</p>
                             </td>
@@ -151,11 +181,24 @@
 
         <div class="form-container form-section">
             <div class="form-title-block">
+<<<<<<< HEAD
+                {% if edit_mode %} 
+                    <h3><i class="bi bi-pencil-square color-edit"></i> Modify Zone</h3>
+                    <p>Altering existing territorial database rows parameters.</p>
+                {% else %} 
+                    <h3><i class="bi bi-plus-circle-fill color-add"></i> Create Region</h3>
+                    <p>Append a new geographic division constraint row.</p>
+                {% endif %}
+            </div>
+            
+            <form method="POST" action="{% if edit_mode %}{% url 'edit_region' form.instance.regionid %}{% else %}{% url 'add_region' %}{% endif %}">
+=======
                 <h3><i class="bi bi-plus-circle-fill color-add"></i> Create Region</h3>
                 <p>Append a new geographic division constraint row.</p>
             </div>
             
             <form method="POST" action="{% url 'add_region' %}" id="add-product-form" data-mode="add">
+>>>>>>> lakshya-dev
                 {% csrf_token %}
                 
                 <div class="django-injected-form-wrapper">
@@ -163,16 +206,77 @@
                 </div>
 
                 <div class="form-processing-actions">
+<<<<<<< HEAD
+                    <button type="submit" class="submit-core-action-btn {% if edit_mode %}modify-theme-btn{% endif %}">
+                        {% if edit_mode %} Commit Zone Updates {% else %} Push New Region {% endif %}
+                    </button>
+                    {% if edit_mode %}
+                        <a href="{% url 'region_list' %}" class="dismiss-action-link">
+                            Dismiss Operations
+                        </a>
+                    {% endif %}
+=======
                     <button type="submit" class="submit-core-action-btn">Push New Region</button>
                     <a href="#" id="cancel-edit-btn" class="dismiss-action-link" style="display: none;">
                         Dismiss Operations
                     </a>
+>>>>>>> lakshya-dev
                 </div>
             </form>
         </div>
 
     </div>
 
+<<<<<<< HEAD
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const formElements = document.querySelectorAll(
+            '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select'
+        );
+
+        formElements.forEach(element => {
+            if (element.type !== 'checkbox' && element.type !== 'radio') {
+                element.classList.add('premium-cyber-input-element');
+            }
+        });
+
+        const regionInput = document.getElementById('regionname');
+
+        if (regionInput) {
+
+            regionInput.addEventListener('input', function () {
+                this.setCustomValidity('');
+            });
+
+            regionInput.addEventListener('blur', function () {
+
+                if (this.value.trim() === '') return;
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                fetch(`/check-regionname/?regionname=${encodeURIComponent(this.value)}`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        if (data.exists) {
+                            this.setCustomValidity(
+                                'Region with this name already exists.'
+                            );
+                        } else {
+                            this.setCustomValidity('');
+                        }
+
+                        this.reportValidity();
+                    });
+            });
+        }
+
+        });
+=======
     <div class="cyber-modal-overlay" id="bulkImportModal">
         <div class="cyber-modal-window">
             <div class="cyber-modal-header">
@@ -197,6 +301,7 @@
 
     <script src="{% static 'scripts/region_list.js' %}">
     
+>>>>>>> lakshya-dev
     </script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>
