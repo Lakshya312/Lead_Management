@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate , login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+import re
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -14,6 +15,120 @@ from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
 from rest_framework import status
 import getpass
 from .utils import log_error
+
+import pandas as pd
+
+'''FOR IMPORTING'''
+
+@login_required(login_url='login')
+def import_products(request):
+    if request.method != 'POST':
+        return redirect('product_list')
+
+    uploaded_file = request.FILES.get('product_file')
+
+    if not uploaded_file:
+        messages.error(request, "Please select a file.")
+        return redirect('product_list')
+
+    try:
+        # 1. Parse File Engine
+        if uploaded_file.name.endswith('.csv'):
+            df = pd.read_csv(uploaded_file)
+        elif uploaded_file.name.endswith('.xlsx'):
+            df = pd.read_excel(uploaded_file)
+        else:
+            messages.error(request, "Only CSV and Excel files are allowed.")
+            return redirect('product_list')
+
+        # Standardize expected headers to avoid column mismatch errors
+        required_columns = ['ProductName', 'CategoryID', 'Is_Active']
+        if not all(col in df.columns for col in required_columns):
+            messages.error(request, "Missing required columns: ProductName, CategoryID, or Is_Active")
+            return redirect('product_list')
+
+        last_product = Product.objects.order_by('-productid').first()
+        next_id = last_product.productid + 1 if last_product else 1
+
+        imported = 0
+        skipped = 0
+        errors = []
+        
+        for index, row in df.iterrows():
+            # Clean text properties and handle NaN cases safely
+            product_name = str(row['ProductName']).strip() if pd.notna(row['ProductName']) else ""
+            category_id = row['CategoryID']
+            is_active = row['Is_Active']
+
+            row_num = index + 2  # Human-readable row index layout line position
+
+            # 2. Strict Validations
+            if not product_name or product_name.lower() == "nan":
+                errors.append(f"Row {row_num}: Empty Product Name")
+                skipped += 1
+                continue
+
+            if not re.match(r'^[A-Za-z0-9 ]+$', product_name):
+                errors.append(f"Row {row_num}: Invalid characters in Product Name ('{product_name}')")
+                skipped += 1
+                continue
+
+            # Check if category ID is a valid number, then parse to integer safely
+            if pd.isna(category_id) or not str(category_id).strip().replace('.0', '').isdigit():
+                errors.append(f"Row {row_num}: Invalid Category ID mapping format")
+                skipped += 1
+                continue
+            category_id = int(float(category_id))
+
+            if not ProductCategory.objects.filter(categoryid=category_id).exists():
+                errors.append(f"Row {row_num}: Category ID {category_id} does not exist in the database")
+                skipped += 1
+                continue
+
+            # Normalize Is_Active from floats or strings safely
+            if pd.isna(is_active) or str(is_active).strip().replace('.0', '') not in ['0', '1']:
+                errors.append(f"Row {row_num}: Invalid Is_Active status value (must be 0 or 1)")
+                skipped += 1
+                continue
+            is_active = int(float(is_active))
+
+            if Product.objects.filter(productname__iexact=product_name).exists():
+                errors.append(f"Row {row_num}: Duplicate Product Name ('{product_name}') detected")
+                skipped += 1
+                continue
+
+            # 3. Create Record (Let DB auto-increment handle productid automatically)
+            Product.objects.create(
+                productid=next_id,
+                productname=product_name,
+                categoryid_id=category_id,
+                is_active=is_active,
+                added_by=request.user.username,
+                added_dts=datetime.now()
+            )
+            imported += 1
+            next_id+=1
+
+        # Flash success/warning message summary counts instantly
+        if imported > 0:
+            messages.success(request, f"Successfully imported {imported} products into core matrix.")
+        if skipped > 0:
+            messages.warning(request, f"Skipped {skipped} rows due to validation conflicts.")
+
+        # Save summary to session safely
+        request.session['import_summary'] = {
+            'imported': imported,
+            'skipped': skipped,
+            'errors': errors
+        }
+
+    except Exception as e:
+        log_error(e)
+        # Fallback log wrapper handle
+        print(f"CRITICAL BULK IMPORT ERROR: {str(e)}")
+        messages.error(request, "Something went wrong during data stream import parsing.")
+
+    return redirect('product_list')
 
 '''FOR LOGIN'''
 
@@ -82,14 +197,18 @@ class Product_view:
                 )
 
         form = ProductForm()
-
+        import_summary = request.session.pop(
+            'import_summary',
+            None
+        )
         return render(
             request,
             'product_list.html',
             {
                 'products': products,
                 'form': form,
-                'search': search
+                'search': search,
+                'import_summary':import_summary
             }
         )
 

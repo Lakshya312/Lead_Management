@@ -151,6 +151,84 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
 }
 
 /* ==========================================
+   BULK IMPORT ENVIRONMENT STYLING TOKENS
+   ========================================== */
+   .bulk-upload-console-card {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px dashed var(--glass-border);
+    padding: 16px;
+    border-radius: var(--radius-input);
+    margin-bottom: 30px;
+}
+.bulk-upload-form {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.file-drop-zone-wrapper {
+    position: relative;
+    flex: 1;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-input);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    overflow: hidden;
+}
+.native-file-picker {
+    position: absolute;
+    left: 0; top: 0; opacity: 0;
+    width: 100%; height: 100%;
+    cursor: pointer;
+}
+.upload-icon { color: var(--glow-primary); font-size: 18px; }
+.upload-placeholder-txt { color: var(--text-slate); font-size: 13px; font-weight: 500; }
+
+.bulk-execute-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: var(--glow-lead);
+    color: #fff;
+    font-size: 13px; font-weight: 700;
+    border: none; border-radius: var(--radius-input);
+    cursor: pointer; transition: all 0.3s var(--ease-curve);
+    height: 45px;
+}
+.bulk-execute-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+/* Ledger summary card design formats */
+.import-summary-matrix {
+    background: var(--glass-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-box);
+    padding: 24px; margin-bottom: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+.summary-matrix-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--glass-border);
+}
+.summary-matrix-header h4 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+.report-badge-pill { font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.15); color: var(--glow-lead); padding: 4px 10px; border-radius: 50px; text-transform: uppercase; }
+
+.summary-counter-grid { display: flex; gap: 16px; margin-bottom: 20px; }
+.metric-block-card { flex: 1; padding: 16px; border-radius: var(--radius-input); background: rgba(15, 23, 42, 0.4); border: 1px solid var(--glass-border); }
+.metrics-success .m-val { color: var(--glow-success); font-weight: 800; font-size: 22px; font-family: monospace; }
+.metrics-skipped .m-val { color: #fbbf24; font-weight: 800; font-size: 22px; font-family: monospace; }
+.m-lbl { font-size: 11px; color: var(--text-slate); text-transform: uppercase; margin-top: 4px; font-weight: 700; letter-spacing: 0.5px; }
+
+.audit-exception-logs-box { background: rgba(0,0,0,0.2); border-radius: var(--radius-input); padding: 16px; border: 1px solid rgba(239, 68, 68, 0.1); }
+.audit-exception-logs-box h5 { font-size: 12px; color: #f87171; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+.exception-log-lines { list-style: none; max-height: 150px; overflow-y: auto; font-family: monospace; font-size: 12px; color: var(--text-slate); }
+.exception-log-lines li { padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+.log-bullet { color: var(--glow-danger); font-size: 10px; }
+
+/* ==========================================
    PARENT LAYOUT GRID GRID CONTROL
    ========================================== */
    .main-container {

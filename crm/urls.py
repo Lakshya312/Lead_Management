@@ -2,6 +2,8 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    # for importing
+    path('products/import/',import_products,name='import_products'),
 
     # for login
     path('login/', Login_view.login_view, name='login'),

@@ -40,6 +40,50 @@
                     <i class="bi bi-funnel-fill"></i> Filter Matrix
                 </button>
             </form>
+
+            <div class="bulk-upload-console-card">
+                <form method="POST" action="{% url 'import_products' %}" enctype="multipart/form-data" class="bulk-upload-form">
+                    {% csrf_token %}
+                    <div class="file-drop-zone-wrapper">
+                        <i class="bi bi-cloud-arrow-up-fill upload-icon"></i>
+                        <input type="file" name="product_file" accept=".csv, .xlsx" required class="native-file-picker">
+                        <span class="upload-placeholder-txt">Drop CSV/Excel file here or click to browse</span>
+                    </div>
+                    <button type="submit" class="bulk-execute-btn">
+                        <i class="bi bi-database-fill-up"></i> Bulk Import
+                    </button>
+                </form>
+            </div>
+            
+            {% if import_summary %}
+            <div class="import-summary-matrix">
+                <div class="summary-matrix-header">
+                    <h4><i class="bi bi-terminal-box text-indigo"></i> Bulk Import Audit Ledger</h4>
+                    <span class="report-badge-pill">Sync Complete</span>
+                </div>
+                <div class="summary-counter-grid">
+                    <div class="metric-block-card metrics-success">
+                        <div class="m-val">{{ import_summary.imported }}</div>
+                        <div class="m-lbl">Rows Comitted</div>
+                    </div>
+                    <div class="metric-block-card metrics-skipped">
+                        <div class="m-val">{{ import_summary.skipped }}</div>
+                        <div class="m-lbl">Rows Rejected</div>
+                    </div>
+                </div>
+            
+                {% if import_summary.errors %}
+                <div class="audit-exception-logs-box">
+                    <h5><i class="bi bi-bug-fill text-danger"></i> Validation Log Exceptions</h5>
+                    <ul class="exception-log-lines">
+                        {% for error in import_summary.errors %}
+                            <li><i class="bi bi-caret-right-fill log-bullet"></i> {{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
             <div class="table-scroll-wrapper">
                 <table>
                     <thead>
@@ -138,6 +182,22 @@
                     element.classList.add('premium-cyber-input-element');
                 }
             });
+
+            const filePicker = document.querySelector('.native-file-picker');
+            const uploadText = document.querySelector('.upload-placeholder-txt');
+
+            if (filePicker && uploadText) {
+                filePicker.addEventListener('change', function() {
+                    if (this.files && this.files.length > 0) {
+                        // Extracts the selected filename and injects it into our layout card text field
+                        uploadText.textContent = `Selected: ${this.files[0].name}`;
+                        uploadText.style.color = 'var(--glow-success)'; // Swaps text color to green to indicate active staging
+                    } else {
+                        uploadText.textContent = "Drop CSV/Excel file here or click to browse";
+                        uploadText.style.color = 'var(--text-slate)';
+                    }
+                });
+            }
         });
 
         // ==========================
