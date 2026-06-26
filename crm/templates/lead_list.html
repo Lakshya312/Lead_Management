@@ -41,6 +41,19 @@
                 <button type="submit" class="search-action-btn">
                     <i class="bi bi-funnel-fill"></i> Filter Matrix
                 </button>
+                <div class="export-dropdown-wrapper">
+                    <button type="button" class="export-ledger-btn" id="exportMenuTrigger" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.15); color: #fff; display: inline-flex; align-items: center; gap: 8px; padding: 14px 20px; font-size: 14px; font-weight: 700; border-radius: var(--radius-input); cursor: pointer; height: 47px;">
+                        <i class="bi bi-download"></i> Export Data <i class="bi bi-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                    </button>
+                    <div class="export-dropdown-menu" id="exportDropdownMenu">
+                        <a href="#" class="export-option-link" data-format="xlsx">
+                            <i class="bi bi-file-earmark-excel-fill" style="color: #10b981;"></i> Excel Workbook (.xlsx)
+                        </a>
+                        <a href="#" class="export-option-link" data-format="csv">
+                            <i class="bi bi-filetype-csv" style="color: #3b82f6;"></i> CSV Document (.csv)
+                        </a>
+                    </div>
+                </div>
             </form>
 
             <div id="bulk-action-bar" style="display: none; margin-bottom: 15px;" class="bulk-action-floating-panel">
@@ -342,5 +355,6 @@
         
 >>>>>>> lakshya-dev
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body>
 </html>

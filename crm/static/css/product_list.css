@@ -90,6 +90,52 @@ body {
 
 /* ==========================================
 <<<<<<< HEAD
+   SINGLE EXPORT DROPDOWN COMPONENT THEME
+   ========================================== */
+   .export-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.export-dropdown-menu {
+    display: none; /* Controlled dynamically via JS */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #141c2f;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: var(--radius-input);
+    z-index: 1000;
+    min-width: 170px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.export-option-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.export-option-link:hover {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981 !important;
+}
+
+.export-option-link:not(:first-child) {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================
+=======
+<<<<<<< HEAD
    PARENT LAYOUT GRID GRID CONTROL
    ========================================== */
    .main-container {
@@ -98,6 +144,7 @@ body {
     align-items: flex-start;
     max-width: 100%;        /* Changed from 1650px to stay perfectly fluid within margins */
 =======
+>>>>>>> main
    CYBER SEARCH CONSOLE ROW GRID ARCHITECTURE
    ========================================== */
 .search-form-console {
