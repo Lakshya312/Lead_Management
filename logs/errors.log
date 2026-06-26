@@ -106,3 +106,48 @@ ZeroDivisionError: division by zero
   Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
   Line    : 641
 --------------------------------------------------------------------------------
+[2026-06-23 13:32:35] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------
+[2026-06-23 13:32:35] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 6247
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------
+[2026-06-24 16:05:44] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------
+[2026-06-24 16:05:44] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 6247
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------
+[2026-06-26 00:35:13] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------
+[2026-06-26 00:35:13] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 7014
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------
+[2026-06-26 00:35:43] [WARNING] [leads] [views.post:L106]
+  Message : LoginView: Failed login attempt. Errors: <ul class="errorlist"><li>__all__<ul class="errorlist nonfield"><li>Please enter a correct username and password. Note that both fields may be case-sensitive.</li></ul></li></ul>
+  Path    : D:\LeadManagement\LeadManagementSystem\leads\views.py
+  Line    : 106
+--------------------------------------------------------------------------------
+[2026-06-26 00:47:36] [WARNING] [django.request] [log.log_message:L249]
+  Message : Not Found: /favicon.ico
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------
+[2026-06-26 00:47:36] [WARNING] [django.server] [log.log_message:L249]
+  Message : "GET /favicon.ico HTTP/1.1" 404 7014
+  Path    : D:\LeadManagement\LeadManagementSystem\venv\Lib\site-packages\django\utils\log.py
+  Line    : 249
+--------------------------------------------------------------------------------

@@ -4,66 +4,564 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Lead Management System{% endblock %}</title>
-    <!-- Bootstrap 5 CSS CDN -->
+    <meta name="description" content="Lead Management System — Intelligent lead management platform">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --primary:       #6C63FF;
+            --primary-dark:  #5A52D5;
+            --primary-light: rgba(108,99,255,0.12);
+            --accent:        #FF6584;
+            --success:       #00D9A5;
+            --warning:       #FFB347;
+            --bg:            #0F0E17;
+            --bg-card:       #1A1828;
+            --bg-input:      #231F38;
+            --sidebar-w:     260px;
+            --border:        rgba(108,99,255,0.2);
+            --text:          #E8E8F0;
+            --text-muted:    #8B87A8;
+            --nav-h:         64px;
+        }
+
         body {
-            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0; padding: 0;
+            min-height: 100vh;
         }
-        .navbar {
-            margin-bottom: 20px;
+
+        /* ── Top Navbar ── */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: var(--nav-h);
+            background: rgba(26,24,40,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 24px;
+            gap: 16px;
         }
+
+        .nav-brand {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; margin-right: auto;
+        }
+        .nav-brand .brand-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: #fff;
+            box-shadow: 0 4px 12px rgba(108,99,255,0.4);
+        }
+        .nav-brand .brand-name {
+            font-size: 1.1rem; font-weight: 700; color: #fff;
+            letter-spacing: -0.02em;
+        }
+        .nav-brand .brand-name span { color: var(--primary); }
+
+        .sidebar-toggle {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 20px; cursor: pointer; padding: 6px;
+            border-radius: 8px; transition: all 0.2s; line-height: 1;
+        }
+        .sidebar-toggle:hover { background: var(--primary-light); color: var(--primary); }
+
+        .nav-actions { display: flex; align-items: center; gap: 8px; }
+
+        .nav-btn {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 18px; cursor: pointer; padding: 8px;
+            border-radius: 8px; transition: all 0.2s; position: relative;
+            text-decoration: none; display: flex; align-items: center;
+        }
+        .nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+        .nav-user {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: 10px; padding: 6px 12px 6px 6px; cursor: pointer;
+            transition: border-color 0.2s; position: relative;
+        }
+        .nav-user:hover { border-color: var(--primary); }
+        .nav-user .avatar {
+            width: 30px; height: 30px; border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+        }
+        .nav-user .uname {
+            font-size: 0.85rem; font-weight: 600; color: var(--text);
+        }
+        .nav-user .urole {
+            font-size: 0.72rem; color: var(--text-muted); line-height: 1;
+        }
+
+        /* Dropdown */
+        .user-dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 8px;
+            min-width: 200px; display: none;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5); z-index: 200;
+        }
+        .nav-user:hover .user-dropdown { display: block; }
+        .user-dropdown a, .user-dropdown button {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 8px;
+            color: var(--text-muted); font-size: 0.85rem; font-weight: 500;
+            text-decoration: none; border: none; background: none; width: 100%;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .user-dropdown a:hover, .user-dropdown button:hover {
+            background: var(--primary-light); color: var(--primary);
+        }
+        .user-dropdown hr { border-color: var(--border); margin: 6px 0; }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            position: fixed; top: var(--nav-h); left: 0; bottom: 0;
+            width: var(--sidebar-w); z-index: 90;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 24px 12px;
+            display: flex; flex-direction: column; gap: 4px;
+            overflow-y: auto; transition: transform 0.3s ease;
+        }
+        .sidebar.collapsed { transform: translateX(-100%); }
+
+        .sidebar-section {
+            font-size: 0.7rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.08em;
+            padding: 8px 12px 4px; margin-top: 8px;
+        }
+        .sidebar-section:first-child { margin-top: 0; }
+
+        .nav-item-link {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 10px;
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.88rem; font-weight: 500;
+            transition: all 0.2s; position: relative;
+        }
+        .nav-item-link:hover {
+            background: var(--primary-light); color: var(--primary);
+        }
+        .nav-item-link.active {
+            background: var(--primary-light); color: var(--primary);
+            font-weight: 600;
+        }
+        .nav-item-link.active::before {
+            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
+            width: 3px; border-radius: 0 2px 2px 0;
+            background: var(--primary);
+        }
+        .nav-item-link .ni { font-size: 17px; flex-shrink: 0; }
+        .nav-item-link .badge-count {
+            margin-left: auto; background: var(--primary);
+            color: #fff; font-size: 0.7rem; font-weight: 700;
+            border-radius: 20px; padding: 1px 7px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto; padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Main content ── */
+        .main-wrapper {
+            margin-top: var(--nav-h);
+            margin-left: var(--sidebar-w);
+            padding: 28px 32px;
+            min-height: calc(100vh - var(--nav-h));
+            transition: margin-left 0.3s ease;
+        }
+        .main-wrapper.full { margin-left: 0; }
+
+        /* ── Page header ── */
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+        }
+        .page-header h1 {
+            font-size: 1.5rem; font-weight: 700; color: var(--text);
+            letter-spacing: -0.02em; margin: 0;
+        }
+        .breadcrumb-trail {
+            font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .breadcrumb-trail a { color: var(--primary); text-decoration: none; }
+        .breadcrumb-trail a:hover { opacity: 0.8; }
+
+        /* ── Cards ── */
+        .card-crm {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .card-crm:hover { border-color: rgba(108,99,255,0.4); }
+
+        /* ── Stat cards ── */
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px;
+            display: flex; align-items: center; gap: 20px;
+            transition: border-color 0.25s, transform 0.25s;
+        }
+        .stat-card:hover { border-color: rgba(108,99,255,0.5); transform: translateY(-2px); }
+        .stat-icon {
+            width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+        }
+        .stat-value {
+            font-size: 1.8rem; font-weight: 800; color: var(--text);
+            letter-spacing: -0.03em; line-height: 1;
+        }
+        .stat-label { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .stat-change {
+            font-size: 0.78rem; margin-top: 6px;
+            display: flex; align-items: center; gap: 4px; font-weight: 600;
+        }
+        .stat-change.up { color: var(--success); }
+        .stat-change.down { color: var(--accent); }
+
+        /* ── Tables ── */
+        .table-crm { width: 100%; border-collapse: collapse; }
+        .table-crm thead th {
+            padding: 12px 16px; background: var(--bg-input);
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+        .table-crm thead th:first-child { border-radius: 10px 0 0 0; }
+        .table-crm thead th:last-child  { border-radius: 0 10px 0 0; }
+        .table-crm tbody td {
+            padding: 14px 16px; border-bottom: 1px solid rgba(108,99,255,0.08);
+            font-size: 0.88rem; color: var(--text); vertical-align: middle;
+        }
+        .table-crm tbody tr:hover td { background: rgba(108,99,255,0.05); }
+        .table-crm tbody tr:last-child td { border-bottom: none; }
+
+        /* ── Buttons ── */
+        .btn-primary-crm {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff; border: none; border-radius: 9px;
+            padding: 10px 20px; font-family: 'Inter', sans-serif;
+            font-size: 0.88rem; font-weight: 600; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(108,99,255,0.35);
+            display: inline-flex; align-items: center; gap: 7px;
+            text-decoration: none;
+        }
+        .btn-primary-crm:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(108,99,255,0.5); color: #fff; }
+
+        .btn-ghost-crm {
+            background: var(--primary-light); color: var(--primary);
+            border: 1px solid var(--border); border-radius: 9px;
+            padding: 9px 18px; font-family: 'Inter', sans-serif;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
+            text-decoration: none;
+        }
+        .btn-ghost-crm:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        .btn-danger-crm {
+            background: rgba(255,101,132,0.12); color: var(--accent);
+            border: 1px solid rgba(255,101,132,0.25); border-radius: 9px;
+            padding: 9px 18px; font-family: 'Inter', sans-serif;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
+            text-decoration: none;
+        }
+        .btn-danger-crm:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* ── Forms ── */
+        .form-label-crm {
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
+            display: block;
+        }
+        .form-control-crm {
+            width: 100%; background: var(--bg-input);
+            border: 1px solid var(--border); border-radius: 9px;
+            padding: 11px 14px; color: var(--text);
+            font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control-crm:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+        }
+        .form-control-crm::placeholder { color: var(--text-muted); }
+
+        /* ── Badges ── */
+        .badge-crm {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.73rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .badge-success { background: rgba(0,217,165,0.15); color: var(--success); }
+        .badge-danger  { background: rgba(255,101,132,0.15); color: var(--accent); }
+        .badge-primary { background: var(--primary-light); color: var(--primary); }
+        .badge-warning { background: rgba(255,179,71,0.15); color: var(--warning); }
+
+        /* ── Alerts ── */
+        .alert-crm {
+            border-radius: 12px; padding: 14px 18px;
+            display: flex; align-items: flex-start; gap: 12px;
+            font-size: 0.88rem; margin-bottom: 20px;
+        }
+        .alert-crm.success { background: rgba(0,217,165,0.1); border: 1px solid rgba(0,217,165,0.3); color: var(--success); }
+        .alert-crm.danger  { background: rgba(255,101,132,0.1); border: 1px solid rgba(255,101,132,0.3); color: var(--accent); }
+        .alert-crm.warning { background: rgba(255,179,71,0.1);  border: 1px solid rgba(255,179,71,0.3);  color: var(--warning); }
+        .alert-crm.info    { background: var(--primary-light);   border: 1px solid var(--border);          color: var(--primary); }
+
+        /* ── Search bar ── */
+        .search-bar {
+            position: relative; display: inline-flex; align-items: center;
+        }
+        .search-bar i {
+            position: absolute; left: 12px; color: var(--text-muted); font-size: 15px;
+        }
+        .search-bar input {
+            background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: 9px; padding: 10px 14px 10px 38px;
+            color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.88rem;
+            outline: none; min-width: 260px; transition: border-color 0.2s;
+        }
+        .search-bar input:focus { border-color: var(--primary); }
+        .search-bar input::placeholder { color: var(--text-muted); }
+
+        /* ── Action icon buttons ── */
+        .action-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 14px; border: none; cursor: pointer; transition: all 0.2s;
+            text-decoration: none;
+        }
+        .action-btn.edit   { background: var(--primary-light); color: var(--primary); }
+        .action-btn.delete { background: rgba(255,101,132,0.12); color: var(--accent); }
+        .action-btn:hover  { transform: scale(1.12); }
+
+        /* ── Toast messages ── */
+        .toast-container-crm {
+            position: fixed; top: calc(var(--nav-h) + 16px); right: 16px; z-index: 9999;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast-crm {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 18px;
+            display: flex; align-items: center; gap: 12px;
+            min-width: 280px; max-width: 360px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            animation: toastSlide 0.35s ease;
+        }
+        @keyframes toastSlide { from { opacity:0; transform: translateX(40px); } }
+        .toast-crm .t-icon { font-size: 18px; flex-shrink: 0; }
+        .toast-crm .t-msg  { font-size: 0.85rem; color: var(--text); }
+        .toast-crm .t-close {
+            margin-left: auto; background: none; border: none;
+            color: var(--text-muted); cursor: pointer; font-size: 16px;
+        }
+        .toast-crm.success { border-left: 3px solid var(--success); }
+        .toast-crm.success .t-icon { color: var(--success); }
+        .toast-crm.danger  { border-left: 3px solid var(--accent); }
+        .toast-crm.danger  .t-icon { color: var(--accent); }
+        .toast-crm.warning { border-left: 3px solid var(--warning); }
+        .toast-crm.warning .t-icon { color: var(--warning); }
+        .toast-crm.info    { border-left: 3px solid var(--primary); }
+        .toast-crm.info    .t-icon { color: var(--primary); }
+
+        /* ── Scrollbar styling ── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(108,99,255,0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; }
+        }
+        @media (max-width: 600px) {
+            .main-wrapper { padding: 20px 16px; }
+            .page-header h1 { font-size: 1.25rem; }
+        }
+
+        /* Bootstrap overrides for dark theme */
+        .table { color: var(--text); }
+        select.form-control-crm option { background: var(--bg-card); color: var(--text); }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'leads:dashboard' %}">LeadManager</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'leads:dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'leads:region_list' %}">Regions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'leads:product_list' %}">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'leads:lead_list' %}">Leads</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/" target="_blank">Admin Panel</a>
-                    </li>
-                </ul>
+<!-- ── Toast notifications ── -->
+<div class="toast-container-crm" id="toastContainer">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                <div class="toast-crm success" data-auto-dismiss="4000">
+                    <i class="bi bi-check-circle-fill t-icon"></i>
+                    <span class="t-msg">{{ message }}</span>
+                    <button class="t-close" onclick="this.parentElement.remove()"><i class="bi bi-x"></i></button>
+                </div>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                <div class="toast-crm danger" data-auto-dismiss="6000">
+                    <i class="bi bi-exclamation-triangle-fill t-icon"></i>
+                    <span class="t-msg">{{ message }}</span>
+                    <button class="t-close" onclick="this.parentElement.remove()"><i class="bi bi-x"></i></button>
+                </div>
+            {% elif message.tags == 'warning' %}
+                <div class="toast-crm warning" data-auto-dismiss="5000">
+                    <i class="bi bi-exclamation-circle-fill t-icon"></i>
+                    <span class="t-msg">{{ message }}</span>
+                    <button class="t-close" onclick="this.parentElement.remove()"><i class="bi bi-x"></i></button>
+                </div>
+            {% else %}
+                <div class="toast-crm info" data-auto-dismiss="4000">
+                    <i class="bi bi-info-circle-fill t-icon"></i>
+                    <span class="t-msg">{{ message }}</span>
+                    <button class="t-close" onclick="this.parentElement.remove()"><i class="bi bi-x"></i></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+<!-- ── Top Navbar ── -->
+<nav class="top-nav">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <a href="{% url 'leads:dashboard' %}" class="nav-brand">
+        <div class="brand-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+        <div class="brand-name">Lead <span>Management</span></div>
+    </a>
+
+    <div class="nav-actions">
+        <a href="{% url 'leads:lead_add' %}" class="nav-btn" title="New Lead">
+            <i class="bi bi-plus-circle"></i>
+        </a>
+        <a href="/admin/" target="_blank" class="nav-btn" title="Admin Panel">
+            <i class="bi bi-gear"></i>
+        </a>
+
+        {% if user.is_authenticated %}
+        <div class="nav-user" tabindex="0">
+            <div class="avatar">{{ user.username|slice:":1"|upper }}</div>
+            <div>
+                <div class="uname">{{ user.get_full_name|default:user.username }}</div>
+                <div class="urole">{% if user.is_superuser %}Admin{% elif user.is_staff %}Staff{% else %}User{% endif %}</div>
+            </div>
+            <i class="bi bi-chevron-down" style="font-size:11px; color:var(--text-muted); margin-left:4px;"></i>
+            <div class="user-dropdown">
+                <a href="/admin/password_change/"><i class="bi bi-key"></i> Change Password</a>
+                <hr>
+                <form method="post" action="{% url 'leads:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit"><i class="bi bi-box-arrow-left"></i> Sign Out</button>
+                </form>
             </div>
         </div>
-    </nav>
-
-    <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+        {% else %}
+        <a href="{% url 'leads:login' %}" class="btn-primary-crm" style="padding:8px 16px; font-size:0.83rem;">
+            <i class="bi bi-box-arrow-in-right"></i> Sign In
+        </a>
         {% endif %}
-
-        {% block content %}
-        {% endblock content %}
     </div>
+</nav>
 
-    <!-- Bootstrap 5 JS Bundle CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ── Sidebar ── -->
+<aside class="sidebar" id="sidebar">
+    <span class="sidebar-section">Main</span>
+    <a href="{% url 'leads:dashboard' %}" class="nav-item-link {% block nav_dashboard %}{% endblock %}">
+        <i class="bi bi-grid-1x2-fill ni"></i> Dashboard
+    </a>
+
+    <span class="sidebar-section">CRM</span>
+    <a href="{% url 'leads:lead_list' %}" class="nav-item-link {% block nav_leads %}{% endblock %}">
+        <i class="bi bi-person-lines-fill ni"></i> Leads
+    </a>
+    <a href="{% url 'leads:lead_add' %}" class="nav-item-link {% block nav_leads_add %}{% endblock %}">
+        <i class="bi bi-person-plus ni"></i> Add Lead
+    </a>
+
+    <span class="sidebar-section">Catalogue</span>
+    <a href="{% url 'leads:product_list' %}" class="nav-item-link {% block nav_products %}{% endblock %}">
+        <i class="bi bi-box-seam-fill ni"></i> Products
+    </a>
+    <a href="{% url 'leads:product_upload_excel' %}" class="nav-item-link {% block nav_excel %}{% endblock %}">
+        <i class="bi bi-file-earmark-excel-fill ni"></i> Bulk Upload
+    </a>
+
+    <span class="sidebar-section">Settings</span>
+    <a href="{% url 'leads:region_list' %}" class="nav-item-link {% block nav_regions %}{% endblock %}">
+        <i class="bi bi-map-fill ni"></i> Regions
+    </a>
+
+
+    <div class="sidebar-bottom">
+        <a href="/admin/" class="nav-item-link" target="_blank">
+            <i class="bi bi-shield-lock ni"></i> Admin Panel
+        </a>
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'leads:logout' %}" style="margin:0">
+            {% csrf_token %}
+            <button type="submit" class="nav-item-link" style="width:100%; text-align:left; background:none; border:none; cursor:pointer; color:var(--accent);">
+                <i class="bi bi-box-arrow-left ni"></i> Sign Out
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</aside>
+
+<!-- ── Main Content ── -->
+<main class="main-wrapper" id="mainWrapper">
+    {% block content %}{% endblock content %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const mainWrapper = document.getElementById('mainWrapper');
+const toggleBtn = document.getElementById('sidebarToggle');
+let collapsed = false;
+
+toggleBtn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    if (window.innerWidth > 900) {
+        sidebar.classList.toggle('collapsed', collapsed);
+        mainWrapper.classList.toggle('full', collapsed);
+    } else {
+        sidebar.classList.toggle('open', !collapsed);
+    }
+});
+
+// Auto-dismiss toasts
+document.querySelectorAll('[data-auto-dismiss]').forEach(el => {
+    const delay = parseInt(el.dataset.autoDismiss) || 4000;
+    setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(40px)';
+        el.style.transition = 'all 0.35s ease';
+        setTimeout(() => el.remove(), 350);
+    }, delay);
+});
+</script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

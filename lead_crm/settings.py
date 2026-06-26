@@ -243,3 +243,11 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
 }
+
+# ---------------------------------------------------------------------------
+# Authentication redirects
+# ---------------------------------------------------------------------------
+LOGIN_URL          = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+

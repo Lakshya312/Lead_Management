@@ -25,20 +25,29 @@ router.register(r'follow-ups', views.LeadFollowUpViewSet, basename='follow-up')
 urlpatterns = [
     # API endpoints (browsable API root at /api/)
     path('api/', include(router.urls)),
-    
-    # Frontend endpoints
+
+    # ── Authentication ────────────────────────────────────────────────────────
+    path('login/',    views.LoginView.as_view(),    name='login'),
+    path('logout/',   views.LogoutView.as_view(),   name='logout'),
+    path('register/', views.RegisterView.as_view(), name='register'),
+
+    # ── Frontend dashboard ───────────────────────────────────────────────────
     path('', views.DashboardView.as_view(), name='dashboard'),
-    
+
+    # ── Regions ───────────────────────────────────────────────────────────────
     path('regions/', views.RegionListView.as_view(), name='region_list'),
     path('regions/add/', views.RegionCreateView.as_view(), name='region_add'),
     path('regions/<int:pk>/edit/', views.RegionUpdateView.as_view(), name='region_edit'),
     path('regions/<int:pk>/delete/', views.RegionDeleteView.as_view(), name='region_delete'),
-    
+
+    # ── Products ──────────────────────────────────────────────────────────────
     path('products/', views.ProductListView.as_view(), name='product_list'),
     path('products/add/', views.ProductCreateView.as_view(), name='product_add'),
     path('products/<int:pk>/edit/', views.ProductUpdateView.as_view(), name='product_edit'),
     path('products/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='product_delete'),
-    
+    path('products/upload-excel/', views.ProductExcelUploadView.as_view(), name='product_upload_excel'),
+
+    # ── Leads ─────────────────────────────────────────────────────────────────
     path('leads/', views.LeadListView.as_view(), name='lead_list'),
     path('leads/add/', views.LeadCreateView.as_view(), name='lead_add'),
     path('leads/<int:pk>/edit/', views.LeadUpdateView.as_view(), name='lead_edit'),

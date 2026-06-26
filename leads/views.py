@@ -36,6 +36,133 @@ logger = logging.getLogger('leads')
 
 
 # ==============================================================================
+# AUTHENTICATION VIEWS
+# ==============================================================================
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
+from django import forms as django_forms
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib import messages as contrib_messages
+
+
+class CRMUserCreationForm(UserCreationForm):
+    """
+    Extended user registration form that collects first name, last name, and email.
+    Inherits all password validation from Django's built-in UserCreationForm.
+    """
+    first_name = django_forms.CharField(
+        max_length=30, required=False,
+        widget=django_forms.TextInput(attrs={'placeholder': 'John'}),
+    )
+    last_name = django_forms.CharField(
+        max_length=150, required=False,
+        widget=django_forms.TextInput(attrs={'placeholder': 'Doe'}),
+    )
+    email = django_forms.EmailField(
+        required=False,
+        widget=django_forms.EmailInput(attrs={'placeholder': 'john@company.com'}),
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data.get('first_name', '')
+        user.last_name  = self.cleaned_data.get('last_name', '')
+        user.email      = self.cleaned_data.get('email', '')
+        if commit:
+            user.save()
+        return user
+
+
+class LoginView(View):
+    """
+    Handles GET (render login form) and POST (authenticate & login).
+    Redirects authenticated users directly to the dashboard.
+    """
+    template_name = 'registration/login.html'
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('leads:dashboard')
+        form = AuthenticationForm(request)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            logger.info("LoginView: User '%s' logged in successfully.", user.username)
+            contrib_messages.success(request, f"Welcome back, {user.get_full_name() or user.username}! 👋")
+            next_url = request.GET.get('next') or 'leads:dashboard'
+            return redirect(next_url)
+        else:
+            logger.warning(
+                "LoginView: Failed login attempt. Errors: %s",
+                form.errors,
+            )
+            contrib_messages.error(request, "Invalid username or password. Please try again.")
+        return render(request, self.template_name, {'form': form})
+
+
+class LogoutView(View):
+    """
+    Handles POST-only logout (CSRF protected) and redirects to login page.
+    """
+    def post(self, request):
+        username = request.user.username if request.user.is_authenticated else 'Unknown'
+        logout(request)
+        logger.info("LogoutView: User '%s' logged out.", username)
+        contrib_messages.success(request, "You have been signed out successfully.")
+        return redirect('leads:login')
+
+    def get(self, request):
+        # Redirect GET requests to login; logout should be POST only
+        return redirect('leads:login')
+
+
+class RegisterView(View):
+    """
+    Handles GET (render registration form) and POST (create user account).
+    Uses extended CRMUserCreationForm with first name, last name, email.
+    """
+    template_name = 'registration/register.html'
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('leads:dashboard')
+        form = CRMUserCreationForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = CRMUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            logger.info(
+                "RegisterView: New user '%s' (%s %s) registered and logged in.",
+                user.username, user.first_name, user.last_name,
+            )
+            contrib_messages.success(
+                request,
+                f"Account created successfully! Welcome, {user.get_full_name() or user.username}! 🎉"
+            )
+            return redirect('leads:dashboard')
+        else:
+            logger.warning(
+                "RegisterView: Registration failed for username='%s'. Errors: %s",
+                request.POST.get('username', ''), form.errors,
+            )
+        return render(request, self.template_name, {'form': form})
+
+
+# ==============================================================================
 # API VIEWSETS (Django REST Framework)
 # ==============================================================================
 
@@ -446,12 +573,14 @@ class DashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context['total_leads'] = Lead.objects.filter(is_deleted=False).count()
-            context['total_products'] = Product.objects.count()
-            context['total_regions'] = Region.objects.count()
+            context['total_leads']     = Lead.objects.filter(is_deleted=False).count()
+            context['total_products']  = Product.objects.count()
+            context['total_regions']   = Region.objects.count()
+            context['total_followups'] = LeadFollowUp.objects.count()
             logger.info(
-                "DashboardView: Stats fetched — leads=%s, products=%s, regions=%s",
-                context['total_leads'], context['total_products'], context['total_regions'],
+                "DashboardView: Stats fetched — leads=%s, products=%s, regions=%s, follow_ups=%s",
+                context['total_leads'], context['total_products'],
+                context['total_regions'], context['total_followups'],
             )
         except DatabaseError as exc:
             logger.error(
@@ -462,6 +591,7 @@ class DashboardView(TemplateView):
             context.setdefault('total_leads', 0)
             context.setdefault('total_products', 0)
             context.setdefault('total_regions', 0)
+            context.setdefault('total_followups', 0)
         except Exception as exc:
             logger.error(
                 "DashboardView.get_context_data: Unexpected error — %s",
@@ -470,6 +600,7 @@ class DashboardView(TemplateView):
             context.setdefault('total_leads', 0)
             context.setdefault('total_products', 0)
             context.setdefault('total_regions', 0)
+            context.setdefault('total_followups', 0)
         return context
 
 
@@ -762,3 +893,194 @@ class LeadDeleteView(DeleteView):
                 f'Please contact the administrator.'
             )
             return redirect(self.success_url)
+
+
+# ==============================================================================
+# PRODUCT EXCEL UPLOAD VIEW
+# ==============================================================================
+
+import pandas as pd
+from django.views import View
+from django.utils import timezone
+
+
+class ProductExcelUploadView(View):
+    """
+    Handles bulk product upload via an Excel (.xlsx / .xls) file.
+
+    Expected columns (case-insensitive):
+        productname  | category  | isactive
+
+    Validation rules per row:
+        1. productname must not be empty.
+        2. category must not be empty and must match an existing ProductCategory.
+        3. productname must not already exist in the DB (duplicate check).
+        4. isactive defaults to 1 (True) when the cell is blank.
+    """
+
+    template_name = 'leads/product_excel_upload.html'
+
+    def get(self, request):
+        return self._render(request)
+
+    def post(self, request):
+        excel_file = request.FILES.get('excel_file')
+
+        # ── 1. File presence check ──────────────────────────────────────────
+        if not excel_file:
+            messages.error(request, "Please select an Excel file before uploading.")
+            return self._render(request)
+
+        # ── 2. Extension check ──────────────────────────────────────────────
+        if not (excel_file.name.endswith('.xlsx') or excel_file.name.endswith('.xls')):
+            messages.error(request, "Invalid file type. Please upload an Excel file (.xlsx or .xls).")
+            return self._render(request)
+
+        # ── 3. Parse Excel ──────────────────────────────────────────────────
+        try:
+            df = pd.read_excel(excel_file, dtype=str)
+        except Exception as exc:
+            logger.error("ProductExcelUploadView: Failed to parse Excel — %s", exc, exc_info=True)
+            messages.error(request, f"Could not read the Excel file: {exc}")
+            return self._render(request)
+
+        # ── 4. Normalise column names (strip spaces, lowercase) ─────────────
+        df.columns = [c.strip().lower().replace(' ', '') for c in df.columns]
+
+        required_cols = {'productname', 'category', 'isactive'}
+        missing = required_cols - set(df.columns)
+        if missing:
+            messages.error(
+                request,
+                f"Missing required column(s): {', '.join(missing)}. "
+                "Please ensure your Excel file has columns: ProductName, Category, IsActive."
+            )
+            return self._render(request)
+
+        # ── 5. Pre-load category map & existing product names ───────────────
+        category_map = {
+            cat.categoryname.strip().lower(): cat
+            for cat in ProductCategory.objects.all()
+        }
+        existing_names = set(
+            Product.objects.values_list('productname', flat=True)
+        )
+        # Track names already seen in this upload batch (prevent intra-batch duplicates)
+        seen_in_batch = set()
+
+        row_results = []   # list of dicts: {row, status, message}
+        products_to_create = []
+        added_by = request.user.get_full_name() or request.user.username
+        added_dts = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # ── 6. Row-level validation ─────────────────────────────────────────
+        for idx, row in df.iterrows():
+            row_num = idx + 2  # Excel row number (header = row 1)
+            errors = []
+
+            raw_name = str(row.get('productname', '') or '').strip()
+            raw_cat  = str(row.get('category', '') or '').strip()
+            raw_active = str(row.get('isactive', '') or '').strip()
+
+            # Rule 1 — product name must not be empty
+            if not raw_name or raw_name.lower() == 'nan':
+                errors.append("Product Name is empty.")
+
+            # Rule 3 — category must not be empty
+            if not raw_cat or raw_cat.lower() == 'nan':
+                errors.append("Category is empty.")
+
+            if errors:
+                row_results.append({
+                    'row': row_num,
+                    'status': 'error',
+                    'product': raw_name or '(blank)',
+                    'messages': errors,
+                })
+                continue
+
+            # Rule 2 — duplicate check (DB + batch)
+            name_key = raw_name.lower()
+            if raw_name in existing_names or name_key in seen_in_batch:
+                row_results.append({
+                    'row': row_num,
+                    'status': 'error',
+                    'product': raw_name,
+                    'messages': [f'Duplicate product name "{raw_name}" — already exists.'],
+                })
+                continue
+
+            # Category lookup
+            cat_key = raw_cat.lower()
+            if cat_key not in category_map:
+                row_results.append({
+                    'row': row_num,
+                    'status': 'error',
+                    'product': raw_name,
+                    'messages': [f'Category "{raw_cat}" does not exist. Please add it first.'],
+                })
+                continue
+
+            # Rule 4 — isactive defaults to 1 if blank
+            if not raw_active or raw_active.lower() in ('nan', ''):
+                is_active_val = 1
+            elif raw_active.lower() in ('true', '1', 'yes', 'active'):
+                is_active_val = 1
+            elif raw_active.lower() in ('false', '0', 'no', 'inactive'):
+                is_active_val = 0
+            else:
+                is_active_val = 1  # default for unrecognised values
+
+            # All checks passed — queue for insert
+            seen_in_batch.add(name_key)
+            products_to_create.append(Product(
+                productname=raw_name,
+                categoryid=category_map[cat_key],
+                is_active=is_active_val,
+                added_by=added_by,
+                added_dts=added_dts,
+            ))
+            row_results.append({
+                'row': row_num,
+                'status': 'success',
+                'product': raw_name,
+                'messages': ['Ready for import.'],
+            })
+
+        # ── 7. Bulk insert valid rows ───────────────────────────────────────
+        inserted_count = 0
+        if products_to_create:
+            try:
+                Product.objects.bulk_create(products_to_create)
+                inserted_count = len(products_to_create)
+                logger.info(
+                    "ProductExcelUploadView: Bulk inserted %d products by user '%s'.",
+                    inserted_count, added_by,
+                )
+            except Exception as exc:
+                logger.error(
+                    "ProductExcelUploadView: bulk_create failed — %s", exc, exc_info=True,
+                )
+                messages.error(request, f"Database error during import: {exc}")
+                return self._render(request)
+
+        # ── 8. Summary flash message ────────────────────────────────────────
+        error_count = sum(1 for r in row_results if r['status'] == 'error')
+        if inserted_count:
+            messages.success(
+                request,
+                f"{inserted_count} product(s) imported successfully."
+                + (f" {error_count} row(s) had errors — see details below." if error_count else "")
+            )
+        else:
+            messages.warning(request, "No products were imported. Please review the errors below.")
+
+        return self._render(request, row_results=row_results)
+
+    # ── Helper ──────────────────────────────────────────────────────────────
+    def _render(self, request, row_results=None):
+        from django.shortcuts import render
+        return render(request, self.template_name, {
+            'row_results': row_results or [],
+            'categories': ProductCategory.objects.all(),
+        })

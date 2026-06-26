@@ -1,49 +1,83 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if object %}Edit Region{% else %}Add Region{% endif %} | Lead Management System{% endblock %}
+{% block title %}{% if object %}Edit Region{% else %}Add Region{% endif %} — LeadManager CRM{% endblock %}
+{% block nav_regions %}active{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
-                <i class="bi bi-{% if object %}pencil-square{% else %}plus-circle{% endif %} fs-5"></i>
-                <h4 class="mb-0">{% if object %}Edit Region{% else %}Add New Region{% endif %}</h4>
-            </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-
-                    {% if form.non_field_errors %}
-                    <div class="alert alert-danger shadow-sm">
-                        <ul class="mb-0">
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Region Name <span class="text-danger">*</span></label>
-                        {{ form.regionname }}
-                        {% if form.regionname.errors %}
-                            <div class="text-danger small mt-1">{{ form.regionname.errors.0 }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <a href="{% url 'leads:region_list' %}" class="btn btn-secondary">
-                            <i class="bi bi-x-circle me-1"></i> Cancel
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            {% if object %}Update Region{% else %}Save Region{% endif %}
-                        </button>
-                    </div>
-                </form>
-            </div>
+<div class="page-header">
+    <div>
+        <h1>{% if object %}Edit Region{% else %}Add Region{% endif %}</h1>
+        <div class="breadcrumb-trail">
+            <a href="{% url 'leads:dashboard' %}"><i class="bi bi-house-fill"></i> Home</a>
+            &rsaquo; <a href="{% url 'leads:region_list' %}">Regions</a>
+            &rsaquo; {% if object %}Edit{% else %}Add{% endif %}
         </div>
     </div>
 </div>
+
+<div style="max-width:540px;">
+    <div class="card-crm">
+        <h2 style="font-size:1rem; font-weight:700; color:var(--text); margin-bottom:24px; display:flex; align-items:center; gap:8px;">
+            <i class="bi bi-{% if object %}pencil{% else %}plus-circle{% endif %}" style="color:var(--primary);"></i>
+            {% if object %}Update Region Details{% else %}New Region{% endif %}
+        </h2>
+
+        {% if form.non_field_errors %}
+            <div class="alert-crm danger" style="margin-bottom:20px;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <div>{% for error in form.non_field_errors %}{{ error }}{% endfor %}</div>
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div style="margin-bottom:20px;">
+                <label class="form-label-crm" for="{{ field.id_for_label }}">
+                    {{ field.label }}{% if field.field.required %} <span style="color:var(--accent);">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <div style="color:var(--accent); font-size:0.78rem; margin-top:5px; display:flex; align-items:center; gap:4px;">
+                        <i class="bi bi-x-circle"></i> {{ field.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div style="display:flex; gap:12px; margin-top:8px;">
+                <a href="{% url 'leads:region_list' %}" class="btn-ghost-crm" style="flex:1; justify-content:center; padding:12px;">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+                <button type="submit" class="btn-primary-crm" style="flex:2; justify-content:center; padding:12px;">
+                    <i class="bi bi-check-lg"></i>
+                    {% if object %}Update Region{% else %}Save Region{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Style Django-rendered form widgets */
+input[type="text"], input[type="number"], input[type="email"], select, textarea {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+}
+select option { background: #1A1828; color: var(--text); }
+</style>
 {% endblock %}
