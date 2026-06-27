@@ -1,11 +1,4 @@
 from datetime import datetime
-<<<<<<< HEAD
-
-def log_error(error):
-    with open("error_log.txt", "a") as file:
-        file.write(
-            f"{datetime.now()} : {type(error).__name__} : {str(error)}\n"
-=======
 import traceback
 
 def log_error(error):
@@ -28,5 +21,4 @@ def log_error(error):
             f"Function    : {tb.name}\n"
             f"Line Number : {tb.lineno}\n"
             f"{'=' * 60}\n"
->>>>>>> lakshya-dev
         )
