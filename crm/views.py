@@ -2,18 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from datetime import datetime
-<<<<<<< HEAD
-from django.http import JsonResponse, HttpResponseRedirect
-from django.contrib import messages
-from django.db.models import Q
-=======
 from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate , login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 import re
->>>>>>> lakshya-dev
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -21,150 +15,9 @@ from .serializers import ProductSerializer, LeadSerializer, RegionSerializer
 from rest_framework import status
 import getpass
 from .utils import log_error
-<<<<<<< HEAD
-
-'''FOR PRODUCTS'''
-class Product_view:
-
-    def product_list(request):
-        products = Product.objects.all()
-        form = ProductForm()
-
-        return render(
-            request,
-            'product_list.html',
-            {'products': products, 'form': form}
-        )
-
-    @staticmethod
-    def add_product(request):
-
-        try:
-
-            if request.method == 'POST':
-
-                form = ProductForm(request.POST)
-
-                if form.is_valid():
-
-                    last_product = Product.objects.order_by(
-                        '-productid'
-                    ).first()
-
-=======
 import json
 from django.views.decorators.http import require_POST
 import pandas as pd
-
-@login_required(login_url='login')
-def import_products(request):
-    if request.method != 'POST':
-        return redirect('product_list')
-
-    uploaded_file = request.FILES.get('product_file')
-
-    if not uploaded_file:
-        messages.error(request, "Please select a file.")
-        return redirect('product_list')
-
-    try:
-        # 1. Parse File Engine
-        if uploaded_file.name.endswith('.csv'):
-            df = pd.read_csv(uploaded_file)
-        elif uploaded_file.name.endswith('.xlsx'):
-            df = pd.read_excel(uploaded_file)
-        else:
-            messages.error(request, "Only CSV and Excel files are allowed.")
-            return redirect('product_list')
-
-        # Standardize expected headers to avoid column mismatch errors
-        required_columns = ['ProductName', 'CategoryID', 'Is_Active']
-        if not all(col in df.columns for col in required_columns):
-            messages.error(request, "Missing required columns: ProductName, CategoryID, or Is_Active")
-            return redirect('product_list')
-
-        last_product = Product.objects.order_by('-productid').first()
-        next_id = last_product.productid + 1 if last_product else 1
-
-        imported = 0
-        skipped = 0
-        errors = []
-        
-        for index, row in df.iterrows():
-            # Clean text properties and handle NaN cases safely
-            product_name = str(row['ProductName']).strip() if pd.notna(row['ProductName']) else ""
-            category_id = row['CategoryID']
-            is_active = row['Is_Active']
-
-            row_num = index + 2  # Human-readable row index layout line position
-
-            # 2. Strict Validations
-            if not product_name or product_name.lower() == "nan":
-                errors.append(f"Row {row_num}: Empty Product Name")
-                skipped += 1
-                continue
-
-            if not re.match(r'^[A-Za-z0-9 ]+$', product_name):
-                errors.append(f"Row {row_num}: Invalid characters in Product Name ('{product_name}')")
-                skipped += 1
-                continue
-
-            # Check if category ID is a valid number, then parse to integer safely
-            if pd.isna(category_id) or not str(category_id).strip().replace('.0', '').isdigit():
-                errors.append(f"Row {row_num}: Invalid Category ID mapping format")
-                skipped += 1
-                continue
-            category_id = int(float(category_id))
-
-            if not ProductCategory.objects.filter(categoryid=category_id).exists():
-                errors.append(f"Row {row_num}: Category ID {category_id} does not exist in the database")
-                skipped += 1
-                continue
-
-            # Normalize Is_Active from floats or strings safely
-            if pd.isna(is_active) or str(is_active).strip().replace('.0', '') not in ['0', '1']:
-                errors.append(f"Row {row_num}: Invalid Is_Active status value (must be 0 or 1)")
-                skipped += 1
-                continue
-            is_active = int(float(is_active))
-
-            if Product.objects.filter(productname__iexact=product_name).exists():
-                errors.append(f"Row {row_num}: Duplicate Product Name ('{product_name}') detected")
-                skipped += 1
-                continue
-
-            # 3. Create Record (Let DB auto-increment handle productid automatically)
-            Product.objects.create(
-                productid=next_id,
-                productname=product_name,
-                categoryid_id=category_id,
-                is_active=is_active,
-                added_by=request.user.username,
-                added_dts=datetime.now()
-            )
-            imported += 1
-            next_id+=1
-
-        # Flash success/warning message summary counts instantly
-        if imported > 0:
-            messages.success(request, f"Successfully imported {imported} products into core matrix.")
-        if skipped > 0:
-            messages.warning(request, f"Skipped {skipped} rows due to validation conflicts.")
-
-        # Save summary to session safely
-        request.session['import_summary'] = {
-            'imported': imported,
-            'skipped': skipped,
-            'errors': errors
-        }
-
-    except Exception as e:
-        log_error(e)
-        # Fallback log wrapper handle
-        print(f"CRITICAL BULK IMPORT ERROR: {str(e)}")
-        messages.error(request, "Something went wrong during data stream import parsing.")
-
-    return redirect('product_list')
 
 '''FOR LOGIN'''
 
@@ -264,7 +117,7 @@ class Product_view:
             # Instantiates a clean fallback structure on a default GET request routing loop
             form = ProductForm()
 
-        import_summary = request.session.pop('import_summary', None)
+        import_summary = request.session.pop('product_import_summary', None)
         
         return render(
             request,
@@ -286,7 +139,6 @@ class Product_view:
 
                 if form.is_valid():
                     last_product = Product.objects.order_by('-productid').first()
->>>>>>> lakshya-dev
                     product = form.save(commit=False)
 
                     product.productid = (
@@ -296,29 +148,11 @@ class Product_view:
                     )
 
                     product.added_dts = datetime.now()
-<<<<<<< HEAD
-
-=======
->>>>>>> lakshya-dev
                     product.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else "System"
                     )
-<<<<<<< HEAD
-
-                    product.save()
-
-                    messages.success(
-                        request,
-                        "Product added successfully."
-                    )
-
-                    return redirect('product_list')
-
-            products = Product.objects.all()
-
-=======
                     product.save()
 
                     # ==========================================
@@ -348,7 +182,6 @@ class Product_view:
 
             # Fallback render block for GET requests or fallback sequences
             products = Product.objects.all()
->>>>>>> lakshya-dev
             return render(
                 request,
                 'product_list.html',
@@ -359,56 +192,108 @@ class Product_view:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-
-            log_error(e)
-
-=======
             log_error(e)
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
 
->>>>>>> lakshya-dev
             messages.error(
                 request,
                 f"{type(e).__name__}: {str(e)}"
             )
-<<<<<<< HEAD
-
             return redirect('product_list')
-
-    @staticmethod
-    def edit_product(request, productid):
-
+        
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_upload_products(request):
         try:
+            if 'bulk_file' not in request.FILES:
+                return JsonResponse({'success': False, 'error': 'No file stream payload parsed.'}, status=400)
+                
+            uploaded_file = request.FILES['bulk_file']
+            filename = uploaded_file.name
 
-            product = get_object_or_404(
-                Product,
-                pk=productid
-            )
+            if filename.endswith('.csv'):
+                df = pd.read_csv(uploaded_file)
+            elif filename.endswith(('.xls', '.xlsx')):
+                df = pd.read_excel(uploaded_file)
+            else:
+                return JsonResponse({'success': False, 'error': 'Unsupported format extension. Use CSV or Excel.'}, status=400)
 
-            form = ProductForm(
-                request.POST or None,
-                instance=product
-            )
+            required_columns = ['ProductName', 'CategoryID', 'Is_Active']
+            if not all(col in df.columns for col in required_columns):
+                return JsonResponse({'success': False, 'error': 'Missing required matrix headers: ProductName, CategoryID, or Is_Active'}, status=400)
 
-            if form.is_valid():
+            last_product = Product.objects.order_by('-productid').first()
+            next_id = last_product.productid + 1 if last_product else 1
 
-                product = form.save(commit=False)
+            imported = 0
+            skipped = 0
+            errors = []
+            
+            for index, row in df.iterrows():
+                product_name = str(row['ProductName']).strip() if pd.notna(row['ProductName']) else ""
+                category_id = row['CategoryID']
+                is_active = row['Is_Active']
+                row_num = index + 2
 
-                product.added_dts = datetime.now()
+                if not product_name or product_name.lower() == "nan":
+                    errors.append(f"Row {row_num}: Empty Product Name")
+                    skipped += 1
+                    continue
 
-                product.save()
+                if not re.match(r'^[A-Za-z0-9 ]+$', product_name):
+                    errors.append(f"Row {row_num}: Invalid characters inside string ('{product_name}')")
+                    skipped += 1
+                    continue
 
-                messages.success(
-                    request,
-                    "Product updated successfully."
+                if pd.isna(category_id) or not str(category_id).strip().replace('.0', '').isdigit():
+                    errors.append(f"Row {row_num}: Invalid Category ID mapping format")
+                    skipped += 1
+                    continue
+                category_id = int(float(category_id))
+
+                if not ProductCategory.objects.filter(categoryid=category_id).exists():
+                    errors.append(f"Row {row_num}: Category ID {category_id} mismatch inside ledger")
+                    skipped += 1
+                    continue
+
+                if pd.isna(is_active) or str(is_active).strip().replace('.0', '') not in ['0', '1']:
+                    errors.append(f"Row {row_num}: Invalid active binary assignment state")
+                    skipped += 1
+                    continue
+                is_active = int(float(is_active))
+
+                if Product.objects.filter(productname__iexact=product_name).exists():
+                    errors.append(f"Row {row_num}: Duplicate Record trace ('{product_name}') skipped")
+                    skipped += 1
+                    continue
+
+                Product.objects.create(
+                    productid=next_id,
+                    productname=product_name,
+                    categoryid_id=category_id,
+                    is_active=is_active,
+                    added_by=request.user.username,
+                    added_dts=datetime.now()
                 )
+                imported += 1
+                next_id += 1
 
-                return redirect('product_list')
-=======
-            return redirect('product_list')
+            # Cache metrics to display once upon refresh inside product_list view
+            request.session['product_import_summary'] = {
+                'imported': imported,
+                'skipped': skipped,
+                'errors': errors,
+                'filename': filename
+            }
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            if 'log_error' in globals():
+                log_error(e)
+            return JsonResponse({'success': False, 'error': f"Critical processing exception: {str(e)}"}, status=500)
 
     @login_required(login_url='login')
     @staticmethod # Keeps your staticmethod decorator intact
@@ -446,7 +331,6 @@ class Product_view:
                 else:
                     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                         return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
->>>>>>> lakshya-dev
 
             return render(
                 request,
@@ -459,45 +343,6 @@ class Product_view:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-            return redirect('product_list')
-
-    @staticmethod
-    def delete_product(request, productid):
-
-        try:
-
-            product = get_object_or_404(
-                Product,
-                pk=productid
-            )
-
-            product.delete()
-
-            messages.success(
-                request,
-                "Product deleted successfully."
-            )
-
-        except Exception as e:
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-        return redirect('product_list')
-=======
             log_error(e)
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -553,19 +398,10 @@ class Product_view:
             if 'log_error' in globals():
                 log_error(e)
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
->>>>>>> lakshya-dev
 
 '''FOR REGION'''
 
 class Region_view:
-<<<<<<< HEAD
-
-    def region_list(request):
-
-        regions = Region.objects.all()
-        form = RegionForm()
-
-=======
     @login_required(login_url='login')
     def region_list(request):
         search = request.GET.get('search', '')
@@ -578,36 +414,18 @@ class Region_view:
                 regions = regions.filter(regionname__istartswith=search)
 
         form = RegionForm()
->>>>>>> lakshya-dev
+        
+        # CRITICAL SYNC: Safely pull the summary matrix block data out of the session pipeline
+        import_summary = request.session.pop('import_summary', None)
+        
         return render(
             request,
             'region_list.html',
             {
                 'regions': regions,
-<<<<<<< HEAD
-                'form': form
-            }
-        )
-
-
-    @staticmethod
-    def add_region(request):
-
-        try:
-
-            if request.method == 'POST':
-
-                form = RegionForm(request.POST)
-
-                if form.is_valid():
-
-                    last_region = Region.objects.order_by(
-                        '-regionid'
-                    ).first()
-
-=======
                 'form': form,
-                'search': search
+                'search': search,
+                'import_summary': import_summary # Handed down directly to template engine
             }
         )
 
@@ -619,35 +437,17 @@ class Region_view:
                 form = RegionForm(request.POST)
                 if form.is_valid():
                     last_region = Region.objects.order_by('-regionid').first()
->>>>>>> lakshya-dev
                     region = form.save(commit=False)
 
                     region.regionid = (
                         last_region.regionid + 1
                         if last_region else 1
                     )
-<<<<<<< HEAD
-
-=======
->>>>>>> lakshya-dev
                     region.added_by = (
                         request.user.username
                         if request.user.is_authenticated
                         else 'System'
                     )
-<<<<<<< HEAD
-
-                    region.added_dts = datetime.now()
-
-                    region.save()
-
-                    messages.success(
-                        request,
-                        "Region added successfully."
-                    )
-
-                    return redirect('region_list')
-=======
                     region.added_dts = datetime.now()
                     region.save()
 
@@ -668,62 +468,10 @@ class Region_view:
                 else:
                     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                         return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
->>>>>>> lakshya-dev
 
             return redirect('region_list')
 
         except Exception as e:
-<<<<<<< HEAD
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-            return redirect('region_list')
-
-
-    @staticmethod
-    def edit_region(request, regionid):
-
-        try:
-
-            region = get_object_or_404(
-                Region,
-                pk=regionid
-            )
-
-            form = RegionForm(
-                request.POST or None,
-                instance=region
-            )
-
-            if request.method == 'POST' and form.is_valid():
-
-                region = form.save(commit=False)
-
-                region.added_dts = datetime.now()
-
-                region.added_by = (
-                    request.user.username
-                    if request.user.is_authenticated
-                    else 'System'
-                )
-
-                region.save()
-
-                messages.success(
-                    request,
-                    "Region updated successfully."
-                )
-
-                return redirect('region_list')
-
-            regions = Region.objects.all()
-
-=======
             log_error(e)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
@@ -766,7 +514,6 @@ class Region_view:
                         return JsonResponse({'success': False, 'error': 'Invalid layout form data details.'}, status=400)
 
             regions = Region.objects.all()
->>>>>>> lakshya-dev
             return render(
                 request,
                 'region_list.html',
@@ -778,51 +525,6 @@ class Region_view:
             )
 
         except Exception as e:
-<<<<<<< HEAD
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-            return redirect('region_list')
-
-
-    @staticmethod
-    def delete_region(request, regionid):
-
-        try:
-
-            region = get_object_or_404(
-                Region,
-                pk=regionid
-            )
-
-            region.delete()
-
-            messages.success(
-                request,
-                "Region deleted successfully."
-            )
-
-        except Exception as e:
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-        return redirect('region_list')
-
-'''FOR LEAD'''
-class Lead_view:
-    def lead_list(request):
-
-=======
             log_error(e)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
@@ -868,7 +570,6 @@ class Lead_view:
     @require_POST
     def bulk_upload_regions(request):
         try:
-            # 1. Capture incoming multi-part spreadsheet file streams
             if 'bulk_file' not in request.FILES:
                 return JsonResponse({'success': False, 'error': 'No file stream payload parsed.'}, status=400)
                 
@@ -882,8 +583,7 @@ class Lead_view:
             else:
                 return JsonResponse({'success': False, 'error': 'Unsupported format extension. Use CSV or Excel.'}, status=400)
 
-            # Ensure our target column map identifier key is present inside the matrix header
-            target_col = 'Region Name'
+            target_col = 'RegionName'
             if target_col not in df.columns:
                 return JsonResponse({'success': False, 'error': f"Missing required column header token: '{target_col}'"}, status=400)
 
@@ -891,36 +591,31 @@ class Lead_view:
             skipped_count = 0
             exception_logs = []
 
-            # 2. Open an isolated runtime processing cycle loop across rows
-            for index, row in df.iterrows():
-                row_num = index + 2  # Offsets array indexing to map cleanly onto physical sheet rows
-                raw_region_name = str(row[target_col]).strip()
+            last_region = Region.objects.order_by('-regionid').first()
+            next_id = (last_region.regionid + 1) if last_region else 1
 
-                # Layer A: Check for blank entries or Pandas string artifacts
+            for index, row in df.iterrows():
+                row_num = index + 2  
+                raw_region_name = str(row[target_col]).strip() if pd.notna(row[target_col]) else ""
+
                 if not raw_region_name or raw_region_name.lower() in ['nan', 'null', '']:
                     skipped_count += 1
                     exception_logs.append(f"Row {row_num}: Rejected due to blank cell mapping context.")
                     continue
 
-                # Layer B: Enforce validation matrix patterns (Allows letter structures, spaces, and hyphens)
                 import re
                 if not re.match(r'^[A-Za-z -]+$', raw_region_name):
                     skipped_count += 1
                     exception_logs.append(f"Row {row_num}: '{raw_region_name}' contains illegal characters.")
                     continue
 
-                # Layer C: Scan database constraints for pre-existing records (Case-insensitive)
                 if Region.objects.filter(regionname__iexact=raw_region_name).exists():
                     skipped_count += 1
                     exception_logs.append(f"Row {row_num}: Zone record '{raw_region_name}' already exists inside core ledger.")
                     continue
 
                 try:
-                    # Calculate the sequential primary key values manually
-                    last_region = Region.objects.order_by('-regionid').first()
-                    next_id = (last_region.regionid + 1) if last_region else 1
-
-                    # 3. Commit unique object rows to the database
+                    # 3. Commit unique object rows to the database using the rolling next_id
                     Region.objects.create(
                         regionid=next_id,
                         regionname=raw_region_name,
@@ -928,11 +623,12 @@ class Lead_view:
                         added_dts=datetime.now()
                     )
                     success_count += 1
+                    next_id += 1 
+                    
                 except Exception as e:
                     skipped_count += 1
-                    exception_logs.append(f"Row {row_num}: Processing anomaly dropped row line -> {str(e)}")
+                    exception_logs.append(f"Row {row_num}: Database write failure -> {str(e)}")
 
-            # Store processing matrix inside session storage to serve as post-import ledger report layout updates
             request.session['import_summary'] = {
                 'success_count': success_count,
                 'skipped_count': skipped_count,
@@ -943,14 +639,14 @@ class Lead_view:
             return JsonResponse({'success': True})
 
         except Exception as e:
-            log_error(e)
+            if 'log_error' in globals():
+                log_error(e)
             return JsonResponse({'success': False, 'error': f"Critical ingestion failure: {str(e)}"}, status=500)
 
 '''FOR LEAD'''
 class Lead_view:
     @login_required(login_url='login')
     def lead_list(request):
->>>>>>> lakshya-dev
         search = request.GET.get('search', '')
 
         leads = Lead.objects.select_related(
@@ -961,24 +657,6 @@ class Lead_view:
         )
 
         if search:
-<<<<<<< HEAD
-
-            leads = leads.filter(
-
-                Q(personname__istartswith=search) |
-                Q(productid__productname__istartswith=search) |
-                Q(regionid__regionname__istartswith=search)
-
-            )
-
-        if search.isdigit():
-            leads = leads | Lead.objects.filter(
-                leadid=int(search)
-            )
-
-        form = LeadForm()
-
-=======
             if search.isdigit():
                 leads = leads.filter(leadid=int(search))
             else:
@@ -989,66 +667,21 @@ class Lead_view:
                 )
 
         form = LeadForm()
->>>>>>> lakshya-dev
+        
+        # PULL FROM SESSION PIPELINE FOR REFRESH LAYOUT DISPLAY
+        import_summary = request.session.pop('leads_import_summary', None)
+        
         return render(
             request,
             'lead_list.html',
             {
                 'leads': leads,
                 'form': form,
-                'search': search
+                'search': search,
+                'import_summary': import_summary
             }
         )
 
-<<<<<<< HEAD
-    @staticmethod
-    def add_lead(request):
-
-        try:
-            1/0
-            if request.method == 'POST':
-
-                form = LeadForm(request.POST)
-
-                if form.is_valid():
-
-                    last_lead = Lead.objects.order_by('-leadid').first()
-
-                    lead = form.save(commit=False)
-
-                    lead.leadid = (
-                        last_lead.leadid + 1
-                        if last_lead else 1
-                    )
-
-                    lead.added_by = (
-                        request.user.username
-                        if request.user.is_authenticated
-                        else "System"
-                    )
-
-                    lead.added_dts = datetime.now()
-
-                    lead.save()
-
-                    messages.success(
-                        request,
-                        "Lead added successfully."
-                    )
-
-                    return redirect('lead_list')
-
-                leads = Lead.objects.all()
-
-                return render(
-                    request,
-                    'lead_list.html',
-                    {
-                        'leads': leads,
-                        'form': form
-                    }
-                )
-=======
     @login_required(login_url='login')
     @staticmethod
     def add_lead(request):
@@ -1098,104 +731,10 @@ class Lead_view:
 
                     leads = Lead.objects.all()
                     return render(request, 'lead_list.html', {'leads': leads, 'form': form})
->>>>>>> lakshya-dev
 
             return redirect('lead_list')
 
         except Exception as e:
-<<<<<<< HEAD
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-            return redirect('lead_list')
-
-    @staticmethod
-    def edit_lead(request, leadid):
-
-        try:
-
-            lead = get_object_or_404(
-                Lead,
-                pk=leadid
-            )
-
-            form = LeadForm(
-                request.POST or None,
-                instance=lead
-            )
-
-            if request.method == 'POST' and form.is_valid():
-
-                lead = form.save(commit=False)
-
-                lead.added_dts = datetime.now()
-                lead.save()
-
-                messages.success(
-                    request,
-                    "Lead updated successfully."
-                )
-
-                return redirect('lead_list')
-
-            leads = Lead.objects.all()
-
-            return render(
-                request,
-                'lead_list.html',
-                {
-                    'leads': leads,
-                    'form': form,
-                    'edit_mode': True
-                }
-            )
-
-        except Exception as e:
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-        return redirect('lead_list')
-
-    @staticmethod
-    def delete_lead(request, leadid):
-
-        try:
-
-            lead = get_object_or_404(
-                Lead,
-                pk=leadid
-            )
-
-            lead.delete()
-
-            messages.success(
-                request,
-                "Lead deleted successfully."
-            )
-
-        except Exception as e:
-
-            log_error(e)
-
-            messages.error(
-                request,
-                f"{type(e).__name__}: {str(e)}"
-            )
-
-        return redirect('lead_list')
-    
-'''DASHBOARD'''
-=======
             log_error(e)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': f"{type(e).__name__}: {str(e)}"}, status=500)
@@ -1280,10 +819,129 @@ class Lead_view:
         except Exception as e:
             log_error(e)
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        
+    @login_required(login_url='login')
+    @require_POST
+    def bulk_upload_leads(request):
+        try:
+            if 'bulk_file' not in request.FILES:
+                return JsonResponse({'success': False, 'error': 'No file stream payload parsed.'}, status=400)
+                
+            uploaded_file = request.FILES['bulk_file']
+            filename = uploaded_file.name
+
+            if filename.endswith('.csv'):
+                df = pd.read_csv(uploaded_file)
+            elif filename.endswith(('.xls', '.xlsx')):
+                df = pd.read_excel(uploaded_file)
+            else:
+                return JsonResponse({'success': False, 'error': 'Unsupported format extension. Use CSV or Excel.'}, status=400)
+            
+            df.columns = df.columns.str.strip()
+
+            required_columns = [
+                'PersonName', 'Gender', 'CompanyName', 'ContactNo', 'Email', 'City', 'State', 
+                'ProductSelection', 'Territory', 'Region', 'LeadStatus', 'LeadSourceId', 
+                'BusinessNeeded', 'LeadGenerationDate', 'ExecutiveId'
+            ]
+            if not all(col in df.columns for col in required_columns):
+                return JsonResponse({'success': False, 'error': f'Missing expected column matrix headers. Required layout: {", ".join(required_columns)}'}, status=400)
+
+            success_count = 0
+            skipped_count = 0
+            exception_logs = []
+
+            last_lead = Lead.objects.order_by('-leadid').first()
+            next_id = (last_lead.leadid + 1) if last_lead else 1
+
+            for index, row in df.iterrows():
+                row_num = index + 2
+                
+                person_name = str(row['PersonName']).strip() if pd.notna(row['PersonName']) else ""
+                company_name = str(row['CompanyName']).strip() if pd.notna(row['CompanyName']) else ""
+                contact_no = str(row['ContactNo']).strip().replace('.0', '') if pd.notna(row['ContactNo']) else ""
+                email = str(row['Email']).strip() if pd.notna(row['Email']) else ""
+                city = str(row['City']).strip() if pd.notna(row['City']) else ""
+                state = str(row['State']).strip() if pd.notna(row['State']) else ""
+                gender = str(row['Gender']).strip() if pd.notna(row['Gender']) else ""
+                territory = str(row['Territory']).strip() if pd.notna(row['Territory']) else ""
+                business_needed = str(row['BusinessNeeded']).strip() if pd.notna(row['BusinessNeeded']) else ""
+                executive_id = str(row['ExecutiveId']).strip() if pd.notna(row['ExecutiveId']) else ""
+                
+                raw_prod = str(row['ProductSelection']).strip() if pd.notna(row['ProductSelection']) else ""
+                raw_reg = str(row['Region']).strip() if pd.notna(row['Region']) else ""
+                raw_stat = str(row['LeadStatus']).strip() if pd.notna(row['LeadStatus']) else ""
+                raw_src = str(row['LeadSourceId']).strip() if pd.notna(row['LeadSourceId']) else ""
+
+                if not person_name or person_name.lower() in ['nan', 'null', '']:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Missing required field 'PersonName'.")
+                    continue
+
+                if Lead.objects.filter(personname__iexact=person_name).exists():
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Lead trace record '{person_name}' already exists.")
+                    continue
+
+                try:
+                    prod_obj = Product.objects.get(productname__iexact=raw_prod)
+                    reg_obj = Region.objects.get(regionname__iexact=raw_reg)
+                    stat_obj = LeadStatus.objects.get(statusname__iexact=raw_stat)
+                    src_obj = LeadSource.objects.get(leadsourcename__iexact=raw_src)
+                    
+                except Product.DoesNotExist:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Product option '{raw_prod}' not found.")
+                    continue
+                except Region.DoesNotExist:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Region option '{raw_reg}' not found.")
+                    continue
+                except LeadStatus.DoesNotExist:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Status option '{raw_stat}' not found.")
+                    continue
+                except LeadSource.DoesNotExist:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Source option '{raw_src}' not found.")
+                    continue
+
+                try:
+                    Lead.objects.create(
+                        leadid=next_id,
+                        personname=person_name,
+                        companyname=company_name,
+                        contactno=contact_no if contact_no.lower() not in ['nan', 'null'] else "",
+                        productid=prod_obj,
+                        regionid=reg_obj,
+                        statusid=stat_obj,
+                        leadsourceid=src_obj,
+                        lead_gen_date=datetime.now().date(),
+                        added_by=request.user.username if request.user.is_authenticated else "System",
+                        added_dts=datetime.now()
+                    )
+                    success_count += 1
+                    next_id += 1
+                except Exception as loop_err:
+                    skipped_count += 1
+                    exception_logs.append(f"Row {row_num}: Database write exception -> {str(loop_err)}")
+
+            request.session['leads_import_summary'] = {
+                'success_count': success_count,
+                'skipped_count': skipped_count,
+                'exception_logs': exception_logs,
+                'filename': filename
+            }
+
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            if 'log_error' in globals():
+                log_error(e)
+            return JsonResponse({'success': False, 'error': f"Critical layout pipeline ingestion fault: {str(e)}"}, status=500)
     
 '''DASHBOARD'''
 @login_required(login_url='login')
->>>>>>> lakshya-dev
 def dashboard(request):
     return render(request, 'dashboard.html')
 

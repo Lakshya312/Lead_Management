@@ -1,11 +1,7 @@
 /* ==========================================
    ALIGNMENT MATRIX: DASHBOARD THEME DESIGN TOKENS
    ========================================== */
-<<<<<<< HEAD
    :root {
-=======
-:root {
->>>>>>> lakshya-dev
     --bg-universe: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     --glass-card: rgba(30, 41, 59, 0.7);
     --glass-border: rgba(255, 255, 255, 0.08);
@@ -37,6 +33,166 @@ body {
     color: var(--text-white);
     padding: 40px 30px;
     min-height: 100vh;
+}
+
+/* Snaps all standard form fields to full width matching your cards */
+.django-injected-form-wrapper input,
+.django-injected-form-wrapper select,
+.django-injected-form-wrapper textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--radius-input) !important;
+    padding: 12px 16px !important;
+    color: var(--text-white) !important;
+    font-size: 14px !important;
+    font-family: inherit;
+    transition: all 0.3s var(--ease-curve) !important;
+    outline: none !important;
+}
+
+.django-injected-form-wrapper input:focus,
+.django-injected-form-wrapper select:focus,
+.django-injected-form-wrapper textarea:focus {
+    border-color: var(--glow-primary) !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* ==========================================
+   DYNAMIC BULK IMPORT SUMMARY GRID & MATRIX
+   ========================================== */
+.import-summary-matrix {
+    margin-top: 20px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    padding: 20px;
+    border-radius: var(--radius-input);
+    backdrop-filter: blur(8px);
+    animation: matrixFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.summary-matrix-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.summary-matrix-header h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.report-badge-pill {
+    font-size: 11px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.summary-counter-grid {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-block-card {
+    flex: 1;
+    padding: 15px;
+    border-radius: var(--radius-input);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.metric-block-card:hover {
+    transform: translateY(-2px);
+}
+
+.metric-block-card.metrics-success {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.metric-block-card.metrics-skipped {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.metric-block-card .m-val {
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.metrics-success .m-val { color: #10b981; }
+.metrics-skipped .m-val { color: #f87171; }
+
+.metric-block-card .m-lbl {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* AUDIT LOG EXCEPTION BOX */
+.audit-exception-logs-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    padding: 15px;
+    border-radius: var(--radius-input);
+}
+
+.audit-exception-logs-box h5 {
+    margin: 0 0 10px 0;
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.exception-log-lines {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.exception-log-lines li {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: #cbd5e1;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.exception-log-lines li:last-child {
+    border-bottom: none;
+}
+
+.log-bullet {
+    color: #f87171;
+    font-size: 10px;
+}
+
+@keyframes matrixFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================
@@ -89,7 +245,6 @@ body {
 }
 
 /* ==========================================
-<<<<<<< HEAD
    SINGLE EXPORT DROPDOWN COMPONENT THEME
    ========================================== */
    .export-dropdown-wrapper {
@@ -134,17 +289,6 @@ body {
 }
 
 /* ==========================================
-=======
-<<<<<<< HEAD
-   PARENT LAYOUT GRID GRID CONTROL
-   ========================================== */
-   .main-container {
-    display: flex;
-    gap: 24px;              /* Reduced from 35px to free up horizontal space */
-    align-items: flex-start;
-    max-width: 100%;        /* Changed from 1650px to stay perfectly fluid within margins */
-=======
->>>>>>> main
    CYBER SEARCH CONSOLE ROW GRID ARCHITECTURE
    ========================================== */
 .search-form-console {
@@ -207,7 +351,7 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
 }
 
 /* ==========================================
-   MODAL INLINE ROW LAYOUT DESIGN FIX
+   MODAL INLINE ROW LAYOUT — PRODUCTS
    ========================================== */
    .cyber-modal-body .bulk-upload-form {
     display: flex;
@@ -216,27 +360,25 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     width: 100%;
 }
 
-/* Ensures the upload zone grows dynamically to fill space left by the button */
 .cyber-modal-body .file-drop-zone-wrapper {
     flex: 1;
-    margin-bottom: 0 !important; /* Forces out any residual vertical margins */
+    margin-bottom: 0 !important;
 }
 
-/* Keeps the import button neatly proportioned to match the line height exactly */
 .cyber-modal-body .bulk-execute-btn {
     height: 45px;
-    margin-top: 0 !important; /* Prevents any alignment dropping shifts */
-    white-space: nowrap;      /* Blocks text wrapping onto multiple lines */
+    margin-top: 0 !important;
+    white-space: nowrap;
 }
 
 /* ==========================================
-   MODAL UPLOAD FILE COMPONENT MECHANICS
+   MODAL UPLOAD FILE COMPONENT — PRODUCTS
    ========================================== */
 .file-drop-zone-wrapper {
     position: relative;
     flex: 1;
     background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--glass-border);
+    border: 2px dashed rgba(16, 185, 129, 0.45);  /* green */
     border-radius: var(--radius-input);
     padding: 12px 16px;
     display: flex;
@@ -244,6 +386,11 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     gap: 12px;
     cursor: pointer;
     overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.file-drop-zone-wrapper:hover {
+    border-color: rgba(16, 185, 129, 0.75);
 }
 
 .native-file-picker {
@@ -253,7 +400,7 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     cursor: pointer;
 }
 
-.upload-icon { color: var(--glow-primary); font-size: 18px; }
+.upload-icon { color: #10b981; font-size: 18px; }  /* green */
 .upload-placeholder-txt { color: var(--text-slate); font-size: 13px; font-weight: 500; }
 
 .bulk-execute-btn {
@@ -261,7 +408,7 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     align-items: center;
     gap: 8px;
     padding: 12px 22px;
-    background: var(--glow-primary); /* Swapped broken var identifier to primary glow token */
+    background: var(--glow-primary);
     color: #fff;
     font-size: 13px; font-weight: 700;
     border: none; border-radius: var(--radius-input);
@@ -269,6 +416,23 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     height: 45px;
 }
 .bulk-execute-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+#clear-file-btn {
+    flex-shrink: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    height: 45px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    border-radius: var(--radius-input);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#clear-file-btn:hover { background: rgba(239, 68, 68, 0.2); }
 
 /* Ledger summary report formats inside modal body */
 .import-summary-matrix {
@@ -388,7 +552,6 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     gap: 24px;
     align-items: flex-start;
     max-width: 100%;
->>>>>>> lakshya-dev
     margin: 0 auto;
     animation: scaleInUp 0.7s var(--ease-curve) 0.1s both;
 }
@@ -396,29 +559,17 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
 /* ==========================================
    LEFT COMPONENT: CYBER RECORD DATA MATRIX
    ========================================== */
-<<<<<<< HEAD
-   .table-section {
-=======
 .table-section {
->>>>>>> lakshya-dev
     flex: 3;
     background: var(--glass-card);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-<<<<<<< HEAD
-    padding: 24px;          /* Reduced from 35px to expand table field visibility space */
-    border-radius: var(--radius-box);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    transition: border-color 0.4s var(--ease-curve), box-shadow 0.4s var(--ease-curve);
-    overflow: hidden;       /* Keeps the glass edges super clean */
-=======
     padding: 24px;
     border-radius: var(--radius-box);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     transition: border-color 0.4s var(--ease-curve), box-shadow 0.4s var(--ease-curve);
     overflow: hidden;
->>>>>>> lakshya-dev
 }
 
 .table-section:hover {
@@ -473,11 +624,7 @@ table {
 }
 
 th, td {
-<<<<<<< HEAD
-    padding: 14px 16px;     /* Reduced from 18px 24px to completely eliminate column crowding */
-=======
     padding: 14px 16px;
->>>>>>> lakshya-dev
     text-align: left;
     border-bottom: 1px solid var(--glass-border);
 }
@@ -546,10 +693,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 .user-meta-txt { color: var(--text-slate); font-size: 14px; }
 .chrono-stamp { font-family: monospace; color: var(--text-slate); font-size: 13px; }
 
-<<<<<<< HEAD
-/* TABLE CONSOLE CONTROLS CLICK TRIGGER TRIGGERS */
-=======
->>>>>>> lakshya-dev
 .action-buttons-group {
     display: flex;
     gap: 8px;
@@ -583,27 +726,16 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 /* ==========================================
    RIGHT COMPONENT: GLASS INPUT TERMINAL CARD
    ========================================== */
-<<<<<<< HEAD
-   .form-section {
-=======
 .form-section {
->>>>>>> lakshya-dev
     flex: 1;
     background: var(--glass-card);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-<<<<<<< HEAD
-    padding: 28px;          /* Adjusted from 35px for tight column proportions */
-    border-radius: var(--radius-box);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    min-width: 320px;       /* Reduced from 380px so it fits smaller laptops gracefully */
-=======
     padding: 28px;
     border-radius: var(--radius-box);
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     min-width: 320px;
->>>>>>> lakshya-dev
     position: sticky;
     top: 40px;
     transition: border-color 0.4s var(--ease-curve), box-shadow 0.4s var(--ease-curve);
@@ -624,10 +756,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 .color-add { color: var(--glow-product); }
 .color-edit { color: var(--glow-primary); }
 
-<<<<<<< HEAD
-/* Auto-Rendered Django Field Mappings Wrappers Layout */
-=======
->>>>>>> lakshya-dev
 .django-injected-form-wrapper p { margin-bottom: 22px; }
 .django-injected-form-wrapper label {
     font-size: 12px;
@@ -639,10 +767,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     letter-spacing: 0.04em;
 }
 
-<<<<<<< HEAD
-/* JavaScript Target Styling Hooks Input Boxes Fields */
-=======
->>>>>>> lakshya-dev
 .premium-cyber-input-element {
     width: 100%;
     background: rgba(15, 23, 42, 0.5) !important;
@@ -659,10 +783,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     outline: none !important;
 }
 
-<<<<<<< HEAD
-/* Checkbox alignment settings layout modifications */
-=======
->>>>>>> lakshya-dev
 .django-injected-form-wrapper input[type="checkbox"] {
     width: 20px;
     height: 20px;
@@ -671,10 +791,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     vertical-align: middle;
 }
 
-<<<<<<< HEAD
-/* WORKSPACE TRANSACTION EXECUTION FOOTER CONTROLS LINKS BUTTONS */
-=======
->>>>>>> lakshya-dev
 .form-processing-actions {
     margin-top: 35px;
     display: flex;
@@ -716,11 +832,7 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scaleInUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-<<<<<<< HEAD
-/* View footprint break maps layout configuration restrictions */
-=======
 /* Responsive adjustments */
->>>>>>> lakshya-dev
 @media (max-width: 1250px) {
     .main-container { flex-direction: column; align-items: stretch; }
     .form-section { position: relative; top: 0; width: 100%; }

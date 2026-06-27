@@ -3,10 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // ==========================================
     // 1. FORM FIELD CYBER STYLING INITIALIZER
     // ==========================================
-    const formElements = document.querySelectorAll(
-        '.django-injected-form-wrapper p input, .django-injected-form-wrapper p select'
-    );
-
+    const formElements = document.querySelectorAll('.django-injected-form-wrapper p input, .django-injected-form-wrapper p select');
     formElements.forEach(element => {
         if (element.type !== 'checkbox' && element.type !== 'radio') {
             element.classList.add('premium-cyber-input-element');
@@ -14,108 +11,126 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // ==========================================
-    // 2. REGION NAME BLUR VALIDATION
+    // 2. MODAL WINDOW CONTROLLER (INTERACTIVE)
     // ==========================================
-    const regionInput = document.getElementById('regionname');
+    const modal = document.getElementById('bulkImportModal');
+    const openBtn = document.getElementById('open-bulk-modal');
+    const closeBtn = document.getElementById('close-bulk-modal');
 
-    if (regionInput) {
-        regionInput.addEventListener('input', function () {
-            this.setCustomValidity('');
-        });
+    // INTERACTIVE AUTO-OPEN: If template reports a summary exists, force modal layout to show instantly
+    if (modal && document.querySelector('.import-summary-matrix')) {
+        modal.style.display = 'flex';
+    }
 
-        regionInput.addEventListener('blur', function () {
-            if (this.value.trim() === '') return;
-            if (!this.checkValidity()) {
-                this.reportValidity();
-                return;
-            }
+    function purgePreviousImportSummary() {
+        if (modal) {
+            const summaryReport = document.querySelector('.import-summary-matrix');
+            if (summaryReport) summaryReport.remove();
+        }
+    }
 
-            fetch(`/check-regionname/?regionname=${encodeURIComponent(this.value)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.exists) {
-                        this.setCustomValidity('Region with this name already exists.');
-                    } else {
-                        this.setCustomValidity('');
-                    }
-                    this.reportValidity();
-                });
-        });
+    if (openBtn && modal && closeBtn) {
+        openBtn.addEventListener('click', () => modal.style.display = 'flex');
+        closeBtn.addEventListener('click', () => { modal.style.display = 'none'; purgePreviousImportSummary(); resetFileState(); });
+        modal.addEventListener('click', (e) => { if (e.target === modal) { modal.style.display = 'none'; purgePreviousImportSummary(); resetFileState(); } });
     }
 
     // ==========================================
-    // 3. INTERCEPT INLINE EDIT CLICKS (STATE SWITCH)
+    // 3. FILE PICKER FILENAME TRACKER
     // ==========================================
-    const regionForm = document.getElementById('add-product-form');
+    const filePicker = document.querySelector('.native-file-picker');
+    const uploadText = document.querySelector('.upload-placeholder-txt');
+    const clearBtn = document.getElementById('clear-file-btn');
+
+    if (filePicker && uploadText && clearBtn) {
+        filePicker.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                uploadText.innerHTML = `<strong>Selected:</strong> ${this.files[0].name}`;
+                uploadText.style.color = '#06b6d4'; // Cyan UI themed highlight match
+                clearBtn.style.display = 'flex';
+            } else {
+                resetFileState();
+            }
+        });
+        clearBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            resetFileState();
+        });
+    }
+
+    function resetFileState() {
+        if (filePicker) filePicker.value = '';
+        if (uploadText) {
+            uploadText.textContent = "Drop CSV/Excel region schema file here or click to browse";
+            uploadText.style.color = '#94a3b8';
+        }
+        if (clearBtn) clearBtn.style.display = 'none';
+    }
+
+    // ==========================================
+    // 4. INTERCEPT EDIT BUTTON CLICK (LIVE FLIP)
+    // ==========================================
+    const addRegionForm = document.getElementById('add-product-form'); // Matches the form element ID in region template
     const cancelEditBtn = document.getElementById('cancel-edit-btn');
-    const submitFormBtn = regionForm?.querySelector('.submit-core-action-btn');
-    const formTitleBlock = document.querySelector('.form-title-block');
+    const submitFormBtn = addRegionForm?.querySelector('.submit-core-action-btn');
+    const formTitle = document.querySelector('.form-title-block h3');
+
+    // Mapped straight to regional database entity column names
     const inputNameField = document.querySelector('[name="regionname"]');
 
     document.addEventListener('click', function(e) {
-        const editTrigger = e.target.closest('.single-edit-btn');
-        if (!editTrigger) return;
+        const editBtn = e.target.closest('.single-edit-btn');
+        if (!editBtn) return;
 
-        const id = editTrigger.getAttribute('data-id');
-        const name = editTrigger.getAttribute('data-name');
+        const id = editBtn.getAttribute('data-id');
+        const name = editBtn.getAttribute('data-name');
 
-        regionForm.setAttribute('data-mode', 'edit');
-        regionForm.setAttribute('action', `/regions/edit/${id}/`);
-        
-        if (formTitleBlock) {
-            formTitleBlock.innerHTML = `
-                <h3><i class="bi bi-pencil-square color-edit"></i> Modify Zone</h3>
-                <p>Altering existing territorial database rows parameters.</p>
-            `;
-        }
+        addRegionForm.setAttribute('data-mode', 'edit');
+        addRegionForm.setAttribute('action', `/regions/edit/${id}/`); 
+        if (formTitle) formTitle.innerHTML = `<i class="bi bi-pencil-square color-edit"></i> Edit Region #${id}`;
         if (submitFormBtn) {
-            submitFormBtn.textContent = "Commit Zone Updates";
+            submitFormBtn.textContent = "Commit Region Updates";
             submitFormBtn.classList.add('modify-theme-btn');
         }
         if (cancelEditBtn) cancelEditBtn.style.display = 'block';
 
         if (inputNameField) inputNameField.value = name;
-
-        regionForm.scrollIntoView({ behavior: 'smooth' });
+        
+        addRegionForm.scrollIntoView({ behavior: 'smooth' });
     });
 
     if (cancelEditBtn) {
         cancelEditBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            resetRegionFormState();
+            resetFormState();
         });
     }
 
-    function resetRegionFormState() {
-        if (!regionForm) return;
-        regionForm.setAttribute('data-mode', 'add');
-        regionForm.setAttribute('action', '/regions/add/');
-        if (formTitleBlock) {
-            formTitleBlock.innerHTML = `
-                <h3><i class="bi bi-plus-circle-fill color-add"></i> Create Region</h3>
-                <p>Append a new geographic division constraint row.</p>
-            `;
-        }
+    function resetFormState() {
+        if (!addRegionForm) return;
+        addRegionForm.setAttribute('data-mode', 'add');
+        addRegionForm.setAttribute('action', '/regions/add/');
+        if (formTitle) formTitle.innerHTML = `<i class="bi bi-plus-circle-fill color-add"></i> Create Region`;
         if (submitFormBtn) {
             submitFormBtn.textContent = "Push New Region";
             submitFormBtn.classList.remove('modify-theme-btn');
         }
         cancelEditBtn.style.display = 'none';
-        regionForm.reset();
+        addRegionForm.reset();
     }
 
     // ==========================================
-    // 4. TRANSACTION ENGINE: ASYNC ADD & UPDATE
+    // 5. ASYNC FORM CREATION & UPDATES (POST ENGINE)
     // ==========================================
     const tableBody = document.querySelector('table tbody');
 
-    if (regionForm) {
-        regionForm.addEventListener('submit', function(e) {
+    if (addRegionForm) {
+        addRegionForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
             const formData = new FormData(this);
             const targetUrl = this.getAttribute('action');
-            const mode = this.getAttribute('data-mode');
+            const currentMode = this.getAttribute('data-mode');
 
             fetch(targetUrl, {
                 method: 'POST',
@@ -125,19 +140,19 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    if (mode === 'edit') {
+                    if (currentMode === 'edit') {
                         const targetRow = document.querySelector(`tr[data-row-id="${data.region.id}"]`);
                         if (targetRow) {
                             targetRow.querySelector('.region-name-txt').textContent = data.region.name;
                             
-                            const editBtn = targetRow.querySelector('.single-edit-btn');
-                            if (editBtn) {
-                                editBtn.setAttribute('data-name', data.region.name);
+                            const rowEditBtn = targetRow.querySelector('.single-edit-btn');
+                            if (rowEditBtn) {
+                                rowEditBtn.setAttribute('data-name', data.region.name);
                             }
-
-                            targetRow.style.background = 'rgba(16, 185, 129, 0.15)';
+                            
+                            targetRow.style.background = 'rgba(6, 182, 212, 0.15)';
                             setTimeout(() => { targetRow.style.transition = 'background 0.5s'; targetRow.style.background = ''; }, 400);
-                            resetRegionFormState();
+                            resetFormState();
                         }
                     } else {
                         const emptyFallback = document.querySelector('.empty-fallback-state');
@@ -165,23 +180,22 @@ document.addEventListener("DOMContentLoaded", function() {
                                 </div>
                             </td>
                         `;
-                        tableBody.appendChild(newRow); // Appends directly to bottom
-                        regionForm.reset();
+                        tableBody.appendChild(newRow);
+                        addRegionForm.reset();
                     }
-                } else { alert('Operation Failed: ' + data.error); }
-            })
-            .catch(err => console.error('Form execution error:', err));
+                } else { alert('Error: ' + data.error); }
+            });
         });
     }
 
     // ==========================================
-    // 5. TRANSACTION ENGINE: SINGLE ASYNC TRASH DELETE
+    // 6. SINGLE INLINE ROW ASYNC DELETE
     // ==========================================
     document.addEventListener('click', function(e) {
-        const trashBtn = e.target.closest('.single-delete-btn');
-        if (!trashBtn) return;
-        const regionId = trashBtn.getAttribute('data-id');
-        if (!confirm("Are you sure you want to permanently delete this operational territory?")) return;
+        const deleteBtn = e.target.closest('.single-delete-btn');
+        if (!deleteBtn) return;
+        const regionId = deleteBtn.getAttribute('data-id');
+        if (!confirm("Permanently delete this territorial record?")) return;
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
         fetch(`/regions/delete/${regionId}/`, {
@@ -201,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // ==========================================
-    // 6. MULTI-SELECT LEDGER BAR HOOKS
+    // 7. MULTI-SELECT LEDGER BAR HOOKS
     // ==========================================
     const masterCheckbox = document.getElementById('master-select-checkbox');
     const rowCheckboxes = document.getElementsByClassName('row-select-checkbox');
@@ -229,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function() {
         bulkDeleteBtn.addEventListener('click', function() {
             const checkedRows = document.querySelectorAll('.row-select-checkbox:checked');
             const selectedIds = Array.from(checkedRows).map(cb => parseInt(cb.value));
-            if (!confirm(`Permanently delete all ${selectedIds.length} selected regions?`)) return;
+            if (!confirm(`Delete ${selectedIds.length} regional records?`)) return;
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
             fetch('/regions/bulk-delete/', {
@@ -248,83 +262,65 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ==========================================
-    // 7. REGIONS MULTI-FORMAT BULK UPLOAD SYSTEM
+    // 8. ASYNC BULK UPLOAD SUBMISSION ENGINE (FIXED ENDPOINT)
     // ==========================================
-    const modal = document.getElementById('bulkImportModal');
-    const openBtn = document.getElementById('open-bulk-modal');
-    const closeBtn = document.getElementById('close-bulk-modal');
     const bulkUploadForm = document.getElementById('bulk-upload-form');
-    const filePicker = document.querySelector('.native-file-picker');
-    const uploadText = document.querySelector('.upload-placeholder-txt');
-
-    function purgePreviousImportSummary() {
-        const summaryReport = document.querySelector('.import-summary-matrix');
-        if (summaryReport) summaryReport.remove();
-    }
-
-    if (openBtn && modal && closeBtn) {
-        openBtn.addEventListener('click', () => modal.style.display = 'flex');
-        
-        closeBtn.addEventListener('click', () => { 
-            modal.style.display = 'none'; 
-            purgePreviousImportSummary(); 
-        });
-        
-        modal.addEventListener('click', (e) => { 
-            if (e.target === modal) { modal.style.display = 'none'; purgePreviousImportSummary(); } 
-        });
-    }
-
-    if (filePicker && uploadText) {
-        filePicker.addEventListener('change', function() {
-            if (this.files && this.files.length > 0) {
-                uploadText.textContent = `Staged File: ${this.files[0].name}`;
-                uploadText.style.color = 'var(--glow-product)';
-            }
-        });
-    }
+    const bulkSubmitBtn = bulkUploadForm?.querySelector('.bulk-execute-btn');
+    const originalSubmitHtml = bulkSubmitBtn ? bulkSubmitBtn.innerHTML : '';
 
     if (bulkUploadForm) {
         bulkUploadForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const formData = new FormData(this);
-            const executeBtn = this.querySelector('.bulk-execute-btn');
-            
-            if (executeBtn) {
-                executeBtn.disabled = true;
-                executeBtn.innerHTML = `<i class="bi bi-arrow-repeat animate-spin"></i> Reading Matrix...`;
+            if (!filePicker || !filePicker.files.length) {
+                alert('Please select a file before execution.');
+                return;
             }
 
-            fetch('/regions/bulk-upload/', {
+            bulkSubmitBtn.disabled = true;
+            bulkSubmitBtn.innerHTML = `<i class="bi bi-arrow-clockwise" style="display:inline-block; animation: spin 1s linear infinite;"></i> Mapping Spatial Schema...`;
+            if (clearBtn) clearBtn.style.pointerEvents = 'none';
+
+            const formData = new FormData(this);
+            // TARGET ALIGNMENT: Dynamically hits regional endpoint layout fallback safely
+            const targetUrl = this.action || window.location.origin + '/regions/bulk-upload/';
+
+            fetch(targetUrl, {
                 method: 'POST',
                 body: formData,
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
+            .then(response => {
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json().then(data => {
+                        if (!response.ok) throw new Error(data.error || 'Spatial coordinate pipeline processing failure.');
+                        return data;
+                    });
                 } else {
-                    alert('Ingestion Disconnect Error: ' + data.error);
-                    if (executeBtn) {
-                        executeBtn.disabled = false;
-                        executeBtn.innerHTML = `<i class="bi bi-terminal-plus"></i> Import`;
-                    }
+                    return response.text().then(htmlText => {
+                        console.error('Server returned HTML mismatch layer:', htmlText);
+                        throw new Error(`Server returned HTML (Status ${response.status}) at route: "${targetUrl}".`);
+                    });
                 }
             })
-            .catch(err => {
-                console.error('Bulk Pipeline Failure Context Exception:', err);
-                if (executeBtn) {
-                    executeBtn.disabled = false;
-                    executeBtn.innerHTML = `<i class="bi bi-terminal-plus"></i> Import`;
-                }
+            .then(data => {
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Regional Processing Failure Logged:', error);
+                alert(`Ingestion processing faulted: ${error.message}`);
+                
+                bulkSubmitBtn.disabled = false;
+                bulkSubmitBtn.innerHTML = originalSubmitHtml;
+                if (clearBtn) clearBtn.style.pointerEvents = 'auto';
             });
         });
     }
 
     // ==========================================
-    // 8. SINGLE BUTTON DUAL EXPORT ENGINE (EXCEL & CSV)
+    // 9. DUAL EXPORT ENGINE (EXCEL & CSV)
     // ==========================================
     const menuTrigger = document.getElementById('exportMenuTrigger');
     const dropdownMenu = document.getElementById('exportDropdownMenu');
@@ -343,8 +339,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (exportOptions.length > 0) {
         exportOptions.forEach(option => {
             option.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+                e.preventDefault(); e.stopPropagation();
                 if (dropdownMenu) dropdownMenu.style.display = 'none';
 
                 const selectedFormat = this.getAttribute('data-format');
@@ -383,10 +378,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             if (!colWidths[colIdx] || colWidths[colIdx] < cellLen) colWidths[colIdx] = cellLen;
                         }
                         workSheet['!cols'] = Object.keys(colWidths).map(k => ({ wch: colWidths[k] }));
-                        XLSX.utils.book_append_sheet(workBook, workSheet, "Data Ledger");
+                        XLSX.utils.book_append_sheet(workBook, workSheet, "Territory Ledger");
                         XLSX.writeFile(workBook, `${filename}.xlsx`);
                     } else {
-                        alert("Export Error: SheetJS library (XLSX) is missing in template header.");
+                        alert("Export Error: SheetJS library missing.");
                     }
                 } else if (selectedFormat === 'csv') {
                     let csvContent = [];

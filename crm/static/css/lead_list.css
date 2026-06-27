@@ -36,9 +36,58 @@ body {
 }
 
 /* ==========================================
+   BRUTEFORCE FORMS EXPANSION DEFIANCE LAYER
+   ========================================== */
+   .django-injected-form-wrapper,
+   .custom-field-stage {
+       width: 100% !important;
+       display: block !important;
+   }
+   
+   /* Hard-override widths and backgrounds for all child form elements */
+   .django-injected-form-wrapper input,
+   .django-injected-form-wrapper select,
+   .django-injected-form-wrapper textarea,
+   .custom-field-stage input,
+   .custom-field-stage select,
+   .custom-field-stage textarea {
+       width: 100% !important;
+       min-width: 100% !important;
+       max-width: 100% !important;
+       box-sizing: border-box !important;
+       display: block !important;
+       
+       background: rgba(15, 23, 42, 0.5) !important;
+       border: 1px solid var(--glass-border) !important;
+       border-radius: var(--radius-input) !important;
+       padding: 12px 16px !important;
+       color: var(--text-white) !important;
+       font-size: 14px !important;
+       font-family: inherit !important;
+       height: 45px !important; /* Forces consistent height architecture across select vs inputs */
+       transition: all 0.3s var(--ease-curve) !important;
+       outline: none !important;
+   }
+   
+   /* Ensure textareas can scale vertically if required */
+   .django-injected-form-wrapper textarea,
+   .custom-field-stage textarea {
+       height: auto !important;
+   }
+   
+   /* Focus Glow States */
+   .django-injected-form-wrapper input:focus,
+   .django-injected-form-wrapper select:focus,
+   .custom-field-stage input:focus,
+   .custom-field-stage select:focus {
+       border-color: var(--glow-primary) !important;
+       box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+   }
+
+/* ==========================================
    SINGLE EXPORT DROPDOWN COMPONENT THEME
    ========================================== */
-   .export-dropdown-wrapper {
+.export-dropdown-wrapper {
     position: relative;
     display: inline-block;
 }
@@ -127,8 +176,6 @@ body {
     filter: brightness(1.1);
 }
 
-<<<<<<< HEAD
-=======
 .bulk-action-floating-panel {
     background: rgba(20, 28, 47, 0.95);
     backdrop-filter: blur(12px);
@@ -146,7 +193,7 @@ body {
 /* ==========================================
    EXPORT UTILITY ACTION BUTTON THEME
    ========================================== */
-   .export-ledger-btn {
+.export-ledger-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -172,7 +219,7 @@ body {
 /* ==========================================
    CYBER SEARCH CONSOLE ROW GRID ARCHITECTURE
    ========================================== */
-   .search-form-console {
+.search-form-console {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -180,13 +227,11 @@ body {
     width: 100%;
 }
 
-/* Flexbox Group Wrapper for Input & Embedded Vector Icon */
 .search-input-group {
     position: relative;
-    flex: 1; /* Automatically forces the input bar to take up remaining available space */
+    flex: 1;
 }
 
-/* Immersive Embedded Field Search Icon */
 .search-field-icon {
     position: absolute;
     left: 16px;
@@ -198,14 +243,12 @@ body {
     z-index: 5;
 }
 
-/* Custom override rule tweaks for deep alignment inside the search field */
 form.search-form-console input.premium-cyber-input-element.search-input-override {
-    padding-left: 56px !important; /* Increased to 56px to ensure total clearance */
+    padding-left: 56px !important;
     margin-top: 0 !important;
     width: 100%;
 }
 
-/* Streamlined Inline Filtering CTA Trigger Button */
 .search-action-btn {
     display: inline-flex;
     align-items: center;
@@ -220,8 +263,8 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     border-radius: var(--radius-input);
     box-shadow: 0 4px 12px var(--glow-primary-rgba);
     cursor: pointer;
-    white-space: nowrap; /* Prevents button text from breaking onto a second line */
-    height: 47px; /* Explicitly matches the native input height profile */
+    white-space: nowrap;
+    height: 47px;
     transition: all 0.3s var(--ease-curve);
 }
 
@@ -235,7 +278,122 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     transform: scale(0.98);
 }
 
->>>>>>> lakshya-dev
+/* Dynamic Lead Module Bulk Trigger Button Override Style Token */
+.bulk-modal-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: var(--radius-input);
+    cursor: pointer;
+    white-space: nowrap;
+    height: 47px;
+    transition: all 0.3s var(--ease-curve);
+}
+.bulk-modal-toggle-btn:hover {
+    background: var(--glow-primary);
+    box-shadow: 0 4px 15px var(--glow-primary-rgba);
+}
+
+/* ── Bulk Upload Layout ─────────────────────────────── */
+.bulk-upload-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+/* ==========================================
+   MODAL INLINE ROW LAYOUT — LEADS
+   ========================================== */
+   .cyber-modal-body .bulk-upload-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.cyber-modal-body .file-drop-zone-wrapper {
+    flex: 1;
+    margin-bottom: 0 !important;
+}
+
+.cyber-modal-body .bulk-execute-btn {
+    height: 45px;
+    margin-top: 0 !important;
+    white-space: nowrap;
+}
+
+/* ==========================================
+   MODAL UPLOAD FILE COMPONENT — LEADS
+   ========================================== */
+.file-drop-zone-wrapper {
+    position: relative;
+    flex: 1;
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px dashed rgba(129, 140, 248, 0.45);  /* purple, vs green in product */
+    border-radius: var(--radius-input);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.file-drop-zone-wrapper:hover {
+    border-color: rgba(129, 140, 248, 0.75);
+}
+
+.native-file-picker {
+    position: absolute;
+    left: 0; top: 0; opacity: 0;
+    width: 100%; height: 100%;
+    cursor: pointer;
+}
+
+.upload-icon { color: #818cf8; font-size: 18px; }  /* purple, vs green in product */
+.upload-placeholder-txt { color: var(--text-slate); font-size: 13px; font-weight: 500; }
+
+.bulk-execute-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: var(--glow-primary);
+    color: #fff;
+    font-size: 13px; font-weight: 700;
+    border: none; border-radius: var(--radius-input);
+    cursor: pointer; transition: all 0.3s var(--ease-curve);
+    height: 45px;
+}
+.bulk-execute-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+/* Clear button — matches product's style */
+#clear-file-btn {
+    flex-shrink: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    height: 45px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    border-radius: var(--radius-input);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#clear-file-btn:hover { background: rgba(239, 68, 68, 0.2); }
+
 /* ==========================================
    FLUID ROW WORKSPACE SPLIT (100% SCALE PROPORTIONS)
    ========================================== */
@@ -289,7 +447,6 @@ form.search-form-console input.premium-cyber-input-element.search-input-override
     border-radius: 50%; box-shadow: 0 0 10px var(--glow-primary);
 }
 
-/* Local Horizontal Overflow Guard: Protects widescreen layouts from popping outer borders */
 .table-scroll-wrapper {
     overflow-x: auto;
     border-radius: var(--radius-input);
@@ -322,7 +479,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 
 .id-token { font-family: monospace; font-weight: 700; color: var(--glow-primary); font-size: 14px; }
 
-/* Lead Profile Identity Styles */
 .lead-identity-cell { display: flex; align-items: center; gap: 10px; }
 .lead-avatar {
     width: 30px; height: 30px; background: rgba(99, 102, 241, 0.15);
@@ -331,7 +487,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 }
 .lead-name-txt { font-weight: 600; font-size: 14px; }
 
-/* Badge Element Uniform Structs */
 .badge-tag-pill { font-size: 13px; font-weight: 500; padding: 5px 12px; border-radius: 6px; }
 .company-tag { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); color: var(--text-white); }
 .region-tag { background: rgba(14, 165, 233, 0.1); color: #38bdf8; }
@@ -345,7 +500,6 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 .user-meta-txt { color: var(--text-slate); font-size: 14px; }
 .chrono-stamp { font-family: monospace; color: var(--text-slate); font-size: 13px; }
 
-/* BUTTON INTERACTION STYLING FOR LEDGER ROW ACQUISITIONS */
 .action-buttons-group { display: flex; gap: 6px; }
 .action-trigger-btn {
     width: 32px; height: 32px; border-radius: 6px;
@@ -377,13 +531,10 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     position: sticky;
     top: 40px;
     transition: border-color 0.4s, box-shadow 0.4s;
-
-    /* Lock form viewport height boundary maps */
     max-height: calc(100vh - 80px); 
     overflow-y: auto;
 }
 
-/* In-Card Custom Premium Scrollbars */
 .form-section::-webkit-scrollbar {
     width: 6px;
 }
@@ -408,14 +559,12 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 .color-add { color: var(--glow-success); }
 .color-edit { color: var(--glow-primary); }
 
-/* Django Form Rendering Formats Map Overrides */
 .django-injected-form-wrapper p { margin-bottom: 18px; }
 .django-injected-form-wrapper label {
     font-size: 12px; font-weight: 700; color: var(--text-slate);
     display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;
 }
 
-/* Premium Dynamic JS Capture Hook Fields Variables */
 .premium-cyber-input-element {
     width: 100%; background: rgba(15, 23, 42, 0.5) !important;
     border: 1px solid var(--glass-border) !important; border-radius: var(--radius-input) !important;
@@ -428,10 +577,8 @@ tr:hover { background-color: rgba(255, 255, 255, 0.02); }
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important; outline: none !important;
 }
 
-/* Enforcing tight limits on native text-area blocks box size properties */
 textarea.premium-cyber-input-element { min-height: 80px; resize: vertical; }
 
-/* UTILITY SUBMIT BUTTON WRAPPER LAYOUT PROFILES */
 .form-processing-actions { margin-top: 35px; display: flex; flex-direction: column; gap: 14px; }
 .submit-core-action-btn {
     width: 100%; padding: 16px; font-size: 14px; font-weight: 700; border: none;
@@ -448,6 +595,137 @@ textarea.premium-cyber-input-element { min-height: 80px; resize: vertical; }
 }
 .dismiss-action-link:hover { color: var(--text-white); background: rgba(255, 255, 255, 0.05); }
 
+/* ==========================================
+   DYNAMIC BULK UPLOAD SUMMARY MATRIX (LEADS)
+   ========================================== */
+.import-summary-matrix {
+    margin-top: 20px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 20px;
+    border-radius: var(--radius-input);
+    backdrop-filter: blur(8px);
+    animation: matrixFadeIn 0.4s var(--ease-curve) forwards;
+}
+
+.summary-matrix-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.summary-matrix-header h4 {
+    margin: 0;
+    color: var(--text-white);
+    font-size: 16px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5;
+}
+
+.report-badge-pill {
+    font-size: 11px;
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.summary-counter-grid {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-block-card {
+    flex: 1;
+    padding: 15px;
+    border-radius: var(--radius-input);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.metric-block-card:hover {
+    transform: translateY(-2px);
+}
+
+.metric-block-card.metrics-success {
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.metric-block-card.metrics-skipped {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.metric-block-card .m-val {
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.metrics-success .m-val { color: #818cf8; }
+.metrics-skipped .m-val { color: #f87171; }
+
+.metric-block-card .m-lbl {
+    font-size: 12px;
+    color: var(--text-slate);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* AUDIT EXCEPTION TRACKING LOGS BLOCK */
+.audit-exception-logs-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    padding: 15px;
+    border-radius: var(--radius-input);
+}
+
+.audit-exception-logs-box h5 {
+    margin: 0 0 10px 0;
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.exception-log-lines {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.exception-log-lines li {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: #cbd5e1;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.exception-log-lines li:last-child {
+    border-bottom: none;
+}
+
+@keyframes matrixFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Core Systems Animations Keyframes Engine */
 @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scaleInUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -461,8 +739,6 @@ textarea.premium-cyber-input-element { min-height: 80px; resize: vertical; }
 /* ==========================================
    NATIVE CALENDAR LIGHT INTERFACE ENGINE
    ========================================== */
-
-/* Explicitly force type dates into dark contextual rules overrides */
 input[type="date"].premium-cyber-input-element,
 input[type="datetime-local"].premium-cyber-input-element {
     color-scheme: dark !important;
@@ -470,7 +746,6 @@ input[type="datetime-local"].premium-cyber-input-element {
     color: var(--text-white) !important;
 }
 
-/* Target and turn the browser calendar indicator symbol crystal white */
 .premium-cyber-input-element::-webkit-calendar-picker-indicator {
     filter: invert(1) brightness(2) !important;
     cursor: pointer !important;
@@ -483,7 +758,6 @@ input[type="datetime-local"].premium-cyber-input-element {
     opacity: 1 !important;
 }
 
-/* Ensure data text bounds inside field rows are readable white values */
 .premium-cyber-input-element::-webkit-datetime-edit,
 .premium-cyber-input-element::-webkit-datetime-edit-fields-wrapper,
 .premium-cyber-input-element::-webkit-datetime-edit-text,
@@ -497,15 +771,15 @@ input[type="datetime-local"].premium-cyber-input-element {
 /* ==========================================
    FORCE CALENDAR ICON TO BRIGHT WHITE
    ========================================== */
-   input[type="date"]::-webkit-calendar-picker-indicator,
-   input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-       filter: invert(1) brightness(10) contrast(10) !important;
-       background-size: contain;
-       opacity: 1 !important;
-       cursor: pointer !important;
-   }
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(10) contrast(10) !important;
+    background-size: contain;
+    opacity: 1 !important;
+    cursor: pointer !important;
+}
 
-   form input::-webkit-calendar-picker-indicator,
+form input::-webkit-calendar-picker-indicator,
 .premium-cyber-input-element::-webkit-calendar-picker-indicator,
 input[type="date"]::-webkit-calendar-picker-indicator,
 input::-webkit-calendar-picker-indicator {
@@ -514,4 +788,58 @@ input::-webkit-calendar-picker-indicator {
     opacity: 1 !important;
     display: block !important;
     background-color: transparent !important;
+}
+
+/* ==========================================
+   FIXED LAYER SELECTOR: OVERLAY SHIELD MATRIX
+   ========================================== */
+   .cyber-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(10, 15, 30, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    z-index: 99999 !important;
+    
+    /* Perfect Center Mapping Proportions */
+    display: none; /* Controlled dynamically via active inline script toggles */
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px;
+}
+
+/* Modal Core Box Proportions */
+.cyber-modal-window {
+    background: #141c2f !important;
+    border: 1px solid rgba(99, 102, 241, 0.25) !important;
+    width: 100% !important;
+    max-width: 680px !important; /* Slightly expanded to mirror products layout */
+    border-radius: var(--radius-box) !important;
+    padding: 30px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
+    animation: scaleInUp 0.35s var(--ease-curve) forwards;
+}
+
+.cyber-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+}
+
+.modal-close-x-trigger {
+    background: none;
+    border: none;
+    color: var(--text-slate);
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-close-x-trigger:hover {
+    color: var(--glow-danger);
 }
