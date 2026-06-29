@@ -36,6 +36,11 @@
         transition: all 0.3s ease;
     }
 
+    textarea.form-control {
+        height: 90px;
+        resize: none;
+    }
+
     .form-control:focus {
         border-color: #2563eb;
         box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
@@ -78,58 +83,164 @@
                 <form method="POST">
                     {% csrf_token %}
 
-                    <div class="form-section">
-                        <label class="form-label">
-                            Lead Name
-                        </label>
+                    <div class="row">
 
-                        <input type="text"
-                               name="PersonName"
-                               value="{{ lead.PersonName }}"
-                               class="form-control"
-                               placeholder="Enter lead name"
-                               required>
-                    </div>
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Lead Name</label>
+                            <input type="text"
+                                   name="PersonName"
+                                   value="{{ lead.PersonName }}"
+                                   class="form-control">
+                        </div>
 
-                    <div class="form-section">
-                        <label class="form-label">
-                            Email
-                        </label>
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Mobile</label>
+                            <input type="tel"
+                                   name="ContactNo"
+                                   value="{{ lead.ContactNo }}"
+                                   class="form-control">
+                        </div>
 
-                        <input type="email"
-                               name="Email"
-                               value="{{ lead.Email }}"
-                               class="form-control"
-                               placeholder="Enter email address"
-                               required>
-                    </div>
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Email</label>
+                            <input type="email"
+                                   name="Email"
+                                   value="{{ lead.Email }}"
+                                   class="form-control">
+                        </div>
 
-                    <div class="form-section">
-                        <label class="form-label">
-                            Status
-                        </label>
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Company</label>
+                            <input type="text"
+                                   name="CompanyName"
+                                   value="{{ lead.CompanyName }}"
+                                   class="form-control">
+                        </div>
 
-                        <select name="Status"
-                                class="form-control"
-                                required>
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Business Need</label>
+                            <textarea name="BusinessNeed"
+                                      class="form-control">{{ lead.BusinessNeed }}</textarea>
+                        </div>
 
-                            {% for st in statuses %}
-                            <option value="{{ st.StatusID }}"
-                                {% if lead.Status.StatusID == st.StatusID %}
-                                    selected
-                                {% endif %}>
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Gender</label>
+                            <select name="Gender" class="form-control" required>
+                                <option value="">--- select gender ---</option>
+                                <option value="Male"
+                                        {% if lead.Gender == "Male" %}selected{% endif %}>
+                                        Male
+                                </option>
+
+                                <option value="Female"
+                                        {% if lead.Gender == "Female" %}selected{% endif %}>
+                                        Female
+                                </option>
+
+                                <option value="Other"
+                                        {% if lead.Gender == "Other" %}selected{% endif %}>
+                                        Other
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">City</label>
+                            <input type="text"
+                                   name="City"
+                                   value="{{ lead.City }}"
+                                   class="form-control">
+                        </div>
+
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">State</label>
+                            <input type="text"
+                                   name="State"
+                                   value="{{ lead.State }}"
+                                   class="form-control">
+                        </div>
+
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Product</label>
+                            <select name="Product" class="form-control" required>
+                                <option value="">--- select product ---</option>
+                                {% for p in products %}
+                                <option value="{{ p.ProductID }}"
+                                {% if lead.Product.ProductID == p.ProductID %}selected{% endif %}>
+                                {{ p.ProductName }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Region</label>
+                            <select name="Region" class="form-control" required>
+                                <option value="">--- select region ---</option>
+                                {% for r in regions %}
+                                <option value="{{ r.RegionID }}"
+                                {% if lead.Region.RegionID == r.RegionID %}selected{% endif %}>
+                                {{ r.RegionName }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Territory</label>
+                            <select name="Territory" class="form-control" required>
+                                <option value="">--- select territory ---</option>
+                                {% for t in territories %}
+                                <option value="{{ t.TerritoryID }}"
+                                {% if lead.Territory.TerritoryID == t.TerritoryID %}selected{% endif %}>
+                                {{ t.TerritoryName }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Source</label>
+                            <select name="Source" class="form-control" required>
+                                <option value="">--- select source ---</option>
+                                {% for s in sources %}
+                                <option value="{{ s.LeadStatusID }}"
+                                {% if lead.Source.LeadSourceID == s.LeadSourceID %}selected{% endif %}>
+                                {{ s.LeadSourceName }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Status</label>
+                            <select name="Status" class="form-control" required>
+                                <option value="">--- select status ---</option>
+                                {% for st in statuses %}
+                                <option value="{{ p.StatusID }}"
+                                {% if lead.Status.StatusID == p.StatusID %}selected{% endif %}>
                                 {{ st.StatusName }}
-                            </option>
-                            {% endfor %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                        </select>
+                        <div class="col-md-6 form-section">
+                            <label class="form-label">Date</label>
+                            <input type="date"
+                                   name="Lead_Gen_Date"
+                                   class="form-control"
+                                   value="{% now 'Y-m-d' %}"
+                                   required>
+                        </div>
+
                     </div>
 
                     <div class="d-flex justify-content-center gap-3 mt-4">
 
                         <button type="submit"
                                 class="btn btn-success btn-custom">
-                            Update
+                            Save
                         </button>
 
                         <a href="{% url 'lead_list' %}"
