@@ -425,7 +425,7 @@ def add_region(request):
 
 @allowed_roles(["Admin", "Manager"])
 def edit_region(request, id):
-    region = get_object_or_404(Region, RegionID=id, Added_By=request.user.username)
+    region = get_object_or_404(Region, RegionID=id)
 
     if request.method == "POST":
         region.RegionName = request.POST.get("RegionName")
