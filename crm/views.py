@@ -1025,7 +1025,6 @@ def lead_api(request):
         if serializer.is_valid():
 
             last = Lead.objects.order_by('-leadid').first()
-            int("abc")
             serializer.save(
                 leadid=last.leadid + 1 if last else 1,
                 added_by=getpass.getuser(),
