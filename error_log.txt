@@ -24,3 +24,30 @@ File        : /opt/anaconda3/envs/swast-intern/lib/python3.12/site-packages/pand
 Function    : get_loc
 Line Number : 3648
 ============================================================
+
+============================================================
+Time        : 2026-07-01 13:31:39.959091
+Error Type  : ValueError
+Message     : invalid literal for int() with base 10: 'abc'
+File        : /Users/lakshya/Lead_Management/crm/views.py
+Function    : lead_api
+Line Number : 1028
+============================================================
+
+============================================================
+Time        : 2026-07-01 13:32:11.085865
+Error Type  : ValueError
+Message     : invalid literal for int() with base 10: 'abc'
+File        : /Users/lakshya/Lead_Management/crm/views.py
+Function    : lead_api
+Line Number : 1028
+============================================================
+
+============================================================
+Time        : 2026-07-01 13:34:02.893426
+Error Type  : ValueError
+Message     : invalid literal for int() with base 10: 'abc'
+File        : /Users/lakshya/Lead_Management/crm/views.py
+Function    : lead_api
+Line Number : 1028
+============================================================
