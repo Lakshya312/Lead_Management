@@ -169,7 +169,7 @@ Lead_Management/
 │   ├── Developer Guide.pdf         # Setup & architecture notes for developers
 │
 ├── diagrams/
-│   └── er_diagram.png              # Entity-Relationship diagram
+│   └── database_er_diagram.png              # Entity-Relationship diagram
 │
 ├── queries/                        # Raw SQL / optimization reference queries
 │
@@ -205,7 +205,7 @@ The system is backed by **Microsoft SQL Server**, with core Django models mapped
 - **Region** — Geographic/organizational region used to segment Leads and Territories.
 - **Territory** — Sub-division within a Region for finer-grained lead assignment.
 
-![ER Diagram](diagrams/er_diagram.png)
+![ER Diagram](diagram/database_er_diagram.png)
 
 The diagram above represents the relationships between Lead, Product, Region, Territory, and supporting lookup tables (Status, Lead Source), all connected through foreign key constraints enforced at the database level.
 
