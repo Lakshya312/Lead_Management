@@ -88,7 +88,7 @@ This CRM was built to solve a real operational need during an internship at Swas
 
 | Module | CRUD | Search | Validation | Bulk Import/Export | REST API |
 |---|:---:|:---:|:---:|:---:|:---:|
-| **Lead** | ✅ | ✅ | ✅ | ➖ | ✅ |
+| **Lead** | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Product** | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **Region** | ✅ | ✅ | ✅ | ✅ | ✅ |
 
