@@ -524,6 +524,8 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 [![GitHub](https://img.shields.io/badge/GitHub-Lakshya312-181717?style=flat-square&logo=github)](https://github.com/Lakshya312)
 
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Lakshya%20Pal-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lakshya-p-34496a15a/)
+
 ---
 
 <div align="center">
